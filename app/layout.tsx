@@ -9,7 +9,14 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html>
-            <body>{children}</body>
+            <body>
+                <h1>
+                    <p id="firsttxt">WORKOUT LOG</p>
+                    <span id="secondtxt">for</span>&nbsp;
+                    <span id="thirdtxt">Overload</span> 💪
+                </h1>
+                {children}
+            </body>
         </html>
     );
 }

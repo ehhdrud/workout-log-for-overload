@@ -1,0 +1,11 @@
+h2 {
+    font-family: VCR_OSD_MONO;
+    font-weight: 400;
+    font-size: 20px;
+}
+
+#codeInput {
+    font-size: 20px;
+    width: 300px;
+    outline: none;
+}

@@ -1,5 +1,50 @@
-#workoutInput {
+.logPage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.workoutInput {
+    position: absolute;
+    bottom: 50px;
+    border-radius: 30px;
+    padding: 10px 30px;
     font-size: 20px;
-    width: 300px;
+    width: 250px;
     outline: none;
+}
+
+.workoutTable {
+    margin: 0px 30px;
+    border-radius: 15px;
+    background-color: darkblue;
+    color: black;
+}
+
+.workoutTableCaption {
+    color: white;
+}
+
+.workoutTableInput {
+    width: 75px;
+}
+
+th {
+    display: flex;
+    width: calc(100vw / 4);
+}
+
+tr {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 15px;
+    background-color: white;
+}
+
+td {
+    display: flex;
+    width: calc(100vw / 4);
+    border-left: 1px solid black;
 }

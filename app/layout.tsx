@@ -1,5 +1,6 @@
 import './globals.css';
 import type { Metadata } from 'next';
+import Recoil from './components/Recoil';
 
 export const metadata: Metadata = {
     title: 'workout log for overload',
@@ -16,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         💪OVERLOAD<p>💪</p>
                     </div>
                 </h1>
-                {children}
+                <Recoil>{children}</Recoil>
             </body>
         </html>
     );

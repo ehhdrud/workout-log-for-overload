@@ -36,8 +36,8 @@ h1 div {
     font-size: 38px;
     margin: 0;
     line-height: 1.2;
-    font-family: consolas;
     font-weight: bold;
+    font-family: VCR_OSD_MONO;
 }
 
 h1 div p {

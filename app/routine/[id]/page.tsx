@@ -1,11 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import { isAcceptedAtom } from '@/recoil/atoms';
-import '../../styles/log-page.css';
+import Image from 'next/image';
+import Spinner from '@/assets/Spinner.svg';
+import '@/styles/routine-id-page.css';
 
-const Log = () => {
+const Log = (props: any) => {
     const [isAccepted, setClientIsAccepted] = useState<string | boolean>('');
     const [recoilIsAccepted, setIsAccepted] = useRecoilState(isAcceptedAtom);
     const [workout, setWorkout] = useState<string>('');
@@ -25,9 +27,10 @@ const Log = () => {
         setClientIsAccepted(recoilIsAccepted);
     }, [recoilIsAccepted]);
 
-    return (
+    return isAccepted ? (
         <div className="logPage">
             <div>
+                <h2>{props.params.id}</h2>
                 {workoutList.map((item, index) => (
                     <table className="workoutTable">
                         <caption className="workoutTableCaption">{item}</caption>
@@ -47,7 +50,7 @@ const Log = () => {
                                         type="text"
                                         value={weight}
                                         onChange={(e) => setWeight(e.target.value)}
-                                        placeholder="헤더1 입력"
+                                        placeholder="?kg"
                                     />
                                 </td>
                                 <td>
@@ -56,7 +59,7 @@ const Log = () => {
                                         type="text"
                                         value={reps}
                                         onChange={(e) => setReps(e.target.value)}
-                                        placeholder="헤더2 입력"
+                                        placeholder="?reps"
                                     />
                                 </td>
                             </tr>
@@ -72,6 +75,10 @@ const Log = () => {
                 onChange={(e) => setWorkout(e.target.value)}
                 onKeyDown={handleKeyPress}
             />
+        </div>
+    ) : (
+        <div>
+            <Image src={Spinner} alt="Loading" />
         </div>
     );
 };

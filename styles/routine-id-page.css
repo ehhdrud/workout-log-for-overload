@@ -96,17 +96,28 @@
 }
 
 .addSetBtn {
-    width: 100px;
-    padding: 2px 0px;
-    font-weight: bold;
-    border-style: none;
-    border-radius: 15px;
-    background-color: #ffff88;
     position: absolute;
     top: 0px;
     right: 0px;
+    width: 100px;
+    padding: 2px 0px;
+    font-weight: bold;
+    font-size: 14px;
+    border-style: none;
+    border-radius: 15px;
+    background-color: #ffff88;
 }
 
+.deleteBtn {
+    position: absolute;
+    top: 0px;
+    right: 110px;
+    width: max-content;
+    padding: 3.5px 20px;
+    border-style: none;
+    border-radius: 10px;
+    background-color: #ff5000;
+}
 .createInputFeild {
     position: absolute;
     bottom: 50px;

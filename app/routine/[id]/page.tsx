@@ -6,6 +6,8 @@ import { isAcceptedAtom } from '@/recoil/atoms';
 import Image from 'next/image';
 import Spinner from '@/assets/Spinner.svg';
 import '@/styles/routine-id-page.css';
+import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface Set {
     weight: number | null;
@@ -31,6 +33,9 @@ const Log = (props: any) => {
     const [weightEditIndex, setWeightEditIndex] = useState<number | null>(null);
     const [repsEditIndex, setRepsEditIndex] = useState<number | null>(null);
     const [createWorkoutInput, setCreateWorkoutInput] = useState<boolean>(false);
+    const [shouldFocus, setShoudFocus] = useState<boolean>(false);
+
+    const [deleteState, setDeleteState] = useState<boolean>(false);
 
     // 운동을 추가하는 함수
     const handleAddWorkout = (e: any) => {
@@ -48,6 +53,11 @@ const Log = (props: any) => {
 
     // 세트를 추가하는 함수
     const addSet = (workoutName: string) => {
+        if (weightEditIndex || repsEditIndex) {
+            alert('수정을 완료해주세요 😢');
+            return;
+        }
+
         const updatedWorkoutData = [...workoutData];
         const workoutArray = updatedWorkoutData.find((workout) =>
             workout.hasOwnProperty(workoutName)
@@ -57,6 +67,28 @@ const Log = (props: any) => {
 
             setWorkoutData(updatedWorkoutData);
         }
+    };
+
+    // 무게 셀을 클릭할 때 실행되는 함수
+    const handleWeightDataCellClick = (
+        index: number,
+        workoutName: string,
+        currnetWeight: number
+    ) => {
+        setWeightEditIndex(index);
+        setRepsEditIndex(null);
+        setSelectedWorkout(workoutName);
+        setWeight(currnetWeight);
+        setShoudFocus(true);
+    };
+
+    // 횟수 셀을 클릭할 때 실행되는 함수
+    const handleRepsDataCellClick = (index: number, workoutName: string, currentReps: number) => {
+        setRepsEditIndex(index);
+        setWeightEditIndex(null);
+        setSelectedWorkout(workoutName);
+        setReps(currentReps);
+        setShoudFocus(true);
     };
 
     // 무게를 수정하는 함수
@@ -76,6 +108,7 @@ const Log = (props: any) => {
 
             setSelectedWorkout(null);
             setWeightEditIndex(null);
+            setShoudFocus(false);
         }
     };
 
@@ -96,27 +129,8 @@ const Log = (props: any) => {
 
             setSelectedWorkout(null);
             setRepsEditIndex(null);
+            setShoudFocus(false);
         }
-    };
-
-    // 무게 셀을 클릭할 때 실행되는 함수
-    const handleWeightDataCellClick = (
-        index: number,
-        workoutName: string,
-        currnetWeight: number
-    ) => {
-        setWeightEditIndex(index);
-        setRepsEditIndex(null);
-        setSelectedWorkout(workoutName);
-        setWeight(currnetWeight);
-    };
-
-    // 횟수 셀을 클릭할 때 실행되는 함수
-    const handleRepsDataCellClick = (index: number, workoutName: string, currentReps: number) => {
-        setRepsEditIndex(index);
-        setWeightEditIndex(null);
-        setSelectedWorkout(workoutName);
-        setReps(currentReps);
     };
 
     useEffect(() => {
@@ -147,20 +161,9 @@ const Log = (props: any) => {
                                             <p className="workoutTableInfo">{subIndex + 1}</p>
                                         </td>
                                         <td className="tableDataCell">
-                                            {/* {subItem.weight && weightEditIndex !== subIndex ? (
-                                                <p
-                                                    className="workoutTableInfo weightInfo"
-                                                    onClick={() =>
-                                                        handleWeightDataCellClick(
-                                                            subIndex,
-                                                            String(Object.keys(item)),
-                                                            Number(subItem.weight)
-                                                        )
-                                                    }
-                                                >
-                                                    {subItem.weight}
-                                                </p>
-                                            ) : (
+                                            {!subItem.weight ||
+                                            (weightEditIndex === subIndex &&
+                                                selectedWorkout === String(Object.keys(item))) ? (
                                                 <input
                                                     className="workoutTableInput weightInput"
                                                     type="text"
@@ -176,28 +179,7 @@ const Log = (props: any) => {
                                                         )
                                                     }
                                                     placeholder={weight ? String(weight) : '? kg'}
-                                                    autoFocus
-                                                />
-                                            )} */}
-                                            {subItem.weight &&
-                                            weightEditIndex === subIndex &&
-                                            selectedWorkout === String(Object.keys(item)) ? (
-                                                <input
-                                                    className="workoutTableInput weightInput"
-                                                    type="text"
-                                                    defaultValue={subItem.weight || undefined}
-                                                    onChange={(e) =>
-                                                        setWeight(Number(e.target.value))
-                                                    }
-                                                    onKeyDown={(e) =>
-                                                        handleEditWeight(
-                                                            e,
-                                                            String(Object.keys(item)),
-                                                            subIndex
-                                                        )
-                                                    }
-                                                    placeholder={weight ? String(weight) : '? kg'}
-                                                    autoFocus
+                                                    autoFocus={shouldFocus}
                                                 />
                                             ) : (
                                                 <p
@@ -215,20 +197,9 @@ const Log = (props: any) => {
                                             )}
                                         </td>
                                         <td className="tableDataCell">
-                                            {/* {subItem.reps && repsEditIndex !== subIndex ? (
-                                                <p
-                                                    className="workoutTableInfo repsInfo"
-                                                    onClick={() =>
-                                                        handleRepsDataCellClick(
-                                                            subIndex,
-                                                            String(Object.keys(item)),
-                                                            Number(subItem.reps)
-                                                        )
-                                                    }
-                                                >
-                                                    {subItem.reps}
-                                                </p>
-                                            ) : (
+                                            {!subItem.reps ||
+                                            (repsEditIndex === subIndex &&
+                                                selectedWorkout === String(Object.keys(item))) ? (
                                                 <input
                                                     className="workoutTableInput repsInput"
                                                     type="text"
@@ -244,28 +215,7 @@ const Log = (props: any) => {
                                                         )
                                                     }
                                                     placeholder={reps ? String(reps) : '? reps'}
-                                                    autoFocus
-                                                />
-                                            )} */}
-                                            {subItem.reps &&
-                                            repsEditIndex === subIndex &&
-                                            selectedWorkout === String(Object.keys(item)) ? (
-                                                <input
-                                                    className="workoutTableInput repsInput"
-                                                    type="text"
-                                                    defaultValue={subItem.reps || undefined}
-                                                    onChange={(e) =>
-                                                        setReps(Number(e.target.value))
-                                                    }
-                                                    onKeyDown={(e) =>
-                                                        handleEditReps(
-                                                            e,
-                                                            String(Object.keys(item)),
-                                                            subIndex
-                                                        )
-                                                    }
-                                                    placeholder={reps ? String(reps) : '? reps'}
-                                                    autoFocus
+                                                    autoFocus={shouldFocus}
                                                 />
                                             ) : (
                                                 <p
@@ -292,6 +242,14 @@ const Log = (props: any) => {
                             >
                                 + Add SET
                             </button>
+                            <button
+                                className="deleteBtn"
+                                onClick={() => {
+                                    setDeleteState(true);
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faTrashCan} fontSize="14px" />
+                            </button>
                         </table>
                     ))}
                 </div>
@@ -308,6 +266,7 @@ const Log = (props: any) => {
                     placeholder="workout name"
                     onChange={(e) => setWorkout(e.target.value)}
                     onKeyDown={handleAddWorkout}
+                    autoFocus
                 />
             )}
         </div>

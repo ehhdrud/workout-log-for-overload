@@ -56,6 +56,7 @@ const Routine = () => {
                         placeholder="routine name..."
                         onChange={(e) => setRoutine(e.target.value)}
                         onKeyDown={handleKeyPress}
+                        autoFocus
                     />
                 )}
             </div>

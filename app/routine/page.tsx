@@ -41,7 +41,7 @@ const Routine = () => {
             </div>
 
             <div className="createField">
-                {createRoutineInput === false ? (
+                {!createRoutineInput ? (
                     <button
                         className="createInputFeild"
                         onClick={() => setCreateRoutineInput(true)}

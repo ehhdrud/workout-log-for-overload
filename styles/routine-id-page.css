@@ -1,8 +1,122 @@
 .logPage {
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.logContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    position: absolute;
+    top: 20vh;
+}
+
+.routineName {
+    padding: 5px 20px;
+    margin: 0px;
+    background-color: #000025;
+    border-bottom: 0;
+    border-radius: 15px 15px 0 0;
+}
+
+.logDataContainer {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    height: 55vh;
+    padding: 0px 20px;
+    background-color: rgba(0, 0, 40, 0.6);
+    border-radius: 0px 15px 15px 15px;
+    border-bottom: 0;
+    overflow: auto;
+}
+
+.workoutTable {
+    position: relative;
+    color: black;
+    margin: 25px 0px;
+}
+
+.workoutTableCaption {
+    position: relative;
+    left: 2px;
+    width: max-content;
+    padding: 2px 5px;
+    color: black;
+    font-weight: bold;
+    text-align: start;
+    background-color: white;
+    opacity: 0.5;
+    border-radius: 10px 10px 0 00;
+}
+
+.workoutTableInfo {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 75px;
+    height: 10px;
+}
+
+.workoutTableInput {
+    width: 75px;
+}
+
+.tableheader {
+}
+
+.tableBody {
+    display: flex;
+    flex-direction: column;
+    border-radius: 15px;
+}
+
+.tableRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    opacity: 0.8;
+}
+
+.tableHeaderCell {
+    display: flex;
+    width: calc(100vw / 4);
+}
+
+.tableDataCell {
+    display: flex;
     justify-content: center;
     align-items: center;
+    width: calc(100vw / 4);
+    height: 20px;
+}
+
+.addSetBtn {
+    width: 100px;
+    padding: 2px 0px;
+    font-weight: bold;
+    border-style: none;
+    border-radius: 15px;
+    background-color: #ffff88;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+.createInputFeild {
+    position: absolute;
+    bottom: 50px;
+    width: 300px;
+    padding: 10px 0px;
+    border-radius: 30px;
+    font-family: VCR_OSD_MONO;
+    font-size: 22px;
+    font-weight: bold;
+    background-color: blue;
 }
 
 .workoutInput {
@@ -13,36 +127,4 @@
     font-size: 20px;
     width: 250px;
     outline: none;
-}
-
-.workoutTable {
-    margin: 0px 30px;
-    border-radius: 15px;
-    color: black;
-}
-
-.workoutTableCaption {
-    color: white;
-}
-
-.workoutTableInput {
-    width: 75px;
-}
-
-th {
-    display: flex;
-    width: calc(100vw / 4);
-}
-
-tr {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: 15px;
-    background-color: white;
-}
-
-td {
-    display: flex;
-    width: calc(100vw / 4);
 }

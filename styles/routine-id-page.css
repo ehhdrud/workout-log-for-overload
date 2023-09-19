@@ -5,13 +5,31 @@
     align-items: center;
 }
 
-.inputOverlay {
+.tableRowInputOverlay {
     position: fixed;
     top: 0;
     width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1;
+}
+
+.tableCaptionInputOverlay {
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 3;
+}
+
+.workoutInputOverlay {
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 5;
 }
 
 .logContainer {
@@ -53,7 +71,7 @@
     position: relative;
     left: 2px;
     width: max-content;
-    max-width: 110px;
+    max-width: 105px;
     padding: 2px 5px;
     color: black;
     font-weight: bold;
@@ -68,7 +86,7 @@
     width: 75px;
     border-style: none;
     border: 2px solid #666;
-    z-index: 2;
+    z-index: 4;
 }
 
 .workoutNameTxt {
@@ -109,7 +127,7 @@
 
 .tableHeaderCell {
     display: flex;
-    width: calc(100vw / 4);
+    width: 90px;
 }
 
 .deleteBtn {
@@ -132,7 +150,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: calc(100vw / 4);
+    width: 90px;
     height: 20px;
 }
 
@@ -152,9 +170,9 @@
 .createDeleteBtn {
     position: absolute;
     top: 0px;
-    right: 110px;
+    right: 105px;
     width: max-content;
-    padding: 3.5px 20px;
+    padding: 3.5px 15px;
     border-style: none;
     border-radius: 10px;
     background-color: #ff5000;
@@ -163,9 +181,9 @@
 .closeDeleteBtn {
     position: absolute;
     top: 0px;
-    right: 110px;
+    right: 105px;
     width: max-content;
-    padding: 3.5px 9.5px;
+    padding: 3.5px 7.5px;
     border-style: none;
     border-radius: 10px;
     background-color: #88a;
@@ -196,5 +214,5 @@
     font-size: 20px;
     width: 250px;
     outline: none;
-    z-index: 2;
+    z-index: 6;
 }

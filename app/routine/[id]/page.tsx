@@ -32,13 +32,16 @@ const Log = (props: any) => {
     const [weightEditIndex, setWeightEditIndex] = useState<number | null>(null);
     const [repsEditIndex, setRepsEditIndex] = useState<number | null>(null);
     const [createWorkoutInput, setCreateWorkoutInput] = useState<boolean>(false);
-    const [shouldFocus, setShoudFocus] = useState<boolean>(false);
+    const [shouldFocus, setShouldFocus] = useState<boolean>(false);
 
     const [workoutNameEditState, setWorkoutNameEditState] = useState<boolean>(false);
     const [editedWorkoutName, setEditedWorkoutName] = useState<string | null>(null);
     const [deleteState, setDeleteState] = useState<boolean>(false);
 
-    const [overlayState, setOverlayState] = useState<boolean>(false);
+    const [tableRowInputOverlayState, setTableRowInputOverlayState] = useState<boolean>(false);
+    const [tableCaptionInputOverlayState, setTableCaptionInputOverlayState] =
+        useState<boolean>(false);
+    const [workoutInputOverlayState, setWorkoutInputOverlayState] = useState<boolean>(false);
 
     // 운동을 추가하는 함수
     const handleAddWorkout = (e: any) => {
@@ -46,22 +49,19 @@ const Log = (props: any) => {
             const workoutDataObj = {
                 [workout]: [{ weight: null, reps: null }],
             };
+
             setWorkoutData([...workoutData, workoutDataObj]);
             setWorkout('');
             setWeight(null);
             setReps(null);
             setCreateWorkoutInput(false);
-            setOverlayState(false);
+            setWorkoutInputOverlayState(false);
         }
     };
 
     // 세트를 추가하는 함수
     const addSet = (workoutName: string) => {
-        if (weightEditIndex || repsEditIndex) {
-            alert('수정을 완료해주세요 😢');
-            return;
-        }
-
+        setDeleteState(false);
         const updatedWorkoutData = [...workoutData];
         const workoutArray = updatedWorkoutData.find((workout) =>
             workout.hasOwnProperty(workoutName)
@@ -79,22 +79,24 @@ const Log = (props: any) => {
         workoutName: string,
         currnetWeight: number
     ) => {
+        setDeleteState(false);
         setWeightEditIndex(index);
         setRepsEditIndex(null);
         setSelectedWorkout(workoutName);
         setWeight(currnetWeight);
-        setShoudFocus(true);
-        setOverlayState(true);
+        setShouldFocus(true);
+        setTableRowInputOverlayState(true);
     };
 
     // 횟수 셀을 클릭할 때 실행되는 함수
     const handleRepsDataCellClick = (index: number, workoutName: string, currentReps: number) => {
+        setDeleteState(false);
         setRepsEditIndex(index);
         setWeightEditIndex(null);
         setSelectedWorkout(workoutName);
         setReps(currentReps);
-        setShoudFocus(true);
-        setOverlayState(true);
+        setShouldFocus(true);
+        setTableRowInputOverlayState(true);
     };
 
     // 무게를 수정하는 함수
@@ -111,11 +113,10 @@ const Log = (props: any) => {
 
                 setWorkoutData(updatedWorkoutData);
             }
-
             setSelectedWorkout(null);
             setWeightEditIndex(null);
-            setShoudFocus(false);
-            setOverlayState(false);
+            setShouldFocus(false);
+            setTableRowInputOverlayState(false);
         }
     };
 
@@ -133,11 +134,10 @@ const Log = (props: any) => {
 
                 setWorkoutData(updatedWorkoutData);
             }
-
             setSelectedWorkout(null);
             setRepsEditIndex(null);
-            setShoudFocus(false);
-            setOverlayState(false);
+            setShouldFocus(false);
+            setTableRowInputOverlayState(false);
         }
     };
 
@@ -162,7 +162,7 @@ const Log = (props: any) => {
         }
     };
 
-    // 운동 이름을 수정하는 함수
+    // 운동 이름(캡션)을 수정하는 함수
     const handleEditWorkoutName = (e: any, workoutName: string) => {
         if (e.key === 'Enter') {
             // 엔터 키를 눌렀을 때만 실행됩니다.
@@ -179,18 +179,29 @@ const Log = (props: any) => {
                 setWorkoutData(updatedWorkoutData);
                 setWorkoutNameEditState(false);
                 setEditedWorkoutName(null);
-                setOverlayState(false);
+                setTableCaptionInputOverlayState(false);
             }
         }
     };
 
-    // 수정 상태를 초기화하는 함수
-    const resetEditState = () => {
-        setWorkoutNameEditState(false);
+    // TableRow-Input의 수정 상태를 초기화하는 함수
+    const resetTableRowInputEditState = () => {
         setWeightEditIndex(null);
         setRepsEditIndex(null);
+        setShouldFocus(false);
+        setTableRowInputOverlayState(false);
+    };
+
+    // Table-Caption의 수정 상태를 초기화하는 함수
+    const resetTableCaptionInputEditState = () => {
+        setWorkoutNameEditState(false);
+        setTableCaptionInputOverlayState(false);
+    };
+
+    // WorkoutInput의 활성화 상태를 초기화하는 함수
+    const resetWorkoutInputEditState = () => {
         setCreateWorkoutInput(false);
-        setOverlayState(false);
+        setWorkoutInputOverlayState(false);
     };
 
     useEffect(() => {
@@ -199,11 +210,27 @@ const Log = (props: any) => {
 
     return isAccepted ? (
         <div className="logPage">
-            {overlayState && (
+            {tableRowInputOverlayState && (
                 <div
-                    className="inputOverlay"
+                    className="tableRowInputOverlay"
                     onClick={() => {
-                        resetEditState();
+                        resetTableRowInputEditState();
+                    }}
+                />
+            )}
+            {tableCaptionInputOverlayState && (
+                <div
+                    className="tableCaptionInputOverlay"
+                    onClick={() => {
+                        resetTableCaptionInputEditState();
+                    }}
+                />
+            )}
+            {workoutInputOverlayState && (
+                <div
+                    className="workoutInputOverlay"
+                    onClick={() => {
+                        resetWorkoutInputEditState();
                     }}
                 />
             )}
@@ -238,9 +265,10 @@ const Log = (props: any) => {
                                     <p
                                         className="workoutNameTxt"
                                         onClick={() => {
+                                            setDeleteState(false);
                                             setWorkoutNameEditState(true);
                                             setSelectedWorkout(String(Object.keys(item)));
-                                            setOverlayState(true);
+                                            setTableCaptionInputOverlayState(true);
                                         }}
                                     >
                                         🏋️‍♀️ {Object.keys(item)}
@@ -275,9 +303,8 @@ const Log = (props: any) => {
                                             <p className="workoutTableInfo">{subIndex + 1}</p>
                                         </td>
                                         <td className="tableDataCell">
-                                            {!subItem.weight ||
-                                            (weightEditIndex === subIndex &&
-                                                selectedWorkout === String(Object.keys(item))) ? (
+                                            {weightEditIndex === subIndex &&
+                                            selectedWorkout === String(Object.keys(item)) ? (
                                                 <input
                                                     className="workoutTableInput weightInput"
                                                     type="text"
@@ -306,14 +333,13 @@ const Log = (props: any) => {
                                                         )
                                                     }
                                                 >
-                                                    {subItem.weight}
+                                                    {subItem.weight || '-'}
                                                 </p>
                                             )}
                                         </td>
                                         <td className="tableDataCell">
-                                            {!subItem.reps ||
-                                            (repsEditIndex === subIndex &&
-                                                selectedWorkout === String(Object.keys(item))) ? (
+                                            {repsEditIndex === subIndex &&
+                                            selectedWorkout === String(Object.keys(item)) ? (
                                                 <input
                                                     className="workoutTableInput repsInput"
                                                     type="text"
@@ -342,7 +368,7 @@ const Log = (props: any) => {
                                                         )
                                                     }
                                                 >
-                                                    {subItem.reps}
+                                                    {subItem.reps || '-'}
                                                 </p>
                                             )}
                                         </td>
@@ -385,7 +411,9 @@ const Log = (props: any) => {
                 <button
                     className="createInputFeild"
                     onClick={() => {
-                        setCreateWorkoutInput(true), setOverlayState(true);
+                        setDeleteState(false);
+                        setCreateWorkoutInput(true);
+                        setWorkoutInputOverlayState(true);
                     }}
                 >
                     create new routine

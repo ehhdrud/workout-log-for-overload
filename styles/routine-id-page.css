@@ -49,7 +49,8 @@
     font-weight: bold;
     text-align: start;
     background-color: white;
-    opacity: 0.5;
+    opacity: 1;
+    background-color: #88a;
     border-radius: 10px 10px 0 00;
 }
 
@@ -65,9 +66,6 @@
     width: 75px;
 }
 
-.tableheader {
-}
-
 .tableBody {
     display: flex;
     flex-direction: column;
@@ -78,6 +76,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
     background-color: white;
     opacity: 0.8;
 }
@@ -85,6 +84,22 @@
 .tableHeaderCell {
     display: flex;
     width: calc(100vw / 4);
+}
+
+.deleteBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 3px;
+    left: -10px;
+    width: 19px;
+    height: 19px;
+    color: white;
+    border-radius: 3px;
+    border-style: none;
+    border: 2px solid black;
+    background-color: red;
 }
 
 .tableDataCell {
@@ -108,7 +123,7 @@
     background-color: #ffff88;
 }
 
-.deleteBtn {
+.createDeleteBtn {
     position: absolute;
     top: 0px;
     right: 110px;
@@ -118,6 +133,23 @@
     border-radius: 10px;
     background-color: #ff5000;
 }
+
+.closeDeleteBtn {
+    position: absolute;
+    top: 0px;
+    right: 110px;
+    width: max-content;
+    padding: 3.5px 9.5px;
+    border-style: none;
+    border-radius: 10px;
+    background-color: #88a;
+}
+
+.doneTxt {
+    font-weight: bold;
+    margin: 0;
+}
+
 .createInputFeild {
     position: absolute;
     bottom: 50px;

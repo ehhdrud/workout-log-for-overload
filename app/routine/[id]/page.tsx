@@ -26,7 +26,6 @@ const Log = (props: any) => {
     const [weight, setWeight] = useState<number | null>(null);
     const [reps, setReps] = useState<number | null>(null);
 
-    const [setData, setSetData] = useState<Set[]>([]);
     const [workoutData, setWorkoutData] = useState<Workout[]>([]);
 
     const [selectedWorkout, setSelectedWorkout] = useState<string | null>(null);
@@ -133,6 +132,27 @@ const Log = (props: any) => {
         }
     };
 
+    // 운동을 삭제하는 함수
+    const handleWorkoutDelete = (workoutName: string) => {
+        const updatedWorkoutData = workoutData.filter((item) => !item[workoutName]);
+        setWorkoutData(updatedWorkoutData);
+    };
+
+    // 세트를 삭제하는 함수
+    const handleSetDelete = (workoutName: string, setIndex: number) => {
+        const updatedWorkoutData = [...workoutData];
+
+        const workoutArray = updatedWorkoutData.find((workout) =>
+            workout.hasOwnProperty(workoutName)
+        );
+
+        if (workoutArray) {
+            workoutArray[workoutName].splice(setIndex, 1);
+
+            setWorkoutData(updatedWorkoutData);
+        }
+    };
+
     useEffect(() => {
         setClientIsAccepted(recoilIsAccepted);
     }, [recoilIsAccepted]);
@@ -145,6 +165,16 @@ const Log = (props: any) => {
                     {workoutData.map((item, index) => (
                         <table className="workoutTable">
                             <caption className="workoutTableCaption">
+                                {deleteState && selectedWorkout === String(Object.keys(item)) && (
+                                    <button
+                                        className="deleteBtn"
+                                        onClick={() =>
+                                            handleWorkoutDelete(String(Object.keys(item)))
+                                        }
+                                    >
+                                        X
+                                    </button>
+                                )}
                                 🏋️‍♀️ {Object.keys(item)}
                             </caption>
                             <thead className="tableHeader">
@@ -157,6 +187,20 @@ const Log = (props: any) => {
                             <tbody className="tableBody">
                                 {Object.values(item)[0].map((subItem, subIndex) => (
                                     <tr className="tableRow" key={subIndex}>
+                                        {deleteState &&
+                                            selectedWorkout === String(Object.keys(item)) && (
+                                                <button
+                                                    className="deleteBtn"
+                                                    onClick={() =>
+                                                        handleSetDelete(
+                                                            String(Object.keys(item)),
+                                                            subIndex
+                                                        )
+                                                    }
+                                                >
+                                                    X
+                                                </button>
+                                            )}
                                         <td className="tableDataCell">
                                             <p className="workoutTableInfo">{subIndex + 1}</p>
                                         </td>
@@ -238,18 +282,31 @@ const Log = (props: any) => {
                             <button
                                 className="addSetBtn"
                                 type="button"
-                                onClick={() => addSet(String(Object.keys(workoutData[index])))}
+                                onClick={() => addSet(String(Object.keys(item)))}
                             >
                                 + Add SET
                             </button>
-                            <button
-                                className="deleteBtn"
-                                onClick={() => {
-                                    setDeleteState(true);
-                                }}
-                            >
-                                <FontAwesomeIcon icon={faTrashCan} fontSize="14px" />
-                            </button>
+                            {deleteState && selectedWorkout === String(Object.keys(item)) ? (
+                                <button
+                                    className="closeDeleteBtn"
+                                    onClick={() => {
+                                        setDeleteState(false);
+                                        setSelectedWorkout(null);
+                                    }}
+                                >
+                                    <p className="doneTxt">Done</p>
+                                </button>
+                            ) : (
+                                <button
+                                    className="createDeleteBtn"
+                                    onClick={() => {
+                                        setDeleteState(true);
+                                        setSelectedWorkout(String(Object.keys(item)));
+                                    }}
+                                >
+                                    <FontAwesomeIcon icon={faTrashCan} fontSize="14px" />
+                                </button>
+                            )}
                         </table>
                     ))}
                 </div>

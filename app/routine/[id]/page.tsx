@@ -32,7 +32,6 @@ const Log = (props: any) => {
     const [weightEditIndex, setWeightEditIndex] = useState<number | null>(null);
     const [repsEditIndex, setRepsEditIndex] = useState<number | null>(null);
     const [createWorkoutInput, setCreateWorkoutInput] = useState<boolean>(false);
-    const [shouldFocus, setShouldFocus] = useState<boolean>(false);
 
     const [workoutNameEditState, setWorkoutNameEditState] = useState<boolean>(false);
     const [editedWorkoutName, setEditedWorkoutName] = useState<string | null>(null);
@@ -46,6 +45,13 @@ const Log = (props: any) => {
     // 운동을 추가하는 함수
     const handleAddWorkout = (e: any) => {
         if (e.key === 'Enter') {
+            // workout 이름이 이미 존재하는지 확인
+            const workoutExists = workoutData.some((item) => item.hasOwnProperty(workout));
+            if (workoutExists) {
+                alert('같은 이름이 이미 존재합니다 😢');
+                return;
+            }
+
             const workoutDataObj = {
                 [workout]: [{ weight: null, reps: null }],
             };
@@ -84,7 +90,6 @@ const Log = (props: any) => {
         setRepsEditIndex(null);
         setSelectedWorkout(workoutName);
         setWeight(currnetWeight);
-        setShouldFocus(true);
         setTableRowInputOverlayState(true);
     };
 
@@ -95,7 +100,6 @@ const Log = (props: any) => {
         setWeightEditIndex(null);
         setSelectedWorkout(workoutName);
         setReps(currentReps);
-        setShouldFocus(true);
         setTableRowInputOverlayState(true);
     };
 
@@ -115,7 +119,6 @@ const Log = (props: any) => {
             }
             setSelectedWorkout(null);
             setWeightEditIndex(null);
-            setShouldFocus(false);
             setTableRowInputOverlayState(false);
         }
     };
@@ -136,7 +139,6 @@ const Log = (props: any) => {
             }
             setSelectedWorkout(null);
             setRepsEditIndex(null);
-            setShouldFocus(false);
             setTableRowInputOverlayState(false);
         }
     };
@@ -188,7 +190,6 @@ const Log = (props: any) => {
     const resetTableRowInputEditState = () => {
         setWeightEditIndex(null);
         setRepsEditIndex(null);
-        setShouldFocus(false);
         setTableRowInputOverlayState(false);
     };
 
@@ -320,7 +321,7 @@ const Log = (props: any) => {
                                                         )
                                                     }
                                                     placeholder={weight ? String(weight) : '? kg'}
-                                                    autoFocus={shouldFocus}
+                                                    autoFocus
                                                 />
                                             ) : (
                                                 <p
@@ -355,7 +356,7 @@ const Log = (props: any) => {
                                                         )
                                                     }
                                                     placeholder={reps ? String(reps) : '? reps'}
-                                                    autoFocus={shouldFocus}
+                                                    autoFocus
                                                 />
                                             ) : (
                                                 <p

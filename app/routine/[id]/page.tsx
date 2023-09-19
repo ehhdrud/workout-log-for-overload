@@ -34,7 +34,11 @@ const Log = (props: any) => {
     const [createWorkoutInput, setCreateWorkoutInput] = useState<boolean>(false);
     const [shouldFocus, setShoudFocus] = useState<boolean>(false);
 
+    const [workoutNameEditState, setWorkoutNameEditState] = useState<boolean>(false);
+    const [editedWorkoutName, setEditedWorkoutName] = useState<string | null>(null);
     const [deleteState, setDeleteState] = useState<boolean>(false);
+
+    const [overlayState, setOverlayState] = useState<boolean>(false);
 
     // 운동을 추가하는 함수
     const handleAddWorkout = (e: any) => {
@@ -47,6 +51,7 @@ const Log = (props: any) => {
             setWeight(null);
             setReps(null);
             setCreateWorkoutInput(false);
+            setOverlayState(false);
         }
     };
 
@@ -79,6 +84,7 @@ const Log = (props: any) => {
         setSelectedWorkout(workoutName);
         setWeight(currnetWeight);
         setShoudFocus(true);
+        setOverlayState(true);
     };
 
     // 횟수 셀을 클릭할 때 실행되는 함수
@@ -88,6 +94,7 @@ const Log = (props: any) => {
         setSelectedWorkout(workoutName);
         setReps(currentReps);
         setShoudFocus(true);
+        setOverlayState(true);
     };
 
     // 무게를 수정하는 함수
@@ -108,6 +115,7 @@ const Log = (props: any) => {
             setSelectedWorkout(null);
             setWeightEditIndex(null);
             setShoudFocus(false);
+            setOverlayState(false);
         }
     };
 
@@ -129,6 +137,7 @@ const Log = (props: any) => {
             setSelectedWorkout(null);
             setRepsEditIndex(null);
             setShoudFocus(false);
+            setOverlayState(false);
         }
     };
 
@@ -153,12 +162,51 @@ const Log = (props: any) => {
         }
     };
 
+    // 운동 이름을 수정하는 함수
+    const handleEditWorkoutName = (e: any, workoutName: string) => {
+        if (e.key === 'Enter') {
+            // 엔터 키를 눌렀을 때만 실행됩니다.
+            const updatedWorkoutData = [...workoutData];
+
+            const workoutArray = updatedWorkoutData.find((workout) =>
+                workout.hasOwnProperty(workoutName)
+            );
+
+            if (workoutArray && editedWorkoutName) {
+                workoutArray[editedWorkoutName] = workoutArray[workoutName];
+                delete workoutArray[workoutName];
+
+                setWorkoutData(updatedWorkoutData);
+                setWorkoutNameEditState(false);
+                setEditedWorkoutName(null);
+                setOverlayState(false);
+            }
+        }
+    };
+
+    // 수정 상태를 초기화하는 함수
+    const resetEditState = () => {
+        setWorkoutNameEditState(false);
+        setWeightEditIndex(null);
+        setRepsEditIndex(null);
+        setCreateWorkoutInput(false);
+        setOverlayState(false);
+    };
+
     useEffect(() => {
         setClientIsAccepted(recoilIsAccepted);
     }, [recoilIsAccepted]);
 
     return isAccepted ? (
         <div className="logPage">
+            {overlayState && (
+                <div
+                    className="inputOverlay"
+                    onClick={() => {
+                        resetEditState();
+                    }}
+                />
+            )}
             <div className="logContainer">
                 <h2 className="routineName">📌 {decodeURIComponent(props.params.id)}</h2>
                 <div className="logDataContainer">
@@ -175,7 +223,29 @@ const Log = (props: any) => {
                                         X
                                     </button>
                                 )}
-                                🏋️‍♀️ {Object.keys(item)}
+                                {workoutNameEditState &&
+                                selectedWorkout === String(Object.keys(item)) ? (
+                                    <input
+                                        className="workoutTableCaptionInput"
+                                        type="text"
+                                        defaultValue={Object.keys(item)}
+                                        onChange={(e) => setEditedWorkoutName(e.target.value)}
+                                        onKeyDown={(e) =>
+                                            handleEditWorkoutName(e, String(Object.keys(item)))
+                                        }
+                                    />
+                                ) : (
+                                    <p
+                                        className="workoutNameTxt"
+                                        onClick={() => {
+                                            setWorkoutNameEditState(true);
+                                            setSelectedWorkout(String(Object.keys(item)));
+                                            setOverlayState(true);
+                                        }}
+                                    >
+                                        🏋️‍♀️ {Object.keys(item)}
+                                    </p>
+                                )}
                             </caption>
                             <thead className="tableHeader">
                                 <tr className="tableRow">
@@ -312,7 +382,12 @@ const Log = (props: any) => {
                 </div>
             </div>
             {!createWorkoutInput ? (
-                <button className="createInputFeild" onClick={() => setCreateWorkoutInput(true)}>
+                <button
+                    className="createInputFeild"
+                    onClick={() => {
+                        setCreateWorkoutInput(true), setOverlayState(true);
+                    }}
+                >
                     create new routine
                 </button>
             ) : (

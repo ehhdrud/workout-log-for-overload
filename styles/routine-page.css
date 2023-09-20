@@ -5,6 +5,24 @@
     align-items: center;
 }
 
+.editInputOverlay {
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.createInputOverlay {
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 3;
+}
+
 .routineContainer {
     display: flex;
     flex-direction: column;
@@ -25,6 +43,47 @@
     border-radius: 15px 15px 0 0;
 }
 
+.editOrDelteContainer {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    top: 9px;
+    right: 10px;
+    width: 105px;
+}
+
+.routineEditBtn {
+    width: 50px;
+    height: 30px;
+    border-style: none;
+    background-color: #000030;
+    color: #d7d7d7;
+    border-radius: 15px 15px 0 0;
+}
+
+.routineDeleteBtn {
+    width: 50px;
+    height: 30px;
+    color: #d7d7d7;
+    border-style: none;
+    background-color: #000030;
+    border-radius: 15px 15px 0 0;
+}
+
+.doneText {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 30px;
+    font-family: VCR_OSD_MONO;
+    font-weight: bold;
+    font-size: 14px;
+    color: #d7d7d7;
+    background-color: #333;
+    border-radius: 15px 15px 0 0;
+}
+
 .routineItems {
     display: flex;
     flex-direction: column;
@@ -35,8 +94,22 @@
     border-radius: 0px 15px 15px 15px;
     overflow: auto;
 }
+.routineItemContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.routineItemInput {
+    position: relative;
+    width: 100%;
+    border-radius: 15px;
+    font-size: 22px;
+    z-index: 2;
+}
 
 .routineItem {
+    max-width: 180px;
     margin: 2vh 0;
     padding: 5px 10px;
     text-decoration: none;
@@ -46,6 +119,34 @@
     background-color: #000025;
     color: white;
     border-radius: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.editButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    color: #bbb;
+    border-radius: 10px;
+    border-style: none;
+    background-color: transparent;
+}
+
+.deleteButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    color: white;
+    border: 3px solid black;
+    border-radius: 5px;
+    border-style: none;
+    background-color: red;
 }
 
 .createField {
@@ -54,7 +155,7 @@
     bottom: 3vh;
 }
 
-.createInputFeild {
+.createRoutineInputFeild {
     width: 300px;
     padding: 10px 0px;
     border-radius: 30px;
@@ -64,10 +165,12 @@
     background-color: blue;
 }
 
-.InputFeild {
+.routineInputFeild {
+    position: relative;
     width: 255px;
     padding: 10px 20px;
     border-radius: 30px;
     font-size: 20px;
     outline: none;
+    z-index: 4;
 }

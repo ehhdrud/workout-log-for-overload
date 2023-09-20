@@ -28,7 +28,7 @@ const Log = (props: any) => {
 
     const [workoutData, setWorkoutData] = useState<Workout[]>([]);
 
-    const [selectedWorkout, setSelectedWorkout] = useState<string | null>(null);
+    const [selectedWorkout, setSelectedWorkout] = useState<string>('');
     const [weightEditIndex, setWeightEditIndex] = useState<number | null>(null);
     const [repsEditIndex, setRepsEditIndex] = useState<number | null>(null);
     const [createWorkoutInput, setCreateWorkoutInput] = useState<boolean>(false);
@@ -55,8 +55,8 @@ const Log = (props: any) => {
             const workoutDataObj = {
                 [workout]: [{ weight: null, reps: null }],
             };
-
             setWorkoutData([...workoutData, workoutDataObj]);
+
             setWorkout('');
             setWeight(null);
             setReps(null);
@@ -117,7 +117,7 @@ const Log = (props: any) => {
 
                 setWorkoutData(updatedWorkoutData);
             }
-            setSelectedWorkout(null);
+            setSelectedWorkout('');
             setWeightEditIndex(null);
             setTableRowInputOverlayState(false);
         }
@@ -137,7 +137,7 @@ const Log = (props: any) => {
 
                 setWorkoutData(updatedWorkoutData);
             }
-            setSelectedWorkout(null);
+            setSelectedWorkout('');
             setRepsEditIndex(null);
             setTableRowInputOverlayState(false);
         }
@@ -167,7 +167,12 @@ const Log = (props: any) => {
     // 운동 이름(캡션)을 수정하는 함수
     const handleEditWorkoutName = (e: any, workoutName: string) => {
         if (e.key === 'Enter') {
-            // 엔터 키를 눌렀을 때만 실행됩니다.
+            const workoutExists = workoutData.some((item) => item.hasOwnProperty(selectedWorkout));
+            if (workoutExists) {
+                alert('같은 이름이 이미 존재합니다 😢');
+                return;
+            }
+
             const updatedWorkoutData = [...workoutData];
 
             const workoutArray = updatedWorkoutData.find((workout) =>
@@ -388,7 +393,7 @@ const Log = (props: any) => {
                                     className="closeDeleteBtn"
                                     onClick={() => {
                                         setDeleteState(false);
-                                        setSelectedWorkout(null);
+                                        setSelectedWorkout('');
                                     }}
                                 >
                                     <p className="doneTxt">Done</p>

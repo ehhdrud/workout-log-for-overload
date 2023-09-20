@@ -1,13 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRecoilValue, useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { isAcceptedAtom } from '@/recoil/atoms';
+
 import Image from 'next/image';
 import Spinner from '@/assets/Spinner.svg';
-import '@/styles/routine-id-page.css';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import '@/styles/routine-id-page.css';
 
 interface Set {
     weight: number | null;
@@ -19,24 +20,34 @@ interface Workout {
 }
 
 const Log = (props: any) => {
+    // 시크릿 코드 유지를 위한 State
     const [isAccepted, setClientIsAccepted] = useState<string | boolean>('');
-    const [recoilIsAccepted, setIsAccepted] = useRecoilState(isAcceptedAtom);
+    const recoilIsAccepted = useRecoilValue(isAcceptedAtom);
 
+    // 취합한 데이터 State
+    const [workoutData, setWorkoutData] = useState<Workout[]>([]);
+
+    // 운동, 무게, 횟수 State
     const [workout, setWorkout] = useState<string>('');
     const [weight, setWeight] = useState<number | null>(null);
     const [reps, setReps] = useState<number | null>(null);
 
-    const [workoutData, setWorkoutData] = useState<Workout[]>([]);
-
+    // 운동,무게,횟수를 선택했을 때 필요한 State
     const [selectedWorkout, setSelectedWorkout] = useState<string>('');
     const [weightEditIndex, setWeightEditIndex] = useState<number | null>(null);
     const [repsEditIndex, setRepsEditIndex] = useState<number | null>(null);
+
+    // '운동 생성 Input' 렌더링에 필요한 State
     const [createWorkoutInput, setCreateWorkoutInput] = useState<boolean>(false);
 
+    // '운동 이름 수정 Input' 렌더링에 필요한 State
     const [workoutNameEditState, setWorkoutNameEditState] = useState<boolean>(false);
     const [editedWorkoutName, setEditedWorkoutName] = useState<string | null>(null);
+
+    // '운동 삭제' 시 필요한 State
     const [deleteState, setDeleteState] = useState<boolean>(false);
 
+    // '각 Input의 Overlay' 렌더링에 필요한 State
     const [tableRowInputOverlayState, setTableRowInputOverlayState] = useState<boolean>(false);
     const [tableCaptionInputOverlayState, setTableCaptionInputOverlayState] =
         useState<boolean>(false);

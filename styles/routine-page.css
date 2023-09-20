@@ -94,6 +94,7 @@
     border-radius: 0px 15px 15px 15px;
     overflow: auto;
 }
+
 .routineItemContainer {
     display: flex;
     justify-content: space-between;

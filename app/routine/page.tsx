@@ -2,26 +2,35 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { isAcceptedAtom } from '@/recoil/atoms';
-import '@/styles/routine-page.css';
+
 import Image from 'next/image';
 import Spinner from '@/assets/Spinner.svg';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import '@/styles/routine-page.css';
 
 const Routine = () => {
+    // 시크릿 코드 유지를 위한 State
     const [isAccepted, setClientIsAccepted] = useState<string | boolean>('');
-    const [recoilIsAccepted, setIsAccepted] = useRecoilState(isAcceptedAtom);
+    const recoilIsAccepted = useRecoilValue(isAcceptedAtom);
 
-    const [createRoutineInput, setCreateRoutineInput] = useState<boolean>(false);
-    const [routine, setRoutine] = useState<string>('');
+    // 취합한 데이터 State
     const [routineList, setRoutineList] = useState<string[]>([]);
 
+    // '루틴 생성 Input' 렌더링에 필요한 State
+    const [createRoutineInput, setCreateRoutineInput] = useState<boolean>(false);
+
+    // 루틴 이름을 입력받는 State
+    const [routine, setRoutine] = useState<string>('');
+
+    // '수정/삭제 button'을 렌더링하기 위한 State
     const [createEditBtn, setCreateEditBtn] = useState<boolean>(false);
     const [createDeleteBtn, setCreateDeleteBtn] = useState<boolean>(false);
 
+    // '루틴 수정 Input' 렌더링에 필요한 State
     const [routineNameEditState, setRoutineNameEditState] = useState<boolean>(false);
     const [selectedRoutine, setSelectedRoutine] = useState<string | null>(null);
     const [editedRoutine, setEditedRoutine] = useState<string>('');

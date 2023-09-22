@@ -225,6 +225,10 @@ const Log = (props: any) => {
         setClientIsAccepted(recoilIsAccepted);
     }, [recoilIsAccepted]);
 
+    useEffect(() => {
+        console.log(workoutData);
+    }, [workoutData]);
+
     return isAccepted ? (
         <div className="logPage">
             {tableRowInputOverlayState && (

@@ -1,0 +1,24 @@
+{
+    "하체": {
+        "Squat": [
+            { "weight": 100, "reps": 8 },
+            { "weight": 120, "reps": 6 },
+            { "weight": 140, "reps": 4 }
+        ],
+        "Leg Press": [
+            { "weight": 400, "reps": 10 },
+            { "weight": 440, "reps": 8 },
+            { "weight": 400, "reps": 10 }
+        ],
+        "Leg Extension": [
+            { "weight": 72, "reps": 10 },
+            { "weight": 72, "reps": 10 },
+            { "weight": 72, "reps": 11 }
+        ],
+        "Leg Curl": [
+            { "weight": 54, "reps": 10 },
+            { "weight": 54, "reps": 8 },
+            { "weight": 54, "reps": 6 }
+        ]
+    }
+}

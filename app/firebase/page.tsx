@@ -31,34 +31,53 @@ const FirebaseTest = (props: any) => {
     const [editRoutine, setEditRoutine] = useState<string>('');
     const [editWorkout, setEditWorkout] = useState<string>('');
 
-    // 전체 읽어오기
-    const readData = async () => {
-        getDocs(collection(db, 'workoutlogforoverload')).then((snapshot) => {
-            console.log(snapshot.docs);
-        });
+    // 문서(루틴) 읽어오기 ✅
+    const readDocumentNames = async () => {
+        try {
+            const docRef = collection(db, 'workout-log');
+            const querySnapshot = await getDocs(docRef);
+
+            const documentNames: any = [];
+            querySnapshot.forEach((doc) => {
+                documentNames.push(doc.id);
+            });
+        } catch (error) {
+            console.error('문서를 읽어오는 중 오류 발생:', error);
+        }
     };
 
-    // 무게 수정
-    const handleEditWeight = async (e: any, workoutName: string, index: number) => {
+    // 필드(운동) 읽어오기 ✅
+    const readDocumentField = async () => {
+        try {
+            const docRef = doc(db, 'workout-log', '가슴');
+            const docSnapshot = await getDoc(docRef);
+
+            if (docSnapshot.exists()) {
+                const data = docSnapshot.data();
+            } else {
+                console.error(`필드가 존재하지 않습니다.`);
+            }
+        } catch (error) {
+            console.error('문서를 읽어오는 중 오류 발생:', error);
+        }
+    };
+
+    // 무게 수정 ✅
+    // 예시로 Index 0-0만 수정하도록 설정
+    const handleEditWeight = async (e: any, workoutName: string) => {
         if (e.key === 'Enter') {
             try {
-                const docRef = doc(db, 'workoutlogforoverload', createRoutine);
+                const docRef = doc(db, 'workout-log', createRoutine);
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
                     const data = docSnap.data();
 
-                    if (data[workoutName] && data[workoutName][index]) {
-                        data[workoutName][index].weight = [editedWeight];
+                    data[createRoutine][0][workoutName][0].weight = editedWeight;
 
-                        await updateDoc(docRef, data);
-                        console.log(
-                            '⭐edit weight⭐:',
-                            `${createRoutine}-${workoutName}-${index}번 세트`
-                        );
-                    } else {
-                        console.error('운동 또는 세트가 존재하지 않습니다.');
-                    }
+                    await updateDoc(docRef, data);
+
+                    console.log('⭐edit weight⭐:', `${createRoutine}-0번 운동-0번 세트`);
                 } else {
                     console.error('문서(=Routine)가 존재하지 않습니다.');
                 }
@@ -68,27 +87,22 @@ const FirebaseTest = (props: any) => {
         }
     };
 
-    // 횟수 수정
-    const handleEditReps = async (e: any, workoutName: string, index: number) => {
+    // 횟수 수정 ✅
+    // 예시로 Index 0-0만 수정하도록 설정
+    const handleEditReps = async (e: any, workoutName: string) => {
         if (e.key === 'Enter') {
             try {
-                const docRef = doc(db, 'workoutlogforoverload', createRoutine);
+                const docRef = doc(db, 'workout-log', createRoutine);
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
                     const data = docSnap.data();
 
-                    if (data[workoutName] && data[workoutName][index]) {
-                        data[workoutName][index].reps = [editedReps];
+                    data[createRoutine][0][workoutName][0].reps = editedReps;
 
-                        await updateDoc(docRef, data);
-                        console.log(
-                            '⭐edit reps⭐:',
-                            `${createRoutine}-${workoutName}-${index}번 세트`
-                        );
-                    } else {
-                        console.error('운동 또는 세트가 존재하지 않습니다.');
-                    }
+                    await updateDoc(docRef, data);
+
+                    console.log('⭐edit reps⭐:', `${createRoutine}-0번 운동-0번 세트`);
                 } else {
                     console.error('문서(=Routine)가 존재하지 않습니다.');
                 }
@@ -98,11 +112,11 @@ const FirebaseTest = (props: any) => {
         }
     };
 
-    // 루틴 추가
+    // 루틴 추가 ✅
     const handleCreateRoutine = (e: any) => {
         if (e.key === 'Enter') {
-            const docRef = doc(db, 'workoutlogforoverload', createRoutine);
-            setDoc(docRef, {})
+            const docRef = doc(db, 'workout-log', createRoutine);
+            setDoc(docRef, { [createRoutine]: [] })
                 .then(() => {
                     console.log('⭐create routine⭐:', createRoutine);
                 })
@@ -112,26 +126,29 @@ const FirebaseTest = (props: any) => {
         }
     };
 
-    // 운동 추가
+    // 운동 추가 ✅
     const handleCreateWorkout = async (e: any) => {
         if (e.key === 'Enter') {
             try {
-                const docRef = doc(db, 'workoutlogforoverload', createRoutine);
+                const docRef = doc(db, 'workout-log', createRoutine);
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
                     const data = docSnap.data();
 
-                    // 기존 데이터에 새로운 key:value 쌍 추가
-                    data[createWorkout] = [
-                        {
-                            weight: [weight],
-                            reps: [reps],
-                        },
-                    ];
+                    const newWorkout = {
+                        [createWorkout]: [
+                            {
+                                weight: weight,
+                                reps: reps,
+                            },
+                        ],
+                    };
 
-                    // Firestore 문서 업데이트
+                    data[createRoutine].push(newWorkout);
+
                     await updateDoc(docRef, data);
+
                     console.log('⭐create workout⭐:', createWorkout);
                 } else {
                     console.error('문서가 존재하지 않습니다.');
@@ -142,36 +159,37 @@ const FirebaseTest = (props: any) => {
         }
     };
 
-    // 세트 추가
-    const handleCreateSet = async (workoutName: string) => {
+    // 세트 추가 ✅
+    const handleCreateSet = async (workoutIndex: number, workoutName: string) => {
         try {
-            const docRef = doc(db, 'workoutlogforoverload', createRoutine);
+            const docRef = doc(db, 'workout-log', createRoutine);
             const docSnap = await getDoc(docRef);
 
             if (docSnap.exists()) {
                 const data = docSnap.data();
 
                 const newSet = {
-                    weight: [weight],
-                    reps: [reps],
+                    weight: weight,
+                    reps: reps,
                 };
 
-                data[workoutName].push(newSet);
+                data[createRoutine][workoutIndex][workoutName].push(newSet);
 
                 await updateDoc(docRef, data);
+
                 console.log('⭐create set⭐:', `${createRoutine}/${workoutName}`);
             } else {
-                console.error('문서(=Routine)가 존재하지 않습니다.');
+                console.error('문서(Routine)가 존재하지 않습니다.');
             }
         } catch (error) {
             console.error(error);
         }
     };
 
-    // 루틴 삭제
+    // 루틴 삭제 ✅
     const handleDeleteRoutine = (e: any) => {
         if (e.key === 'Enter') {
-            const docRef = doc(db, 'workoutlogforoverload', deleteRoutine);
+            const docRef = doc(db, 'workout-log', deleteRoutine);
             deleteDoc(docRef)
                 .then(() => {
                     console.log('❌delete routine❌:', deleteRoutine);
@@ -182,36 +200,55 @@ const FirebaseTest = (props: any) => {
         }
     };
 
-    // 운동 삭제
-    const handleDeleteWorkout = (e: any, workoutName: string) => {
+    // 운동 삭제 ✅
+    const handleDeleteWorkout = async (e: any, workoutIndex: number, workoutName: string) => {
         if (e.key === 'Enter') {
-            const docRef = doc(db, 'workoutlogforoverload', deleteRoutine);
-            updateDoc(docRef, {
-                [workoutName]: deleteField(),
-            })
-                .then(() => {
-                    console.log(`❌delete workout❌: ${deleteRoutine}/${workoutName}`);
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
+            try {
+                const docRef = doc(db, 'workout-log', createRoutine);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+
+                    const updatedWorkouts = data[createRoutine].filter(
+                        (workout: any) => !workout.hasOwnProperty(workoutName)
+                    );
+
+                    data[createRoutine] = updatedWorkouts;
+
+                    await updateDoc(docRef, data);
+
+                    console.log(`❌delete workout❌: ${createRoutine}/${workoutName}`);
+                } else {
+                    console.error('문서가 존재하지 않습니다.');
+                }
+            } catch (error) {
+                console.error(error);
+            }
         }
     };
 
-    // 루틴 수정
+    // 루틴 수정 ✅
     const handleEditRoutine = async (e: any) => {
         if (e.key === 'Enter') {
             try {
-                const docRefOld = doc(db, 'workoutlogforoverload', createRoutine);
-                const docRefNew = doc(db, 'workoutlogforoverload', editRoutine);
+                const docRefOld = doc(db, 'workout-log', createRoutine);
+                const docRefNew = doc(db, 'workout-log', editRoutine);
                 const docSnap = await getDoc(docRefOld);
 
                 if (docSnap.exists()) {
                     const data = docSnap.data();
 
                     await setDoc(docRefNew, data);
-
                     await deleteDoc(docRefOld);
+
+                    data[editRoutine] = data[createRoutine];
+
+                    await updateDoc(docRefNew, data);
+
+                    await updateDoc(docRefNew, {
+                        [createRoutine]: deleteField(),
+                    });
 
                     console.log('✏️edit routine✏️:', `${createRoutine} -> ${editRoutine}`);
                 } else {
@@ -223,32 +260,26 @@ const FirebaseTest = (props: any) => {
         }
     };
 
-    // 운동 수정
+    // 운동 수정 ✅
+    // 예시로 Index 0만 수정하도록 설정
     const handleEditWorkout = async (e: any) => {
         if (e.key === 'Enter') {
             try {
-                const docRef = doc(db, 'workoutlogforoverload', createRoutine);
+                const docRef = doc(db, 'workout-log', createRoutine);
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    console.log(data);
-                    console.log(data[createWorkout]);
-                    if (data[createWorkout]) {
-                        data[editWorkout] = data[createWorkout];
 
-                        await updateDoc(docRef, data);
+                    data[createRoutine].splice(0, 1, {
+                        [editWorkout]: data[createRoutine][0][createWorkout],
+                    });
 
-                        await updateDoc(docRef, {
-                            [createWorkout]: deleteField(),
-                        });
+                    await updateDoc(docRef, data);
 
-                        console.log(
-                            `✏️ Edit workout name ✏️: ${createRoutine}/${createWorkout} -> ${createRoutine}/${editWorkout}`
-                        );
-                    } else {
-                        console.error('운동이 존재하지 않습니다.');
-                    }
+                    console.log(
+                        `✏️ Edit workout name ✏️: ${createRoutine}/${createWorkout} -> ${createRoutine}/${editWorkout}`
+                    );
                 } else {
                     console.error('문서가 존재하지 않습니다.');
                 }
@@ -258,20 +289,24 @@ const FirebaseTest = (props: any) => {
         }
     };
 
-    // 세트 삭제
-    const handleDeleteSet = async (workoutName: string, index: number) => {
+    // 세트 삭제 ✅
+    // 예시로 index 0-1만 삭제하도록 설정
+    const handleDeleteSet = async (workoutIndex: number, workoutName: string, setIndex: number) => {
         try {
-            const docRef = doc(db, 'workoutlogforoverload', createRoutine);
+            const docRef = doc(db, 'workout-log', createRoutine);
             const docSnap = await getDoc(docRef);
 
             if (docSnap.exists()) {
                 const data = docSnap.data();
 
-                data[workoutName].splice(index, 1);
+                data[createRoutine][workoutIndex][workoutName].splice(setIndex, 1);
 
                 await updateDoc(docRef, data);
 
-                console.log('❌delete set❌:', `${createRoutine}-${workoutName}-${index}번 세트`);
+                console.log(
+                    '❌delete set❌:',
+                    `${createRoutine}-${workoutName}-${setIndex}번 세트`
+                );
             } else {
                 console.error('문서(=Routine)가 존재하지 않습니다.');
             }
@@ -280,7 +315,8 @@ const FirebaseTest = (props: any) => {
         }
     };
 
-    readData();
+    readDocumentNames();
+    readDocumentField();
 
     return (
         <div
@@ -326,17 +362,17 @@ const FirebaseTest = (props: any) => {
                 0번 인덱스 요소 무게, 횟수 수정
                 <input
                     type="text"
-                    value={editedWeight}
+                    defaultValue={editedWeight}
                     placeholder="editedWeight"
                     onChange={(e) => setEditedWeight(Number(e.target.value))}
-                    onKeyDown={(e) => handleEditWeight(e, createWorkout, 0)}
+                    onKeyDown={(e) => handleEditWeight(e, createWorkout)}
                 />
                 <input
                     type="text"
-                    value={editedReps}
+                    defaultValue={editedReps}
                     placeholder="editedReps"
                     onChange={(e) => setEditedReps(Number(e.target.value))}
-                    onKeyDown={(e) => handleEditReps(e, createWorkout, 0)}
+                    onKeyDown={(e) => handleEditReps(e, createWorkout)}
                 />
             </div>
             <input
@@ -365,7 +401,7 @@ const FirebaseTest = (props: any) => {
                 value={deleteWorkout}
                 placeholder="deleteWorkout"
                 onChange={(e) => setDeleteWorkout(e.target.value)}
-                onKeyDown={(e) => handleDeleteWorkout(e, deleteWorkout)}
+                onKeyDown={(e) => handleDeleteWorkout(e, 0, deleteWorkout)}
             />
             <input
                 type="text"
@@ -384,14 +420,17 @@ const FirebaseTest = (props: any) => {
             <button
                 type="button"
                 placeholder="Add Set"
-                onClick={() => handleCreateSet(createWorkout)}
+                onClick={() => handleCreateSet(0, createWorkout)}
+                style={{
+                    margin: '10px',
+                }}
             >
                 Add SET
             </button>
             <button
                 type="button"
                 placeholder="Delete Set"
-                onClick={() => handleDeleteSet(createWorkout, 0)}
+                onClick={() => handleDeleteSet(0, createWorkout, 1)}
             >
                 Delete SET
             </button>

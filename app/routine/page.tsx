@@ -10,6 +10,19 @@ import Spinner from '@/assets/Spinner.svg';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import {
+    collection,
+    doc,
+    setDoc,
+    getDoc,
+    getDocs,
+    updateDoc,
+    deleteDoc,
+    deleteField,
+} from 'firebase/firestore';
+import { db } from '@/api/firebase';
+
 import '@/styles/routine-page.css';
 
 const Routine = () => {
@@ -35,6 +48,23 @@ const Routine = () => {
     const [selectedRoutine, setSelectedRoutine] = useState<string | null>(null);
     const [editedRoutine, setEditedRoutine] = useState<string>('');
 
+    // 문서(루틴) 읽어오기
+    const readDocumentNames = async () => {
+        try {
+            const docRef = collection(db, 'workout-log');
+            const querySnapshot = await getDocs(docRef);
+
+            const documentNames: any = [];
+            querySnapshot.forEach((doc) => {
+                documentNames.push(doc.id);
+            });
+
+            setRoutineList(documentNames);
+        } catch (error) {
+            console.error('문서를 읽어오는 중 오류 발생:', error);
+        }
+    };
+
     // 루틴을 생성하는 함수
     const handleKeyPress = (e: any) => {
         if (e.key === 'Enter') {
@@ -42,40 +72,77 @@ const Routine = () => {
                 alert('같은 이름이 이미 존재합니다 😢');
                 return;
             }
-
-            setRoutineList([...routineList, routine]);
+            const docRef = doc(db, 'workout-log', routine);
+            setDoc(docRef, { [routine]: [] })
+                .then(() => {
+                    console.log('⭐create routine⭐:', routine);
+                    readDocumentNames();
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
             setRoutine('');
             setCreateRoutineInput(false);
         }
     };
 
     // 루틴 이름을 수정하는 함수
-    const handleEditRoutine = (e: any, routineName: string) => {
+    const handleEditRoutine = async (e: any, routineName: string) => {
         if (e.key === 'Enter') {
             if (routineList.includes(editedRoutine)) {
                 alert('같은 이름이 이미 존재합니다 😢');
                 return;
             }
-            const updatedRoutineList = [...routineList];
-            const indexToEdit = updatedRoutineList.indexOf(routineName);
 
-            if (indexToEdit !== -1 && editedRoutine) {
-                updatedRoutineList[indexToEdit] = editedRoutine;
-                setRoutineList(updatedRoutineList);
-                setRoutineNameEditState(false);
+            try {
+                const docRefOld = doc(db, 'workout-log', routineName);
+                const docRefNew = doc(db, 'workout-log', editedRoutine);
+                const docSnap = await getDoc(docRefOld);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+
+                    await setDoc(docRefNew, data);
+                    await deleteDoc(docRefOld);
+
+                    data[editedRoutine] = data[routineName];
+
+                    await updateDoc(docRefNew, data);
+
+                    await updateDoc(docRefNew, {
+                        [routineName]: deleteField(),
+                    });
+                    console.log('✏️edit routine✏️:', `${routineName} -> ${editedRoutine}`);
+                } else {
+                    console.error('수정할 루틴이 존재하지 않습니다.');
+                }
+            } catch (error) {
+                console.error(error);
             }
+
+            setRoutineNameEditState(false);
         }
     };
 
     // 루틴을 삭제하는 함수
     const handleRoutineDelete = (routineName: string) => {
-        const updatedRoutineList = routineList.filter((item) => item !== routineName);
-        setRoutineList(updatedRoutineList);
+        const docRef = doc(db, 'workout-log', routineName);
+        deleteDoc(docRef)
+            .then(() => {
+                console.log('❌delete routine❌:', routineName);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     };
 
     useEffect(() => {
         setClientIsAccepted(recoilIsAccepted);
     }, [recoilIsAccepted]);
+
+    useEffect(() => {
+        readDocumentNames();
+    });
 
     return isAccepted ? (
         <div className="routinePage">

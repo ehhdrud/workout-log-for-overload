@@ -157,13 +157,15 @@
 .createRoutineInputFeild {
     width: 300px;
     padding: 10px 0px;
-    border-radius: 30px;
+    border-style: none;
+    border: 3px solid black;
+    border-bottom: 10px solid black;
+    border-radius: 20px;
     font-family: VCR_OSD_MONO;
     font-size: 22px;
     font-weight: bold;
     color: black;
     background-color: blue;
-    border-style: outset;
 }
 
 .routineInputFeild {

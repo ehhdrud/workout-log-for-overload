@@ -33,6 +33,7 @@
 }
 
 .subTitle {
+    height: 32px;
     font-family: VCR_OSD_MONO;
     font-weight: 400;
     font-size: 22px;
@@ -46,10 +47,12 @@
 .editOrDelteContainer {
     display: flex;
     justify-content: space-between;
+    align-items: flex-end;
     position: absolute;
-    top: 9px;
+    top: 0px;
     right: 10px;
     width: 105px;
+    height: 42px;
 }
 
 .routineEditBtn {

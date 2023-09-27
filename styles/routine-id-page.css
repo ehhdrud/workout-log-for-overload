@@ -43,6 +43,8 @@
 
 .routineName {
     max-width: 250px;
+    height: 32px;
+    font-size: 22px;
     padding: 5px 20px;
     margin: 0px;
     background-color: #000025;

@@ -115,6 +115,7 @@ const Log = (props: any) => {
 
                     await updateDoc(docRef, data);
 
+                    readDocumentField();
                     console.log('⭐create workout⭐:', workout);
                 } else {
                     console.error('문서가 존재하지 않습니다.');

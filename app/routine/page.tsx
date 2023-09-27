@@ -198,8 +198,8 @@ const Routine = () => {
                     )}
                 </div>
                 <div className="routineItems">
-                    {routineList.map((item, index) => (
-                        <div className="routineItemContainer">
+                    {routineList.map((item) => (
+                        <div key={item} className="routineItemContainer">
                             <div className="routineItem">
                                 {routineNameEditState && item === selectedRoutine ? (
                                     <input

@@ -77,7 +77,6 @@ const Log = (props: any) => {
             if (docSnapshot.exists()) {
                 const data = docSnapshot.data();
                 setWorkoutData(Object.values(data)[0]);
-                console.log('workoutData:', workoutData);
             } else {
                 console.error(`필드가 존재하지 않습니다.`);
             }
@@ -116,7 +115,6 @@ const Log = (props: any) => {
 
                     await updateDoc(docRef, data);
 
-                    readDocumentField();
                     console.log('⭐create workout⭐:', workout);
                 } else {
                     console.error('문서가 존재하지 않습니다.');
@@ -404,17 +402,17 @@ const Log = (props: any) => {
                 <h2 className="routineName">📌 {decodeURIComponent(props.params.id)}</h2>
                 <div className="logDataContainer">
                     {workoutData.map((item, index) => (
-                        <table className="workoutTable">
+                        <table key={String(Object.keys(item))} className="workoutTable">
                             <caption className="workoutTableCaption">
                                 {deleteState && selectedWorkout === String(Object.keys(item)) && (
-                                    <button
+                                    <div
                                         className="deleteBtn"
                                         onClick={() =>
                                             handleWorkoutDelete(String(Object.keys(item)))
                                         }
                                     >
                                         X
-                                    </button>
+                                    </div>
                                 )}
                                 {workoutNameEditState &&
                                 selectedWorkout === String(Object.keys(item)) ? (
@@ -454,7 +452,10 @@ const Log = (props: any) => {
                             </thead>
                             <tbody className="tableBody">
                                 {Object.values(item)[0].map((subItem, subIndex) => (
-                                    <tr className="tableRow" key={subIndex}>
+                                    <tr
+                                        key={`${String(Object.keys(item))}의 세트`}
+                                        className="tableRow"
+                                    >
                                         {deleteState &&
                                             selectedWorkout === String(Object.keys(item)) && (
                                                 <button

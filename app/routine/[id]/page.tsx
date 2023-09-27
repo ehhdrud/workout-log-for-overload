@@ -4,6 +4,18 @@ import { useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { isAcceptedAtom } from '@/recoil/atoms';
 
+import {
+    collection,
+    doc,
+    setDoc,
+    getDoc,
+    getDocs,
+    updateDoc,
+    deleteDoc,
+    deleteField,
+} from 'firebase/firestore';
+import { db } from '@/api/firebase';
+
 import Image from 'next/image';
 import Spinner from '@/assets/Spinner.svg';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
@@ -20,6 +32,9 @@ interface Workout {
 }
 
 const Log = (props: any) => {
+    // docId(루틴 이름) 저장
+    const docId = decodeURIComponent(props.params.id);
+
     // 시크릿 코드 유지를 위한 State
     const [isAccepted, setClientIsAccepted] = useState<string | boolean>('');
     const recoilIsAccepted = useRecoilValue(isAcceptedAtom);
@@ -53,8 +68,26 @@ const Log = (props: any) => {
         useState<boolean>(false);
     const [workoutInputOverlayState, setWorkoutInputOverlayState] = useState<boolean>(false);
 
-    // 운동을 추가하는 함수
-    const handleAddWorkout = (e: any) => {
+    // 운동을 불러오는 함수 ✅
+    const readDocumentField = async () => {
+        try {
+            const docRef = doc(db, 'workout-log', docId);
+            const docSnapshot = await getDoc(docRef);
+
+            if (docSnapshot.exists()) {
+                const data = docSnapshot.data();
+                setWorkoutData(Object.values(data)[0]);
+                console.log('workoutData:', workoutData);
+            } else {
+                console.error(`필드가 존재하지 않습니다.`);
+            }
+        } catch (error) {
+            console.error('문서를 읽어오는 중 오류 발생:', error);
+        }
+    };
+
+    // 운동을 추가하는 함수 ✅
+    const handleAddWorkout = async (e: any) => {
         if (e.key === 'Enter') {
             // workout 이름이 이미 존재하는지 확인
             const workoutExists = workoutData.some((item) => item.hasOwnProperty(workout));
@@ -63,10 +96,34 @@ const Log = (props: any) => {
                 return;
             }
 
-            const workoutDataObj = {
-                [workout]: [{ weight: null, reps: null }],
-            };
-            setWorkoutData([...workoutData, workoutDataObj]);
+            try {
+                const docRef = doc(db, 'workout-log', docId);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+
+                    const newWorkout = {
+                        [workout]: [
+                            {
+                                weight: weight,
+                                reps: reps,
+                            },
+                        ],
+                    };
+
+                    data[docId].push(newWorkout);
+
+                    await updateDoc(docRef, data);
+
+                    readDocumentField();
+                    console.log('⭐create workout⭐:', workout);
+                } else {
+                    console.error('문서가 존재하지 않습니다.');
+                }
+            } catch (error) {
+                console.error(error);
+            }
 
             setWorkout('');
             setWeight(null);
@@ -76,21 +133,37 @@ const Log = (props: any) => {
         }
     };
 
-    // 세트를 추가하는 함수
-    const addSet = (workoutName: string) => {
+    // 세트를 추가하는 함수 ✅
+    const addSet = async (workoutIndex: number, workoutName: string) => {
         setDeleteState(false);
-        const updatedWorkoutData = [...workoutData];
-        const workoutArray = updatedWorkoutData.find((workout) =>
-            workout.hasOwnProperty(workoutName)
-        );
-        if (workoutArray) {
-            workoutArray[workoutName].push({ weight: null, reps: null });
+        try {
+            const docRef = doc(db, 'workout-log', docId);
+            const docSnap = await getDoc(docRef);
 
-            setWorkoutData(updatedWorkoutData);
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+
+                const newSet = {
+                    weight: weight,
+                    reps: reps,
+                };
+
+                data[docId][workoutIndex][workoutName].push(newSet);
+
+                await updateDoc(docRef, data);
+
+                readDocumentField();
+                console.log('⭐create set⭐:', `${docId}/${workoutName}`);
+            } else {
+                console.error('문서(Routine)가 존재하지 않습니다.');
+            }
+        } catch (error) {
+            console.error(error);
         }
+        // }
     };
 
-    // 무게 셀을 클릭할 때 실행되는 함수
+    // 무게 셀을 클릭할 때 실행되는 함수 ✅
     const handleWeightDataCellClick = (
         index: number,
         workoutName: string,
@@ -104,7 +177,7 @@ const Log = (props: any) => {
         setTableRowInputOverlayState(true);
     };
 
-    // 횟수 셀을 클릭할 때 실행되는 함수
+    // 횟수 셀을 클릭할 때 실행되는 함수 ✅
     const handleRepsDataCellClick = (index: number, workoutName: string, currentReps: number) => {
         setDeleteState(false);
         setRepsEditIndex(index);
@@ -114,69 +187,126 @@ const Log = (props: any) => {
         setTableRowInputOverlayState(true);
     };
 
-    // 무게를 수정하는 함수
-    const handleEditWeight = (e: any, workoutName: string, setIndex: number) => {
+    // 무게를 수정하는 함수 ✅
+    const handleEditWeight = async (
+        e: any,
+        workoutIndex: number,
+        workoutName: string,
+        setIndex: number
+    ) => {
         if (e.key === 'Enter') {
-            const updatedWorkoutData = [...workoutData];
+            try {
+                const docRef = doc(db, 'workout-log', docId);
+                const docSnap = await getDoc(docRef);
 
-            const workoutArray = updatedWorkoutData.find((workout) =>
-                workout.hasOwnProperty(workoutName)
-            );
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
 
-            if (workoutArray) {
-                workoutArray[workoutName][setIndex].weight = weight;
+                    data[docId][workoutIndex][workoutName][setIndex].weight = weight;
 
-                setWorkoutData(updatedWorkoutData);
+                    await updateDoc(docRef, data);
+
+                    readDocumentField();
+                    console.log('⭐edit weight:', `${docId}-0번 운동-0번 세트`);
+                } else {
+                    console.error('문서(=Routine)가 존재하지 않습니다.');
+                }
+            } catch (error) {
+                console.error(error);
             }
+
             setSelectedWorkout('');
             setWeightEditIndex(null);
             setTableRowInputOverlayState(false);
         }
     };
 
-    // 횟수를 수정하는 함수
-    const handleEditReps = (e: any, workoutName: string, setIndex: number) => {
+    // 횟수를 수정하는 함수 ✅
+    const handleEditReps = async (
+        e: any,
+        workoutIndex: number,
+        workoutName: string,
+        setIndex: number
+    ) => {
         if (e.key === 'Enter') {
-            const updatedWorkoutData = [...workoutData];
+            try {
+                const docRef = doc(db, 'workout-log', docId);
+                const docSnap = await getDoc(docRef);
 
-            const workoutArray = updatedWorkoutData.find((workout) =>
-                workout.hasOwnProperty(workoutName)
-            );
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
 
-            if (workoutArray) {
-                workoutArray[workoutName][setIndex].reps = reps;
+                    data[docId][workoutIndex][workoutName][setIndex].reps = reps;
 
-                setWorkoutData(updatedWorkoutData);
+                    await updateDoc(docRef, data);
+
+                    readDocumentField();
+                    console.log('⭐edit reps:', `${docId}-0번 운동-0번 세트`);
+                } else {
+                    console.error('문서(=Routine)가 존재하지 않습니다.');
+                }
+            } catch (error) {
+                console.error(error);
             }
+
             setSelectedWorkout('');
             setRepsEditIndex(null);
             setTableRowInputOverlayState(false);
         }
     };
 
-    // 운동을 삭제하는 함수
-    const handleWorkoutDelete = (workoutName: string) => {
-        const updatedWorkoutData = workoutData.filter((item) => !item[workoutName]);
-        setWorkoutData(updatedWorkoutData);
-    };
+    // 운동을 삭제하는 함수 ✅
+    const handleWorkoutDelete = async (workoutName: string) => {
+        try {
+            const docRef = doc(db, 'workout-log', docId);
+            const docSnap = await getDoc(docRef);
 
-    // 세트를 삭제하는 함수
-    const handleSetDelete = (workoutName: string, setIndex: number) => {
-        const updatedWorkoutData = [...workoutData];
+            if (docSnap.exists()) {
+                const data = docSnap.data();
 
-        const workoutArray = updatedWorkoutData.find((workout) =>
-            workout.hasOwnProperty(workoutName)
-        );
+                const updatedWorkouts = data[docId].filter(
+                    (workout: any) => !workout.hasOwnProperty(workoutName)
+                );
 
-        if (workoutArray) {
-            workoutArray[workoutName].splice(setIndex, 1);
+                data[docId] = updatedWorkouts;
 
-            setWorkoutData(updatedWorkoutData);
+                await updateDoc(docRef, data);
+
+                readDocumentField();
+                console.log(`❌delete workout❌: ${docId}/${workoutName}`);
+            } else {
+                console.error('문서가 존재하지 않습니다.');
+            }
+        } catch (error) {
+            console.error(error);
         }
     };
 
-    // 운동 이름(캡션)을 수정하는 함수
-    const handleEditWorkoutName = (e: any, workoutName: string) => {
+    // 세트를 삭제하는 함수 ✅
+    const handleSetDelete = async (workoutIndex: number, workoutName: string, setIndex: number) => {
+        try {
+            const docRef = doc(db, 'workout-log', docId);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+
+                data[docId][workoutIndex][workoutName].splice(setIndex, 1);
+
+                await updateDoc(docRef, data);
+
+                readDocumentField();
+                console.log('❌delete set❌:', `${docId}-${workoutName}-${setIndex}번 세트`);
+            } else {
+                console.error('문서(=Routine)가 존재하지 않습니다.');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    // 운동 이름(캡션)을 수정하는 함수 ✅
+    const handleEditWorkoutName = async (e: any, workoutIndex: number, workoutName: string) => {
         if (e.key === 'Enter') {
             const workoutExists = workoutData.some((item) => item.hasOwnProperty(selectedWorkout));
             if (workoutExists) {
@@ -184,38 +314,53 @@ const Log = (props: any) => {
                 return;
             }
 
-            const updatedWorkoutData = [...workoutData];
+            try {
+                const docRef = doc(db, 'workout-log', docId);
+                const docSnap = await getDoc(docRef);
 
-            const workoutArray = updatedWorkoutData.find((workout) =>
-                workout.hasOwnProperty(workoutName)
-            );
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
 
-            if (workoutArray && editedWorkoutName) {
-                workoutArray[editedWorkoutName] = workoutArray[workoutName];
-                delete workoutArray[workoutName];
+                    if (editedWorkoutName) {
+                        data[docId].splice(workoutIndex, 1, {
+                            [editedWorkoutName]: data[docId][workoutIndex][workoutName],
+                        });
 
-                setWorkoutData(updatedWorkoutData);
-                setWorkoutNameEditState(false);
-                setEditedWorkoutName(null);
-                setTableCaptionInputOverlayState(false);
+                        await updateDoc(docRef, data);
+
+                        readDocumentField();
+                        console.log(
+                            `✏️ Edit workout name ✏️: ${docId}/${workoutName} -> ${docId}/${editedWorkoutName}`
+                        );
+                    } else {
+                        alert('이름을 입력해주세요');
+                    }
+                } else {
+                    console.error('문서가 존재하지 않습니다.');
+                }
+            } catch (error) {
+                console.error(error);
             }
+            setWorkoutNameEditState(false);
+            setEditedWorkoutName(null);
+            setTableCaptionInputOverlayState(false);
         }
     };
 
-    // TableRow-Input의 수정 상태를 초기화하는 함수
+    // TableRow-Input의 수정 상태를 초기화하는 함수 ✅
     const resetTableRowInputEditState = () => {
         setWeightEditIndex(null);
         setRepsEditIndex(null);
         setTableRowInputOverlayState(false);
     };
 
-    // Table-Caption의 수정 상태를 초기화하는 함수
+    // Table-Caption의 수정 상태를 초기화하는 함수 ✅
     const resetTableCaptionInputEditState = () => {
         setWorkoutNameEditState(false);
         setTableCaptionInputOverlayState(false);
     };
 
-    // WorkoutInput의 활성화 상태를 초기화하는 함수
+    // WorkoutInput의 활성화 상태를 초기화하는 함수 ✅
     const resetWorkoutInputEditState = () => {
         setCreateWorkoutInput(false);
         setWorkoutInputOverlayState(false);
@@ -224,6 +369,10 @@ const Log = (props: any) => {
     useEffect(() => {
         setClientIsAccepted(recoilIsAccepted);
     }, [recoilIsAccepted]);
+
+    useEffect(() => {
+        readDocumentField();
+    }, []);
 
     return isAccepted ? (
         <div className="logPage">
@@ -275,7 +424,11 @@ const Log = (props: any) => {
                                         defaultValue={Object.keys(item)}
                                         onChange={(e) => setEditedWorkoutName(e.target.value)}
                                         onKeyDown={(e) =>
-                                            handleEditWorkoutName(e, String(Object.keys(item)))
+                                            handleEditWorkoutName(
+                                                e,
+                                                index,
+                                                String(Object.keys(item))
+                                            )
                                         }
                                     />
                                 ) : (
@@ -308,6 +461,7 @@ const Log = (props: any) => {
                                                     className="deleteBtn"
                                                     onClick={() =>
                                                         handleSetDelete(
+                                                            index,
                                                             String(Object.keys(item)),
                                                             subIndex
                                                         )
@@ -332,6 +486,7 @@ const Log = (props: any) => {
                                                     onKeyDown={(e) =>
                                                         handleEditWeight(
                                                             e,
+                                                            index,
                                                             String(Object.keys(item)),
                                                             subIndex
                                                         )
@@ -367,6 +522,7 @@ const Log = (props: any) => {
                                                     onKeyDown={(e) =>
                                                         handleEditReps(
                                                             e,
+                                                            index,
                                                             String(Object.keys(item)),
                                                             subIndex
                                                         )
@@ -395,7 +551,7 @@ const Log = (props: any) => {
                             <button
                                 className="addSetBtn"
                                 type="button"
-                                onClick={() => addSet(String(Object.keys(item)))}
+                                onClick={() => addSet(index, String(Object.keys(item)))}
                             >
                                 + Add SET
                             </button>

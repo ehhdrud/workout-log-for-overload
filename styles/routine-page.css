@@ -149,9 +149,12 @@
 }
 
 .createField {
-    width: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: absolute;
     bottom: 3vh;
+    width: 300px;
 }
 
 .createRoutineInputFeild {
@@ -170,10 +173,11 @@
 
 .routineInputFeild {
     position: relative;
-    width: 255px;
+    width: 250px;
     padding: 10px 20px;
-    border-radius: 30px;
+    border-radius: 20px;
     font-size: 20px;
     outline: none;
+    border: none;
     z-index: 4;
 }

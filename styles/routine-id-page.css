@@ -202,7 +202,7 @@
 
 .createInputFeild {
     position: absolute;
-    bottom: 50px;
+    bottom: 3vh;
     width: 300px;
     padding: 10px 0px;
     border-style: none;
@@ -218,11 +218,12 @@
 
 .workoutInput {
     position: absolute;
-    bottom: 50px;
-    border-radius: 30px;
-    padding: 10px 30px;
-    font-size: 20px;
+    bottom: 3vh;
     width: 250px;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 20px;
     outline: none;
+    border: none;
     z-index: 6;
 }

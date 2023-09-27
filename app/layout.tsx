@@ -12,7 +12,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <html>
             <body>
                 <h1>
-                    <p>workout log</p>
+                    <p>WORKOUT LOG</p>
                     <div>
                         💪OVERLOAD<p>💪</p>
                     </div>

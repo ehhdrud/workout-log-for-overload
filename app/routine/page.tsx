@@ -245,7 +245,7 @@ const Routine = () => {
                         className="createRoutineInputFeild"
                         onClick={() => setCreateRoutineInput(true)}
                     >
-                        create new routine
+                        Create new routine
                     </button>
                 ) : (
                     <input

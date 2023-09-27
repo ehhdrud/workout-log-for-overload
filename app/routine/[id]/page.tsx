@@ -590,7 +590,7 @@ const Log = (props: any) => {
                         setWorkoutInputOverlayState(true);
                     }}
                 >
-                    create new routine
+                    Create new workout
                 </button>
             ) : (
                 <input

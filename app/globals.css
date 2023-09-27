@@ -1,3 +1,7 @@
+* {
+    font-family: Inter;
+}
+
 body {
     display: flex;
     flex-direction: column;
@@ -19,8 +23,8 @@ h1 {
 h1 p {
     margin: 0;
     line-height: 1.2;
-    font-family: consolas;
-    font-weight: bold;
+    font-family: VCR_OSD_MONO;
+    color: #ffffd7;
 }
 
 h1 p:nth-child(1) {
@@ -31,8 +35,7 @@ h1 div {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #ffff44;
-    font-family: Inter;
+    color: #fe3;
     font-size: 38px;
     margin: 0;
     line-height: 1.2;
@@ -58,4 +61,11 @@ main {
 @font-face {
     font-family: VCR_OSD_MONO;
     src: url('../assets/VCR_OSD_MONO.ttf') format('truetype');
+}
+
+/* iOS only */
+@supports (-webkit-touch-callout: none) {
+    body {
+        min-height: -webkit-fill-available;
+    }
 }

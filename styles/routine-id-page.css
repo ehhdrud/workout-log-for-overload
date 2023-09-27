@@ -169,6 +169,7 @@
     border-style: none;
     border-radius: 15px;
     background-color: #ffff88;
+    color: black;
 }
 
 .createDeleteBtn {
@@ -180,6 +181,7 @@
     border-style: none;
     border-radius: 10px;
     background-color: #ff5000;
+    color: black;
 }
 
 .closeDeleteBtn {
@@ -207,7 +209,9 @@
     font-family: VCR_OSD_MONO;
     font-size: 22px;
     font-weight: bold;
+    color: black;
     background-color: blue;
+    border-style: outset;
 }
 
 .workoutInput {

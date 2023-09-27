@@ -407,7 +407,7 @@ const Log = (props: any) => {
                             <caption className="workoutTableCaption">
                                 {deleteState && selectedWorkout === String(Object.keys(item)) && (
                                     <div
-                                        className="deleteBtn"
+                                        className="workoutDeleteBtn"
                                         onClick={() =>
                                             handleWorkoutDelete(String(Object.keys(item)))
                                         }
@@ -459,8 +459,8 @@ const Log = (props: any) => {
                                     >
                                         {deleteState &&
                                             selectedWorkout === String(Object.keys(item)) && (
-                                                <button
-                                                    className="deleteBtn"
+                                                <div
+                                                    className="setDeleteBtn"
                                                     onClick={() =>
                                                         handleSetDelete(
                                                             index,
@@ -470,7 +470,7 @@ const Log = (props: any) => {
                                                     }
                                                 >
                                                     X
-                                                </button>
+                                                </div>
                                             )}
                                         <td className="tableDataCell">
                                             <p className="workoutTableInfo">{subIndex + 1}</p>

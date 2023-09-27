@@ -5,12 +5,6 @@ import Link from 'next/link';
 import { useRecoilValue } from 'recoil';
 import { isAcceptedAtom } from '@/recoil/atoms';
 
-import Image from 'next/image';
-import Spinner from '@/assets/Spinner.svg';
-import { faPen } from '@fortawesome/free-solid-svg-icons';
-import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import {
     collection,
     doc,
@@ -23,6 +17,11 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/api/firebase';
 
+import Image from 'next/image';
+import Spinner from '@/assets/Spinner.svg';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@/styles/routine-page.css';
 
 const Routine = () => {

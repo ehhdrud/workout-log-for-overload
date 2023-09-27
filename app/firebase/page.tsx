@@ -201,7 +201,7 @@ const FirebaseTest = (props: any) => {
     };
 
     // 운동 삭제 ✅
-    const handleDeleteWorkout = async (e: any, workoutIndex: number, workoutName: string) => {
+    const handleDeleteWorkout = async (e: any, workoutName: string) => {
         if (e.key === 'Enter') {
             try {
                 const docRef = doc(db, 'workout-log', createRoutine);
@@ -401,7 +401,7 @@ const FirebaseTest = (props: any) => {
                 value={deleteWorkout}
                 placeholder="deleteWorkout"
                 onChange={(e) => setDeleteWorkout(e.target.value)}
-                onKeyDown={(e) => handleDeleteWorkout(e, 0, deleteWorkout)}
+                onKeyDown={(e) => handleDeleteWorkout(e, deleteWorkout)}
             />
             <input
                 type="text"

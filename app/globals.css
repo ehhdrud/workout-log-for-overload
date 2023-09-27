@@ -14,24 +14,21 @@ body {
     color: white;
 }
 
-h1 {
+.mainTitle {
     position: absolute;
     top: 0;
     text-align: center;
 }
 
-h1 p {
+.titleTop {
     margin: 0;
     line-height: 1.2;
     font-family: VCR_OSD_MONO;
     color: #ffffd7;
-}
-
-h1 p:nth-child(1) {
     font-size: 38px;
 }
 
-h1 div {
+.titleBottom {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -43,15 +40,12 @@ h1 div {
     font-family: VCR_OSD_MONO;
 }
 
-h1 div p {
+.rightEmoji {
+    margin: 0;
+    line-height: 1.2;
+    font-family: VCR_OSD_MONO;
+    color: #ffffd7;
     transform: scaleX(-1);
-}
-
-main {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
 }
 
 @font-face {

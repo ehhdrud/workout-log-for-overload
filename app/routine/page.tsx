@@ -91,6 +91,9 @@ const Routine = () => {
             if (routineList.includes(editedRoutine)) {
                 alert('같은 이름이 이미 존재합니다 😢');
                 return;
+            } else if (!editedRoutine) {
+                alert('이름을 입력해주세요 😢');
+                return;
             }
 
             try {
@@ -111,6 +114,8 @@ const Routine = () => {
                     await updateDoc(docRefNew, {
                         [routineName]: deleteField(),
                     });
+
+                    readDocumentNames();
                     console.log('✏️edit routine✏️:', `${routineName} -> ${editedRoutine}`);
                 } else {
                     console.error('수정할 루틴이 존재하지 않습니다.');
@@ -128,6 +133,7 @@ const Routine = () => {
         const docRef = doc(db, 'workout-log', routineName);
         deleteDoc(docRef)
             .then(() => {
+                readDocumentNames();
                 console.log('❌delete routine❌:', routineName);
             })
             .catch((error) => {
@@ -141,7 +147,7 @@ const Routine = () => {
 
     useEffect(() => {
         readDocumentNames();
-    });
+    }, []);
 
     return isAccepted ? (
         <div className="routinePage">

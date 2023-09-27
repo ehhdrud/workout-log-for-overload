@@ -4,16 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { isAcceptedAtom } from '@/recoil/atoms';
 
-import {
-    collection,
-    doc,
-    setDoc,
-    getDoc,
-    getDocs,
-    updateDoc,
-    deleteDoc,
-    deleteField,
-} from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/api/firebase';
 
 import Image from 'next/image';
@@ -68,7 +59,7 @@ const Log = (props: any) => {
         useState<boolean>(false);
     const [workoutInputOverlayState, setWorkoutInputOverlayState] = useState<boolean>(false);
 
-    // 운동을 불러오는 함수 ✅
+    // 운동을 불러오는 함수
     const readDocumentField = async () => {
         try {
             const docRef = doc(db, 'workout-log', docId);
@@ -85,10 +76,9 @@ const Log = (props: any) => {
         }
     };
 
-    // 운동을 추가하는 함수 ✅
+    // 운동을 추가하는 함수
     const handleAddWorkout = async (e: any) => {
         if (e.key === 'Enter') {
-            // workout 이름이 이미 존재하는지 확인
             const workoutExists = workoutData.some((item) => item.hasOwnProperty(workout));
             if (workoutExists) {
                 alert('같은 이름이 이미 존재합니다 😢');
@@ -132,7 +122,7 @@ const Log = (props: any) => {
         }
     };
 
-    // 세트를 추가하는 함수 ✅
+    // 세트를 추가하는 함수
     const addSet = async (workoutIndex: number, workoutName: string) => {
         setDeleteState(false);
         try {
@@ -162,7 +152,7 @@ const Log = (props: any) => {
         // }
     };
 
-    // 무게 셀을 클릭할 때 실행되는 함수 ✅
+    // 무게 셀을 클릭할 때 실행되는 함수
     const handleWeightDataCellClick = (
         index: number,
         workoutName: string,
@@ -176,7 +166,7 @@ const Log = (props: any) => {
         setTableRowInputOverlayState(true);
     };
 
-    // 횟수 셀을 클릭할 때 실행되는 함수 ✅
+    // 횟수 셀을 클릭할 때 실행되는 함수
     const handleRepsDataCellClick = (index: number, workoutName: string, currentReps: number) => {
         setDeleteState(false);
         setRepsEditIndex(index);
@@ -186,7 +176,7 @@ const Log = (props: any) => {
         setTableRowInputOverlayState(true);
     };
 
-    // 무게를 수정하는 함수 ✅
+    // 무게를 수정하는 함수
     const handleEditWeight = async (
         e: any,
         workoutIndex: number,
@@ -220,7 +210,7 @@ const Log = (props: any) => {
         }
     };
 
-    // 횟수를 수정하는 함수 ✅
+    // 횟수를 수정하는 함수
     const handleEditReps = async (
         e: any,
         workoutIndex: number,
@@ -254,7 +244,7 @@ const Log = (props: any) => {
         }
     };
 
-    // 운동을 삭제하는 함수 ✅
+    // 운동을 삭제하는 함수
     const handleWorkoutDelete = async (workoutName: string) => {
         try {
             const docRef = doc(db, 'workout-log', docId);
@@ -281,7 +271,7 @@ const Log = (props: any) => {
         }
     };
 
-    // 세트를 삭제하는 함수 ✅
+    // 세트를 삭제하는 함수
     const handleSetDelete = async (workoutIndex: number, workoutName: string, setIndex: number) => {
         try {
             const docRef = doc(db, 'workout-log', docId);
@@ -304,12 +294,19 @@ const Log = (props: any) => {
         }
     };
 
-    // 운동 이름(캡션)을 수정하는 함수 ✅
+    // 운동 이름(캡션)을 수정하는 함수
     const handleEditWorkoutName = async (e: any, workoutIndex: number, workoutName: string) => {
         if (e.key === 'Enter') {
-            const workoutExists = workoutData.some((item) => item.hasOwnProperty(selectedWorkout));
-            if (workoutExists) {
-                alert('같은 이름이 이미 존재합니다 😢');
+            if (editedWorkoutName) {
+                const workoutExists = workoutData.some((item) =>
+                    item.hasOwnProperty(editedWorkoutName)
+                );
+                if (workoutExists) {
+                    alert('같은 이름이 이미 존재합니다 😢');
+                    return;
+                }
+            } else if (!editedWorkoutName) {
+                alert('이름을 입력해주세요 😢');
                 return;
             }
 
@@ -346,20 +343,20 @@ const Log = (props: any) => {
         }
     };
 
-    // TableRow-Input의 수정 상태를 초기화하는 함수 ✅
+    // TableRow-Input의 수정 상태를 초기화하는 함수
     const resetTableRowInputEditState = () => {
         setWeightEditIndex(null);
         setRepsEditIndex(null);
         setTableRowInputOverlayState(false);
     };
 
-    // Table-Caption의 수정 상태를 초기화하는 함수 ✅
+    // Table-Caption의 수정 상태를 초기화하는 함수
     const resetTableCaptionInputEditState = () => {
         setWorkoutNameEditState(false);
         setTableCaptionInputOverlayState(false);
     };
 
-    // WorkoutInput의 활성화 상태를 초기화하는 함수 ✅
+    // WorkoutInput의 활성화 상태를 초기화하는 함수
     const resetWorkoutInputEditState = () => {
         setCreateWorkoutInput(false);
         setWorkoutInputOverlayState(false);

@@ -11,12 +11,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html>
             <body>
-                <h1>
-                    <p>WORKOUT LOG</p>
-                    <div>
-                        💪OVERLOAD<p>💪</p>
+                <h1 className="mainTitle">
+                    <p className="titleTop">WORKOUT LOG</p>
+
+                    <div className="titleBottom">
+                        💪OVERLOAD<p className="rightEmoji">💪</p>
                     </div>
                 </h1>
+
                 <Recoil>{children}</Recoil>
             </body>
         </html>

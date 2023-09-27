@@ -80,7 +80,6 @@
     width: 50px;
     height: 30px;
     font-size: 14px;
-    font-weight: bold;
     background-color: #88a;
     border-radius: 15px 15px 0 0;
 }
@@ -100,19 +99,20 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: 2vh 0;
 }
 
 .routineItemInput {
     position: relative;
-    width: 100%;
-    border-radius: 15px;
+    width: 150px;
+    height: 23.5px;
+    border-radius: 10px;
     font-size: 22px;
     z-index: 2;
 }
 
 .routineItem {
     max-width: 180px;
-    margin: 2vh 0;
     padding: 5px 10px;
     text-decoration: none;
     color: white;

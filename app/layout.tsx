@@ -1,6 +1,8 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import Recoil from './components/Recoil';
+import Image from 'next/image';
+import backgroundImg from '@/assets/Cloudy.svg';
 
 export const metadata: Metadata = {
     title: 'workout log for overload',
@@ -11,6 +13,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html>
             <body>
+                <Image
+                    className="backgroundImage"
+                    src={backgroundImg}
+                    alt="img"
+                    fill
+                    objectFit="cover"
+                    style={{ zIndex: -1 }}
+                />
                 <h1 className="mainTitle">
                     <p className="titleTop">WORKOUT LOG</p>
 

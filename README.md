@@ -1,5 +1,5 @@
 # Workout Log for Overload
-> 점진적 과부하를 위한 운동 일지
+> 점진적 과부하를 위한 운동 일지  
 > secret code: 'ehhhdrud'
 
 ## 기본 기능 

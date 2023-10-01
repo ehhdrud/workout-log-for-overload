@@ -1,11 +1,11 @@
-.logPage {
+.log-page {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
 }
 
-.tableRowInputOverlay {
+.table-row-input-overlay {
     position: fixed;
     top: 0;
     width: 100vw;
@@ -14,7 +14,7 @@
     z-index: 1;
 }
 
-.tableCaptionInputOverlay {
+.table-caption-input-overlay {
     position: fixed;
     top: 0;
     width: 100vw;
@@ -23,7 +23,7 @@
     z-index: 3;
 }
 
-.workoutInputOverlay {
+.workout-input-overlay {
     position: fixed;
     top: 0;
     width: 100vw;
@@ -32,7 +32,7 @@
     z-index: 5;
 }
 
-.logContainer {
+.log-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -41,7 +41,7 @@
     top: 20vh;
 }
 
-.routineName {
+.routine-name {
     max-width: 250px;
     height: 32px;
     font-size: 22px;
@@ -55,7 +55,7 @@
     text-overflow: ellipsis;
 }
 
-.logDataContainer {
+.log-data-container {
     display: flex;
     flex-direction: column;
     width: 300px;
@@ -67,13 +67,13 @@
     overflow: auto;
 }
 
-.workoutTable {
+.workout-table {
     position: relative;
     color: black;
     margin: 25px 0px;
 }
 
-.workoutTableCaption {
+.workout-table-caption {
     position: relative;
     left: 2px;
     width: max-content;
@@ -87,7 +87,7 @@
     border-radius: 10px 10px 0 00;
 }
 
-.workoutTableCaptionInput {
+.workout-table-caption-input {
     position: relative;
     width: 75px;
     border-style: none;
@@ -95,14 +95,14 @@
     z-index: 4;
 }
 
-.workoutNameTxt {
+.workout-name-txt {
     margin: 0px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.workoutTableInfo {
+.workout-table-info {
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -110,20 +110,20 @@
     height: 10px;
 }
 
-.workoutTableInput {
+.workout-table-input {
     width: 75px;
     position: relative;
     border: 2px solid #666;
     z-index: 2;
 }
 
-.tableBody {
+.table-body {
     display: flex;
     flex-direction: column;
     border-radius: 15px;
 }
 
-.tableRow {
+.table-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -131,12 +131,12 @@
     background-color: white;
 }
 
-.tableHeaderCell {
+.table-header-cell {
     display: flex;
     width: 90px;
 }
 
-.workoutDeleteBtn {
+.workout-delete-btn {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -155,7 +155,7 @@
     background-color: red;
 }
 
-.setDeleteBtn {
+.set-delete-btn {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -172,7 +172,7 @@
     border: 2px solid black;
     background-color: red;
 }
-.tableDataCell {
+.table-data-cell {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -180,7 +180,7 @@
     height: 20px;
 }
 
-.addSetBtn {
+.add-set-btn {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -198,7 +198,7 @@
     color: black;
 }
 
-.createDeleteBtn {
+.create-delete-btn {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -214,7 +214,7 @@
     color: black;
 }
 
-.closeDeleteBtn {
+.close-delete-btn {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -230,12 +230,12 @@
     color: black;
 }
 
-.doneTxt {
+.done-txt {
     font-weight: bold;
     margin: 0;
 }
 
-.createInputFeild {
+.create-input-feild {
     position: absolute;
     bottom: 3vh;
     width: 300px;
@@ -251,7 +251,7 @@
     background-color: blue;
 }
 
-.workoutInput {
+.workout-input {
     position: absolute;
     bottom: 3vh;
     width: 250px;

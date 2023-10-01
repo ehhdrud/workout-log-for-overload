@@ -1,11 +1,11 @@
-.routinePage {
+.routine-page {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.editInputOverlay {
+.edit-input-overlay {
     position: fixed;
     top: 0;
     width: 100vw;
@@ -14,7 +14,7 @@
     z-index: 1;
 }
 
-.createInputOverlay {
+.create-input-overlay {
     position: fixed;
     top: 0;
     width: 100vw;
@@ -23,7 +23,7 @@
     z-index: 3;
 }
 
-.routineContainer {
+.routine-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -32,7 +32,7 @@
     top: 20vh;
 }
 
-.subTitle {
+.sub-title {
     height: 32px;
     font-family: VCR_OSD_MONO;
     font-weight: 400;
@@ -44,7 +44,7 @@
     border-radius: 15px 15px 0 0;
 }
 
-.editOrDelteContainer {
+.edit-or-delete-container {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
@@ -55,7 +55,7 @@
     height: 42px;
 }
 
-.routineEditBtn {
+.routine-edit-btn {
     width: 50px;
     height: 30px;
     border-style: none;
@@ -64,7 +64,7 @@
     border-radius: 15px 15px 0 0;
 }
 
-.routineDeleteBtn {
+.routine-delete-btn {
     width: 50px;
     height: 30px;
     color: #d7d7d7;
@@ -73,7 +73,7 @@
     border-radius: 15px 15px 0 0;
 }
 
-.doneText {
+.done-text {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -85,7 +85,7 @@
     border-radius: 15px 15px 0 0;
 }
 
-.routineItems {
+.routine-items {
     display: flex;
     flex-direction: column;
     width: 240px;
@@ -96,14 +96,14 @@
     overflow: auto;
 }
 
-.routineItemContainer {
+.routine-item-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 2vh 0;
 }
 
-.routineItemInput {
+.routine-item-input {
     position: relative;
     width: 150px;
     height: 23.5px;
@@ -112,7 +112,7 @@
     z-index: 2;
 }
 
-.routineItem {
+.routine-item {
     max-width: 180px;
     padding: 5px 10px;
     text-decoration: none;
@@ -127,7 +127,7 @@
     text-overflow: ellipsis;
 }
 
-.editButton {
+.edit-button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -139,7 +139,7 @@
     background-color: transparent;
 }
 
-.deleteButton {
+.delete-button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -152,7 +152,7 @@
     background-color: red;
 }
 
-.createField {
+.create-field {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -161,7 +161,7 @@
     width: 300px;
 }
 
-.createRoutineInputFeild {
+.create-routine-input-feild {
     width: 300px;
     padding: 10px 0px;
     border-style: none;
@@ -175,7 +175,7 @@
     background-color: blue;
 }
 
-.routineInputFeild {
+.routine-input-feild {
     position: relative;
     width: 250px;
     padding: 10px 20px;

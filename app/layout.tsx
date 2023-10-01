@@ -14,18 +14,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <html>
             <body>
                 <Image
-                    className="backgroundImage"
                     src={backgroundImg}
                     alt="img"
                     fill
                     objectFit="cover"
                     style={{ zIndex: -1 }}
                 />
-                <h1 className="mainTitle">
-                    <p className="titleTop">WORKOUT LOG</p>
+                <h1 className="main-title">
+                    <p className="title-top">WORKOUT LOG</p>
 
-                    <div className="titleBottom">
-                        💪OVERLOAD<p className="rightEmoji">💪</p>
+                    <div className="title-bottom">
+                        💪OVERLOAD<p className="right-emoji">💪</p>
                     </div>
                 </h1>
 

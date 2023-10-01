@@ -150,10 +150,10 @@ const Routine = () => {
     }, []);
 
     return isAccepted ? (
-        <div className="routinePage">
+        <div className="routine-page">
             {routineNameEditState && (
                 <div
-                    className="editInputOverlay"
+                    className="edit-input-overlay"
                     onClick={() => {
                         setRoutineNameEditState(false);
                     }}
@@ -161,22 +161,22 @@ const Routine = () => {
             )}
             {createRoutineInput && (
                 <div
-                    className="createInputOverlay"
+                    className="create-input-overlay"
                     onClick={() => {
                         setCreateRoutineInput(false);
                     }}
                 />
             )}
-            <div className="routineContainer">
-                <h2 className="subTitle">🔥ROUTINE🔥</h2>
-                <div className="editOrDelteContainer">
+            <div className="routine-container">
+                <h2 className="sub-title">🔥ROUTINE🔥</h2>
+                <div className="edit-or-delete-container">
                     {createEditBtn ? (
-                        <div className="doneText" onClick={() => setCreateEditBtn(false)}>
+                        <div className="done-text" onClick={() => setCreateEditBtn(false)}>
                             Done
                         </div>
                     ) : (
                         <button
-                            className="routineEditBtn"
+                            className="routine-edit-btn"
                             type="button"
                             onClick={() => {
                                 setCreateEditBtn(true);
@@ -187,12 +187,12 @@ const Routine = () => {
                         </button>
                     )}
                     {createDeleteBtn ? (
-                        <div className="doneText" onClick={() => setCreateDeleteBtn(false)}>
+                        <div className="done-text" onClick={() => setCreateDeleteBtn(false)}>
                             Done
                         </div>
                     ) : (
                         <button
-                            className="routineDeleteBtn"
+                            className="routine-delete-btn"
                             type="button"
                             onClick={() => {
                                 setCreateDeleteBtn(true);
@@ -203,27 +203,27 @@ const Routine = () => {
                         </button>
                     )}
                 </div>
-                <div className="routineItems">
+                <div className="routine-items">
                     {routineList.map((item) => (
-                        <div key={item} className="routineItemContainer">
-                            <div className="routineItem">
+                        <div key={item} className="routine-item-container">
+                            <div className="routine-item">
                                 {routineNameEditState && item === selectedRoutine ? (
                                     <input
-                                        className="routineItemInput"
+                                        className="routine-item-input"
                                         type="text"
                                         defaultValue={item}
                                         onChange={(e) => setEditedRoutine(e.target.value)}
                                         onKeyDown={(e) => handleEditRoutine(e, item)}
                                     />
                                 ) : (
-                                    <Link className="routineItem" href={`/routine/${item}`}>
+                                    <Link className="routine-item" href={`/routine/${item}`}>
                                         📌 {item}
                                     </Link>
                                 )}
                             </div>
                             {createEditBtn && (
                                 <button
-                                    className="editButton"
+                                    className="edit-button"
                                     onClick={() => {
                                         setRoutineNameEditState(true);
                                         setSelectedRoutine(item);
@@ -234,7 +234,7 @@ const Routine = () => {
                             )}
                             {createDeleteBtn && (
                                 <button
-                                    className="deleteButton"
+                                    className="delete-button"
                                     onClick={() => handleRoutineDelete(item)}
                                 >
                                     X
@@ -245,17 +245,17 @@ const Routine = () => {
                 </div>
             </div>
 
-            <div className="createField">
+            <div className="create-field">
                 {!createRoutineInput ? (
                     <button
-                        className="createRoutineInputFeild"
+                        className="create-routine-input-feild"
                         onClick={() => setCreateRoutineInput(true)}
                     >
                         Create new routine
                     </button>
                 ) : (
                     <input
-                        className="routineInputFeild"
+                        className="routine-input-feild"
                         type="text"
                         value={routine}
                         placeholder="routine name..."

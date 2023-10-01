@@ -371,10 +371,10 @@ const Log = (props: any) => {
     }, []);
 
     return isAccepted ? (
-        <div className="logPage">
+        <div className="log-page">
             {tableRowInputOverlayState && (
                 <div
-                    className="tableRowInputOverlay"
+                    className="table-row-input-overlay"
                     onClick={() => {
                         resetTableRowInputEditState();
                     }}
@@ -382,7 +382,7 @@ const Log = (props: any) => {
             )}
             {tableCaptionInputOverlayState && (
                 <div
-                    className="tableCaptionInputOverlay"
+                    className="table-caption-input-overlay"
                     onClick={() => {
                         resetTableCaptionInputEditState();
                     }}
@@ -390,21 +390,21 @@ const Log = (props: any) => {
             )}
             {workoutInputOverlayState && (
                 <div
-                    className="workoutInputOverlay"
+                    className="workout-input-overlay"
                     onClick={() => {
                         resetWorkoutInputEditState();
                     }}
                 />
             )}
-            <div className="logContainer">
-                <h2 className="routineName">📌 {decodeURIComponent(props.params.id)}</h2>
-                <div className="logDataContainer">
+            <div className="log-container">
+                <h2 className="routine-name">📌 {decodeURIComponent(props.params.id)}</h2>
+                <div className="log-data-container">
                     {workoutData.map((item, index) => (
-                        <table key={String(Object.keys(item))} className="workoutTable">
-                            <caption className="workoutTableCaption">
+                        <table key={String(Object.keys(item))} className="workout-table">
+                            <caption className="workout-table-caption">
                                 {deleteState && selectedWorkout === String(Object.keys(item)) && (
                                     <div
-                                        className="workoutDeleteBtn"
+                                        className="workout-delete-btn"
                                         onClick={() =>
                                             handleWorkoutDelete(String(Object.keys(item)))
                                         }
@@ -415,7 +415,7 @@ const Log = (props: any) => {
                                 {workoutNameEditState &&
                                 selectedWorkout === String(Object.keys(item)) ? (
                                     <input
-                                        className="workoutTableCaptionInput"
+                                        className="workout-table-caption-input"
                                         type="text"
                                         defaultValue={Object.keys(item)}
                                         onChange={(e) => setEditedWorkoutName(e.target.value)}
@@ -429,7 +429,7 @@ const Log = (props: any) => {
                                     />
                                 ) : (
                                     <p
-                                        className="workoutNameTxt"
+                                        className="workout-name-txt"
                                         onClick={() => {
                                             setDeleteState(false);
                                             setWorkoutNameEditState(true);
@@ -441,23 +441,23 @@ const Log = (props: any) => {
                                     </p>
                                 )}
                             </caption>
-                            <thead className="tableHeader">
-                                <tr className="tableRow">
-                                    <th className="tableHeaderCell">SET</th>
-                                    <th className="tableHeaderCell">KG</th>
-                                    <th className="tableHeaderCell">REPS</th>
+                            <thead className="table-header">
+                                <tr className="table-row">
+                                    <th className="table-header-cell">SET</th>
+                                    <th className="table-header-cell">KG</th>
+                                    <th className="table-header-cell">REPS</th>
                                 </tr>
                             </thead>
-                            <tbody className="tableBody">
+                            <tbody className="table-body">
                                 {Object.values(item)[0].map((subItem, subIndex) => (
                                     <tr
                                         key={`${String(Object.keys(item))}의 세트`}
-                                        className="tableRow"
+                                        className="table-row"
                                     >
                                         {deleteState &&
                                             selectedWorkout === String(Object.keys(item)) && (
                                                 <div
-                                                    className="setDeleteBtn"
+                                                    className="set-delete-btn"
                                                     onClick={() =>
                                                         handleSetDelete(
                                                             index,
@@ -469,14 +469,14 @@ const Log = (props: any) => {
                                                     X
                                                 </div>
                                             )}
-                                        <td className="tableDataCell">
-                                            <p className="workoutTableInfo">{subIndex + 1}</p>
+                                        <td className="table-data-cell">
+                                            <p className="workout-table-info">{subIndex + 1}</p>
                                         </td>
-                                        <td className="tableDataCell">
+                                        <td className="table-data-cell">
                                             {weightEditIndex === subIndex &&
                                             selectedWorkout === String(Object.keys(item)) ? (
                                                 <input
-                                                    className="workoutTableInput weightInput"
+                                                    className="workout-table-input"
                                                     type="text"
                                                     defaultValue={subItem.weight || undefined}
                                                     onChange={(e) =>
@@ -495,7 +495,7 @@ const Log = (props: any) => {
                                                 />
                                             ) : (
                                                 <p
-                                                    className="workoutTableInfo weightInfo"
+                                                    className="workout-table-info"
                                                     onClick={() =>
                                                         handleWeightDataCellClick(
                                                             subIndex,
@@ -508,11 +508,11 @@ const Log = (props: any) => {
                                                 </p>
                                             )}
                                         </td>
-                                        <td className="tableDataCell">
+                                        <td className="table-data-cell">
                                             {repsEditIndex === subIndex &&
                                             selectedWorkout === String(Object.keys(item)) ? (
                                                 <input
-                                                    className="workoutTableInput repsInput"
+                                                    className="workout-table-input"
                                                     type="text"
                                                     defaultValue={subItem.reps || undefined}
                                                     onChange={(e) =>
@@ -531,7 +531,7 @@ const Log = (props: any) => {
                                                 />
                                             ) : (
                                                 <p
-                                                    className="workoutTableInfo repsInfo"
+                                                    className="workout-table-info"
                                                     onClick={() =>
                                                         handleRepsDataCellClick(
                                                             subIndex,
@@ -548,7 +548,7 @@ const Log = (props: any) => {
                                 ))}
                             </tbody>
                             <button
-                                className="addSetBtn"
+                                className="add-set-btn"
                                 type="button"
                                 onClick={() => addSet(index, String(Object.keys(item)))}
                             >
@@ -556,17 +556,17 @@ const Log = (props: any) => {
                             </button>
                             {deleteState && selectedWorkout === String(Object.keys(item)) ? (
                                 <button
-                                    className="closeDeleteBtn"
+                                    className="close-delete-btn"
                                     onClick={() => {
                                         setDeleteState(false);
                                         setSelectedWorkout('');
                                     }}
                                 >
-                                    <p className="doneTxt">Done</p>
+                                    <p className="done-txt">Done</p>
                                 </button>
                             ) : (
                                 <button
-                                    className="createDeleteBtn"
+                                    className="create-delete-btn"
                                     onClick={() => {
                                         setDeleteState(true);
                                         setSelectedWorkout(String(Object.keys(item)));
@@ -581,7 +581,7 @@ const Log = (props: any) => {
             </div>
             {!createWorkoutInput ? (
                 <button
-                    className="createInputFeild"
+                    className="create-input-feild"
                     onClick={() => {
                         setDeleteState(false);
                         setCreateWorkoutInput(true);
@@ -592,7 +592,7 @@ const Log = (props: any) => {
                 </button>
             ) : (
                 <input
-                    className="workoutInput"
+                    className="workout-input"
                     type="text"
                     value={workout}
                     placeholder="workout name"

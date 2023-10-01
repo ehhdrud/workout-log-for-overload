@@ -27,10 +27,10 @@ export default function Home() {
 
     return (
         <main>
-            <h2 className="guideText">Please enter the secret code.</h2>
+            <h2 className="guide-text">Please enter the secret code.</h2>
             <form className="myForm" onSubmit={handleFormSubmit}>
                 <input
-                    className="codeInput"
+                    className="code-input"
                     type="text"
                     placeholder="secret code..."
                     value={secretCode}

@@ -16,10 +16,16 @@ import '@/styles/routine-id-page.css';
 interface Set {
     weight: number | null;
     reps: number | null;
+    timer: number | null;
+}
+
+interface WorkoutData {
+    set: Set[];
+    restTime: number | null;
 }
 
 interface Workout {
-    [key: string]: Set[];
+    [key: string]: WorkoutData;
 }
 
 const Log = (props: any) => {
@@ -37,6 +43,7 @@ const Log = (props: any) => {
     const [workout, setWorkout] = useState<string>('');
     const [weight, setWeight] = useState<number | null>(null);
     const [reps, setReps] = useState<number | null>(null);
+    const [restTime, setRestTime] = useState<number | null>(null);
 
     // 운동,무게,횟수를 선택했을 때 필요한 State
     const [selectedWorkout, setSelectedWorkout] = useState<string>('');
@@ -93,12 +100,15 @@ const Log = (props: any) => {
                     const data = docSnap.data();
 
                     const newWorkout = {
-                        [workout]: [
-                            {
-                                weight: weight,
-                                reps: reps,
-                            },
-                        ],
+                        [workout]: {
+                            restTime: restTime,
+                            set: [
+                                {
+                                    weight: weight,
+                                    reps: reps,
+                                },
+                            ],
+                        },
                     };
 
                     data[docId].push(newWorkout);
@@ -137,7 +147,7 @@ const Log = (props: any) => {
                     reps: reps,
                 };
 
-                data[docId][workoutIndex][workoutName].push(newSet);
+                data[docId][workoutIndex][workoutName].set.push(newSet);
 
                 await updateDoc(docRef, data);
 
@@ -191,7 +201,7 @@ const Log = (props: any) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
 
-                    data[docId][workoutIndex][workoutName][setIndex].weight = weight;
+                    data[docId][workoutIndex][workoutName].set[setIndex].weight = weight;
 
                     await updateDoc(docRef, data);
 
@@ -203,7 +213,7 @@ const Log = (props: any) => {
             } catch (error) {
                 console.error(error);
             }
-
+            setWeight(null);
             setSelectedWorkout('');
             setWeightEditIndex(null);
             setTableRowInputOverlayState(false);
@@ -225,7 +235,7 @@ const Log = (props: any) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
 
-                    data[docId][workoutIndex][workoutName][setIndex].reps = reps;
+                    data[docId][workoutIndex][workoutName].set[setIndex].reps = reps;
 
                     await updateDoc(docRef, data);
 
@@ -238,6 +248,7 @@ const Log = (props: any) => {
                 console.error(error);
             }
 
+            setReps(null);
             setSelectedWorkout('');
             setRepsEditIndex(null);
             setTableRowInputOverlayState(false);
@@ -280,7 +291,7 @@ const Log = (props: any) => {
             if (docSnap.exists()) {
                 const data = docSnap.data();
 
-                data[docId][workoutIndex][workoutName].splice(setIndex, 1);
+                data[docId][workoutIndex][workoutName].set.splice(setIndex, 1);
 
                 await updateDoc(docRef, data);
 
@@ -449,7 +460,7 @@ const Log = (props: any) => {
                                 </tr>
                             </thead>
                             <tbody className="table-body">
-                                {Object.values(item)[0].map((subItem, subIndex) => (
+                                {Object.values(item)[0].set.map((subItem, subIndex) => (
                                     <tr
                                         key={`${String(Object.keys(item))}의 세트`}
                                         className="table-row"

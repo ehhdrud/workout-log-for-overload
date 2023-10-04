@@ -296,6 +296,7 @@
     margin-left: 2px;
     background-color: #0000bb;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .rest-time-input {

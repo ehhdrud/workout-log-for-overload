@@ -47,7 +47,7 @@ const Timer = forwardRef((props: { restTime: number; workoutName: string }, ref:
         }
 
         return () => clearInterval(interval);
-    }, [isCounting, seconds]);
+    }, [isCounting, seconds, restTime]);
 
     useImperativeHandle(ref, () => ({
         editTimer,
@@ -66,5 +66,7 @@ const Timer = forwardRef((props: { restTime: number; workoutName: string }, ref:
         </div>
     );
 });
+
+Timer.displayName = 'Timer';
 
 export default Timer;

@@ -6,6 +6,7 @@
 .timer-on {
     margin: 0px;
     color: #bbb;
+    cursor: pointer;
 }
 
 .timer-off {

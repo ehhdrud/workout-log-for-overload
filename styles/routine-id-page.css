@@ -295,14 +295,14 @@
     border-radius: 5px;
     margin-left: 2px;
     background-color: #11d;
-    color: black;
-    font-size: 14px;
+    color: #ddd;
+    font-size: 13px;
     font-weight: bold;
     cursor: pointer;
 }
 
 .rest-time-input {
-    width: 78px;
+    width: 65px;
     height: 20px;
     padding-left: 5px;
     border-style: none;

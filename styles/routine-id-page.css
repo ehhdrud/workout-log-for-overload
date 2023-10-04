@@ -32,6 +32,15 @@
     z-index: 5;
 }
 
+.rest-time-input-overlay {
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 7;
+}
+
 .log-container {
     display: flex;
     flex-direction: column;
@@ -67,10 +76,14 @@
     overflow: auto;
 }
 
-.workout-table {
+.log-data {
     position: relative;
     color: black;
-    margin: 25px 0px;
+    margin: 20px 0px 30px;
+}
+
+.workout-table {
+    width: 300px;
 }
 
 .workout-table-caption {
@@ -261,4 +274,36 @@
     outline: none;
     border: none;
     z-index: 6;
+}
+
+.timer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    bottom: -25px;
+    height: 24px;
+    padding-right: 10px;
+    border-radius: 7.5px;
+    background-color: #000055;
+}
+
+.create-rest-time-input {
+    width: 75px;
+    height: 20px;
+    border-style: none;
+    border-radius: 5px;
+    margin-left: 2px;
+    background-color: #0000bb;
+    font-weight: bold;
+}
+
+.rest-time-input {
+    width: 68px;
+    height: 20px;
+    padding-left: 5px;
+    border-style: none;
+    border-radius: 5px;
+    margin-left: 2px;
+    z-index: 8;
 }

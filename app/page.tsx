@@ -4,6 +4,10 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useRecoilState } from 'recoil';
 import { isAcceptedAtom } from '@/recoil/atoms';
+
+import { faUnlock } from '@fortawesome/free-solid-svg-icons';
+import { faKey } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@/styles/page.css';
 
 export default function Home() {
@@ -31,13 +35,22 @@ export default function Home() {
             <form className="myForm" onSubmit={handleFormSubmit}>
                 <input
                     className="code-input"
-                    type="text"
+                    type="password"
                     placeholder="secret code..."
                     value={secretCode}
                     onChange={(e) => setSecretCode(e.target.value)}
                     autoFocus
                 />
             </form>
+            <div className="hint">
+                <div>
+                    <FontAwesomeIcon icon={faUnlock} fontSize="12px" color="#dd0" />
+                </div>
+                <div>
+                    <FontAwesomeIcon icon={faKey} fontSize="12px" color="#dd0" />
+                </div>
+                <span>"ehhdrud"</span>
+            </div>
         </main>
     );
 }

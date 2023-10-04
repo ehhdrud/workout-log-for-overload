@@ -1,6 +1,6 @@
 .timer-feild {
     margin-left: 15px;
-    font-weight: bold;
+    font-weight: 600;
 }
 
 .timer-on {
@@ -11,5 +11,5 @@
 
 .timer-off {
     margin: 0px;
-    color: #666;
+    color: #999;
 }

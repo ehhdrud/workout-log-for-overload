@@ -59,7 +59,7 @@
     width: 50px;
     height: 30px;
     border-style: none;
-    background-color: #000030;
+    background-color: #003;
     color: #d7d7d7;
     border-radius: 15px 15px 0 0;
 }
@@ -69,7 +69,7 @@
     height: 30px;
     color: #d7d7d7;
     border-style: none;
-    background-color: #000030;
+    background-color: #003;
     border-radius: 15px 15px 0 0;
 }
 
@@ -79,9 +79,10 @@
     align-items: center;
     width: 50px;
     height: 30px;
-    font-size: 14px;
+    color: #888;
+    font-size: 13px;
     font-weight: 600;
-    background-color: #88a;
+    background-color: #335;
     border-radius: 15px 15px 0 0;
 }
 
@@ -106,7 +107,9 @@
 .routine-item-input {
     position: relative;
     width: 150px;
-    height: 23.5px;
+    height: 29px;
+    padding: 0 10px;
+    border-style: none;
     border-radius: 10px;
     font-size: 22px;
     z-index: 2;

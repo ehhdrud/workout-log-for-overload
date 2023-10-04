@@ -49,7 +49,7 @@ export default function Home() {
                 <div>
                     <FontAwesomeIcon icon={faKey} fontSize="12px" color="#dd0" />
                 </div>
-                <span>"ehhdrud"</span>
+                <span>&ldquo;ehhdrud&rdquo;</span>
             </div>
         </main>
     );

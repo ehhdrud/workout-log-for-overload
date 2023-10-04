@@ -410,7 +410,7 @@ const Log = (props: any) => {
 
     useEffect(() => {
         readDocumentField();
-    }, []);
+    }, [readDocumentField]);
 
     return isAccepted ? (
         <div className="log-page">

@@ -16,3 +16,14 @@ main {
     width: 300px;
     outline: none;
 }
+
+.hint {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    color: #666;
+    margin-top: 5px;
+    font-size: 14px;
+    font-style: italic;
+}

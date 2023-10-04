@@ -1,0 +1,14 @@
+.timer-feild {
+    margin-left: 15px;
+    font-weight: bold;
+}
+
+.timer-on {
+    margin: 0px;
+    color: #bbb;
+}
+
+.timer-off {
+    margin: 0px;
+    color: #666;
+}

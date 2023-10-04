@@ -17,8 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     src={backgroundImg}
                     alt="img"
                     fill
-                    objectFit="cover"
-                    style={{ zIndex: -1 }}
+                    style={{ zIndex: -1, objectFit: 'cover' }}
                 />
                 <h1 className="main-title">
                     <p className="title-top">WORKOUT LOG</p>

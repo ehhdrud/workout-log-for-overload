@@ -449,7 +449,7 @@ const Log = (props: any) => {
             <div className="log-container">
                 <h2 className="routine-name">📌 {decodeURIComponent(props.params.id)}</h2>
                 <div className="log-data-container">
-                    {workoutData.map((item, index) => (
+                    {workoutData?.map((item, index) => (
                         <div key={String(Object.keys(item))} className="log-data">
                             <table className="workout-table">
                                 <caption className="workout-table-caption">

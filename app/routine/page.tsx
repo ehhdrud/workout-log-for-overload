@@ -183,7 +183,7 @@ const Routine = () => {
                                 setCreateDeleteBtn(false);
                             }}
                         >
-                            <FontAwesomeIcon icon={faPen} fontSize="16px" />
+                            <FontAwesomeIcon icon={faPen} fontSize="16px" color="#668" />
                         </button>
                     )}
                     {createDeleteBtn ? (
@@ -199,7 +199,7 @@ const Routine = () => {
                                 setCreateEditBtn(false);
                             }}
                         >
-                            <FontAwesomeIcon icon={faTrashCan} fontSize="16px" />
+                            <FontAwesomeIcon icon={faTrashCan} fontSize="16px" color="#668" />
                         </button>
                     )}
                 </div>
@@ -229,7 +229,7 @@ const Routine = () => {
                                         setSelectedRoutine(item);
                                     }}
                                 >
-                                    <FontAwesomeIcon icon={faPen} fontSize="16px" />
+                                    <FontAwesomeIcon icon={faPen} fontSize="16px" color="#668" />
                                 </button>
                             )}
                             {createDeleteBtn && (

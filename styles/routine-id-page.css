@@ -285,7 +285,7 @@
     height: 25px;
     padding-right: 10px;
     border-radius: 7.5px;
-    background-color: #005;
+    background-color: #006;
     border-right: 1px solid black;
     border-bottom: 3px solid black;
     border-left: 1px solid black;
@@ -297,12 +297,13 @@
     border-radius: 6px;
     padding: 0 10px;
     margin-left: 2px;
-    background-color: #007;
+    background-color: #008;
     color: #ccc;
     font-size: 14px;
     font-weight: 600;
     white-space: nowrap;
     cursor: pointer;
+    margin-top: 2px;
     border-right: 1px solid black;
     border-bottom: 3px solid black;
     border-left: 1px solid black;

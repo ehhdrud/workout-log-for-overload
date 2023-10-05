@@ -52,9 +52,9 @@
 
 .routine-name {
     max-width: 250px;
-    height: 32px;
-    font-size: 22px;
+    font-size: 24px;
     padding: 5px 20px;
+    border: 1px solid red;
     margin: 0px;
     background-color: #000025;
     border-bottom: 0;

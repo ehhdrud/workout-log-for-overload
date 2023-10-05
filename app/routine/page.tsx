@@ -168,41 +168,44 @@ const Routine = () => {
                 />
             )}
             <div className="routine-container">
-                <h2 className="sub-title">🔥ROUTINE🔥</h2>
-                <div className="edit-or-delete-container">
-                    {createEditBtn ? (
-                        <div className="done-text" onClick={() => setCreateEditBtn(false)}>
-                            Done
-                        </div>
-                    ) : (
-                        <button
-                            className="routine-edit-btn"
-                            type="button"
-                            onClick={() => {
-                                setCreateEditBtn(true);
-                                setCreateDeleteBtn(false);
-                            }}
-                        >
-                            <FontAwesomeIcon icon={faPen} fontSize="16px" color="#668" />
-                        </button>
-                    )}
-                    {createDeleteBtn ? (
-                        <div className="done-text" onClick={() => setCreateDeleteBtn(false)}>
-                            Done
-                        </div>
-                    ) : (
-                        <button
-                            className="routine-delete-btn"
-                            type="button"
-                            onClick={() => {
-                                setCreateDeleteBtn(true);
-                                setCreateEditBtn(false);
-                            }}
-                        >
-                            <FontAwesomeIcon icon={faTrashCan} fontSize="16px" color="#668" />
-                        </button>
-                    )}
+                <div className="routine-header">
+                    <h2 className="sub-title">ROUTINE</h2>
+                    <div className="edit-or-delete-container">
+                        {createEditBtn ? (
+                            <div className="done-text" onClick={() => setCreateEditBtn(false)}>
+                                Done
+                            </div>
+                        ) : (
+                            <button
+                                className="routine-edit-btn"
+                                type="button"
+                                onClick={() => {
+                                    setCreateEditBtn(true);
+                                    setCreateDeleteBtn(false);
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faPen} fontSize="16px" color="#668" />
+                            </button>
+                        )}
+                        {createDeleteBtn ? (
+                            <div className="done-text" onClick={() => setCreateDeleteBtn(false)}>
+                                Done
+                            </div>
+                        ) : (
+                            <button
+                                className="routine-delete-btn"
+                                type="button"
+                                onClick={() => {
+                                    setCreateDeleteBtn(true);
+                                    setCreateEditBtn(false);
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faTrashCan} fontSize="16px" color="#668" />
+                            </button>
+                        )}
+                    </div>
                 </div>
+
                 <div className="routine-items">
                     {routineList.map((item) => (
                         <div key={item} className="routine-item-container">
@@ -217,7 +220,7 @@ const Routine = () => {
                                     />
                                 ) : (
                                     <Link className="routine-item" href={`/routine/${item}`}>
-                                        📌 {item}
+                                        {item}
                                     </Link>
                                 )}
                             </div>

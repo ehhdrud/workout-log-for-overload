@@ -447,7 +447,7 @@ const Log = (props: any) => {
                 />
             )}
             <div className="log-container">
-                <h2 className="routine-name">📌 {decodeURIComponent(props.params.id)}</h2>
+                <h2 className="routine-name">{decodeURIComponent(props.params.id)}</h2>
                 <div className="log-data-container">
                     {workoutData?.map((item, index) => (
                         <div key={String(Object.keys(item))} className="log-data">
@@ -488,7 +488,7 @@ const Log = (props: any) => {
                                                 setWorkoutNameEditState(true);
                                             }}
                                         >
-                                            🏋️‍♀️ {Object.keys(item)}
+                                            {Object.keys(item)}
                                         </p>
                                     )}
                                 </caption>

@@ -54,7 +54,6 @@
     max-width: 250px;
     font-size: 24px;
     padding: 5px 20px;
-    border: 1px solid red;
     margin: 0px;
     background-color: #000025;
     border-bottom: 0;
@@ -198,7 +197,7 @@
     justify-content: center;
     align-items: center;
     position: absolute;
-    top: 5px;
+    top: 3px;
     right: 0px;
     width: 100px;
     height: 20px;
@@ -216,7 +215,7 @@
     justify-content: center;
     align-items: center;
     position: absolute;
-    top: 5px;
+    top: 3px;
     right: 105px;
     width: max-content;
     height: 20px;
@@ -232,7 +231,7 @@
     justify-content: center;
     align-items: center;
     position: absolute;
-    top: 5px;
+    top: 3px;
     right: 105px;
     width: max-content;
     height: 20px;

@@ -198,7 +198,7 @@
     justify-content: center;
     align-items: center;
     position: absolute;
-    top: 4px;
+    top: 5px;
     right: 0px;
     width: 100px;
     height: 20px;
@@ -216,7 +216,7 @@
     justify-content: center;
     align-items: center;
     position: absolute;
-    top: 4px;
+    top: 5px;
     right: 105px;
     width: max-content;
     height: 20px;
@@ -232,7 +232,7 @@
     justify-content: center;
     align-items: center;
     position: absolute;
-    top: 4px;
+    top: 5px;
     right: 105px;
     width: max-content;
     height: 20px;
@@ -286,14 +286,16 @@
     padding-right: 10px;
     border-radius: 7.5px;
     background-color: #005;
-    border-bottom: 2px solid black;
+    border-right: 1px solid black;
+    border-bottom: 3px solid black;
+    border-left: 1px solid black;
 }
 
 .create-rest-time-input {
-    width: 95px;
     height: 22px;
     border-style: none;
     border-radius: 6px;
+    padding: 0 10px;
     margin-left: 2px;
     background-color: #007;
     color: #ccc;
@@ -301,7 +303,9 @@
     font-weight: 600;
     white-space: nowrap;
     cursor: pointer;
-    border: 2px solid #33a;
+    border-right: 1px solid black;
+    border-bottom: 3px solid black;
+    border-left: 1px solid black;
 }
 
 .rest-time-input {

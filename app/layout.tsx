@@ -21,10 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 />
                 <h1 className="main-title">
                     <p className="title-top">WORKOUT LOG</p>
-
-                    <div className="title-bottom">
-                        💪OVERLOAD<p className="right-emoji">💪</p>
-                    </div>
+                    <div className="title-bottom">OVERLOAD</div>
                 </h1>
 
                 <Recoil>{children}</Recoil>

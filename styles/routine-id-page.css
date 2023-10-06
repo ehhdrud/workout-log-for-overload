@@ -65,7 +65,6 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-family: VCR_OSD_MONO;
 }
 
 .log-data-container {

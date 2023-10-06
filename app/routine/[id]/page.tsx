@@ -449,7 +449,7 @@ const Log = (props: any) => {
             )}
             <div className="log-container">
                 <h2 className="routine-name">
-                    <FontAwesomeIcon icon={faBolt} fontSize="18px" color="#dd0" />
+                    <FontAwesomeIcon icon={faBolt} fontSize="16px" color="#dd0" />
                     {decodeURIComponent(props.params.id)}
                 </h2>
                 <div className="log-data-container">

@@ -474,6 +474,7 @@ const Log = (props: any) => {
                                             className="workout-table-caption-input"
                                             type="text"
                                             defaultValue={Object.keys(item)}
+                                            autoFocus
                                             onChange={(e) => setEditedWorkoutName(e.target.value)}
                                             onKeyDown={(e) =>
                                                 handleEditWorkoutName(
@@ -536,6 +537,10 @@ const Log = (props: any) => {
                                                         className="workout-table-input"
                                                         type="text"
                                                         defaultValue={subItem.weight || undefined}
+                                                        placeholder={
+                                                            weight ? String(weight) : '? kg'
+                                                        }
+                                                        autoFocus
                                                         onChange={(e) =>
                                                             setWeight(Number(e.target.value))
                                                         }
@@ -547,10 +552,6 @@ const Log = (props: any) => {
                                                                 subIndex
                                                             )
                                                         }
-                                                        placeholder={
-                                                            weight ? String(weight) : '? kg'
-                                                        }
-                                                        autoFocus
                                                     />
                                                 ) : (
                                                     <p
@@ -574,6 +575,8 @@ const Log = (props: any) => {
                                                         className="workout-table-input"
                                                         type="text"
                                                         defaultValue={subItem.reps || undefined}
+                                                        placeholder={reps ? String(reps) : '? reps'}
+                                                        autoFocus
                                                         onChange={(e) =>
                                                             setReps(Number(e.target.value))
                                                         }
@@ -586,8 +589,6 @@ const Log = (props: any) => {
                                                                 Object.values(item)[0].set.length
                                                             )
                                                         }
-                                                        placeholder={reps ? String(reps) : '? reps'}
-                                                        autoFocus
                                                     />
                                                 ) : (
                                                     <p
@@ -643,6 +644,7 @@ const Log = (props: any) => {
                                         className="rest-time-input"
                                         type="text"
                                         placeholder="seconds..."
+                                        autoFocus
                                         onChange={(e) => setRestTime(Number(e.target.value))}
                                         onKeyDown={(e) =>
                                             handleEditRestTime(e, index, String(Object.keys(item)))

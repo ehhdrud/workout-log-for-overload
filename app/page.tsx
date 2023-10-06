@@ -38,8 +38,8 @@ export default function Home() {
                     type="password"
                     placeholder="secret code..."
                     value={secretCode}
-                    onChange={(e) => setSecretCode(e.target.value)}
                     autoFocus
+                    onChange={(e) => setSecretCode(e.target.value)}
                 />
             </form>
             <div className="hint">

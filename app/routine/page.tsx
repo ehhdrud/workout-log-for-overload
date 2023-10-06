@@ -219,6 +219,7 @@ const Routine = () => {
                                         className="routine-item-input"
                                         type="text"
                                         defaultValue={item}
+                                        autoFocus
                                         onChange={(e) => setEditedRoutine(e.target.value)}
                                         onKeyDown={(e) => handleEditRoutine(e, item)}
                                     />
@@ -266,9 +267,9 @@ const Routine = () => {
                         type="text"
                         value={routine}
                         placeholder="routine name..."
+                        autoFocus
                         onChange={(e) => setRoutine(e.target.value)}
                         onKeyDown={handleKeyPress}
-                        autoFocus
                     />
                 )}
             </div>

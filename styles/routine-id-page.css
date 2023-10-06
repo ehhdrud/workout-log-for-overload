@@ -51,6 +51,10 @@
 }
 
 .routine-name {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
     max-width: 250px;
     font-size: 24px;
     padding: 5px 20px;

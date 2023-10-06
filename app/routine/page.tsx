@@ -21,6 +21,7 @@ import Image from 'next/image';
 import Spinner from '@/assets/Spinner.svg';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@/styles/routine-page.css';
 
@@ -169,7 +170,10 @@ const Routine = () => {
             )}
             <div className="routine-container">
                 <div className="routine-header">
-                    <h2 className="sub-title">ROUTINE</h2>
+                    <h2 className="sub-title">
+                        <FontAwesomeIcon icon={faStar} fontSize="18px" color="#dd0" />
+                        <span className="sub-title-text">ROUTINE</span>
+                    </h2>
                     <div className="edit-or-delete-container">
                         {createEditBtn ? (
                             <div className="done-text" onClick={() => setCreateEditBtn(false)}>

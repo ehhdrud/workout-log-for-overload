@@ -11,6 +11,7 @@ import { db } from '@/api/firebase';
 import Image from 'next/image';
 import Spinner from '@/assets/Spinner.svg';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
+import { faBolt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@/styles/routine-id-page.css';
 
@@ -447,7 +448,10 @@ const Log = (props: any) => {
                 />
             )}
             <div className="log-container">
-                <h2 className="routine-name">{decodeURIComponent(props.params.id)}</h2>
+                <h2 className="routine-name">
+                    <FontAwesomeIcon icon={faBolt} fontSize="18px" color="#dd0" />
+                    {decodeURIComponent(props.params.id)}
+                </h2>
                 <div className="log-data-container">
                     {workoutData?.map((item, index) => (
                         <div key={String(Object.keys(item))} className="log-data">

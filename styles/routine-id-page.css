@@ -105,10 +105,10 @@
 .workout-table-caption-input {
     position: relative;
     width: 75px;
+    padding: 0;
     border-style: none;
     border-radius: 5px;
     z-index: 4;
-    padding: 1px;
 }
 
 .workout-name-txt {

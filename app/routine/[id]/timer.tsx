@@ -8,6 +8,7 @@ const Timer = forwardRef((props: { restTime: number; workoutName: string }, ref:
 
     const [seconds, setSeconds] = useState(restTime);
     const [isCounting, setIsCounting] = useState(false);
+    const [timeoutAlert, setTimeoutAlert] = useState(false);
 
     const editTimer = (newRestTime: number) => {
         setSeconds(newRestTime);
@@ -30,6 +31,13 @@ const Timer = forwardRef((props: { restTime: number; workoutName: string }, ref:
         }
     };
 
+    const showTimeoutAlert = () => {
+        setTimeoutAlert(true);
+        setTimeout(() => {
+            setTimeoutAlert(false);
+        }, 3000);
+    };
+
     useEffect(() => {
         let interval: NodeJS.Timeout | undefined = undefined;
 
@@ -41,7 +49,8 @@ const Timer = forwardRef((props: { restTime: number; workoutName: string }, ref:
             clearInterval(interval);
         }
 
-        if (seconds === 0) {
+        if (isCounting && seconds === 0) {
+            showTimeoutAlert();
             setIsCounting(false);
             setSeconds(restTime);
         }
@@ -62,6 +71,18 @@ const Timer = forwardRef((props: { restTime: number; workoutName: string }, ref:
                 </p>
             ) : (
                 <p className="timer-off">No rest-time setting</p>
+            )}
+            {timeoutAlert && (
+                <div className="timoeout-alert-container">
+                    <div
+                        className="timeout-alert-overlay"
+                        onClick={() => {
+                            setTimeoutAlert(false);
+                        }}
+                    />
+
+                    <div className="timeout-alert">Time out !</div>
+                </div>
             )}
         </div>
     );

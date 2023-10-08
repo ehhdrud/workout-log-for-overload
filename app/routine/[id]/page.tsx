@@ -614,7 +614,7 @@ const Log = (props: any) => {
                                 type="button"
                                 onClick={() => addSet(index, String(Object.keys(item)))}
                             >
-                                + Add SET
+                                + SET
                             </button>
                             {deleteState && selectedWorkout === String(Object.keys(item)) ? (
                                 <button

@@ -13,3 +13,25 @@
 .timer-off {
     margin: 0px;
 }
+
+.timeout-alert {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 40px;
+    font-weight: 900;
+    white-space: nowrap;
+    z-index: 10;
+}
+
+.timeout-alert-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 9;
+}

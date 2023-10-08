@@ -71,7 +71,7 @@
     display: flex;
     flex-direction: column;
     width: 300px;
-    height: 60vh;
+    height: 70vh;
     padding: 0px 20px;
     background-color: rgba(0, 0, 40, 0.6);
     border-radius: 0px 15px 15px 15px;
@@ -93,7 +93,7 @@
     position: relative;
     left: 2px;
     width: max-content;
-    max-width: 110px;
+    max-width: 135px;
     padding: 2px 5px;
     color: black;
     font-weight: bold;
@@ -203,15 +203,15 @@
     align-items: center;
     position: absolute;
     top: 3px;
-    right: 0px;
-    width: 100px;
+    right: 3px;
+    width: max-content;
     height: 20px;
-    padding: 2px 0px;
+    padding: 3.5px 15px;
     font-weight: bold;
     font-size: 14px;
     border-style: none;
     border-radius: 15px;
-    background-color: #ffff88;
+    background-color: #dddd88;
     color: black;
 }
 
@@ -221,13 +221,13 @@
     align-items: center;
     position: absolute;
     top: 3px;
-    right: 105px;
+    right: 80px;
     width: max-content;
     height: 20px;
     padding: 3.5px 15px;
     border-style: none;
     border-radius: 10px;
-    background-color: #ff5510;
+    background-color: #ee5544;
     color: black;
 }
 
@@ -237,7 +237,7 @@
     align-items: center;
     position: absolute;
     top: 3px;
-    right: 105px;
+    right: 80px;
     width: max-content;
     height: 20px;
     padding: 3.5px 7.5px;

@@ -26,8 +26,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@/styles/routine-page.css';
 
 const Routine = () => {
-    // 시크릿 코드 유지를 위한 State
-    const [isAccepted, setClientIsAccepted] = useState<string | boolean>('');
+    // 시크릿 코드를 위한 State
     const recoilIsAccepted = useRecoilValue(isAcceptedAtom);
 
     // 취합한 데이터 State
@@ -143,14 +142,10 @@ const Routine = () => {
     };
 
     useEffect(() => {
-        setClientIsAccepted(recoilIsAccepted);
-    }, [recoilIsAccepted]);
-
-    useEffect(() => {
         readDocumentNames();
     }, []);
 
-    return isAccepted ? (
+    return recoilIsAccepted ? (
         <div className="routine-page">
             {routineNameEditState && (
                 <div

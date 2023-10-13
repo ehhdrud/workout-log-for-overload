@@ -1,10 +1,6 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
-// SSR 구조에서 서버는 미리 렌더링할 데이터를 만들어서 정적으로 내려줘야하는데, 서버에는 웹 스토리지가 없으므로 오류가 발생.
-// sessionStorage 일단 undefined로 선언해서, 서버에서 window.sessionStorage 객체를 로드하지 않도록 처리.
-const sessionStorage = typeof window !== 'undefined' ? window.sessionStorage : undefined;
-
 const { persistAtom } = recoilPersist({
     key: 'sessionStorage',
     storage: sessionStorage,

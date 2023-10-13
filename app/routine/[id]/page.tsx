@@ -33,8 +33,7 @@ const Log = (props: any) => {
     // docId(루틴 이름) 저장
     const docId = decodeURIComponent(props.params.id);
 
-    // 시크릿 코드 유지를 위한 State
-    const [isAccepted, setClientIsAccepted] = useState<string | boolean>('');
+    // 시크릿 코드를 위한 State
     const recoilIsAccepted = useRecoilValue(isAcceptedAtom);
 
     // 취합한 데이터 State
@@ -405,15 +404,15 @@ const Log = (props: any) => {
         setTableRowInputOverlayState(false);
     };
 
-    useEffect(() => {
-        setClientIsAccepted(recoilIsAccepted);
-    }, [recoilIsAccepted]);
+    // useEffect(() => {
+    //     setClientIsAccepted(recoilIsAccepted);
+    // }, [recoilIsAccepted]);
 
     useEffect(() => {
         readDocumentField();
     }, [readDocumentField]);
 
-    return isAccepted ? (
+    return recoilIsAccepted ? (
         <div className="log-page">
             {tableRowInputOverlayState && (
                 <div

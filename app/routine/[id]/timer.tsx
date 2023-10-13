@@ -3,7 +3,7 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import '@/styles/timer.css';
 
-const Timer = forwardRef((props: { restTime: number; workoutName: string }, ref: any) => {
+const Timer = forwardRef((props: { restTime: number }, ref: any) => {
     const { restTime } = props;
 
     const [seconds, setSeconds] = useState(restTime);

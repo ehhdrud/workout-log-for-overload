@@ -663,7 +663,6 @@ const Log = (props: any) => {
                                 )}
                                 <Timer
                                     restTime={Object.values(item)[0].restTime}
-                                    workoutName={String(Object.keys(item))}
                                     ref={(timerRef) => {
                                         if (timerRef) {
                                             timerRefs.current[String(Object.keys(item))] = timerRef;

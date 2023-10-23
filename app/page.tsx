@@ -13,17 +13,19 @@ import '@/styles/page.css';
 export default function Home() {
     const router = useRouter();
     const [secretCode, setSecretCode] = useState('');
-    const [recoilIsAccepted, setRecoilIsAccepted] = useRecoilState(isAcceptedAtom);
+
+    const [isAccepted, setClientIsAccepted] = useState<string | boolean>('');
+    const [recoilIsAccepted, setIsAccepted] = useRecoilState(isAcceptedAtom);
 
     useEffect(() => {
-        setRecoilIsAccepted(recoilIsAccepted);
+        setClientIsAccepted(recoilIsAccepted);
     }, [recoilIsAccepted]);
 
     const handleFormSubmit = (e: any) => {
         e.preventDefault();
 
         if (secretCode === 'ehhdrud') {
-            setRecoilIsAccepted(true);
+            setIsAccepted(true);
             router.push('/routine');
         }
     };

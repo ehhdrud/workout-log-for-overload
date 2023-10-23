@@ -5,10 +5,11 @@ import '@/styles/timer.css';
 
 const Timer = forwardRef((props: { restTime: number }, ref: any) => {
     const { restTime } = props;
-
     const [seconds, setSeconds] = useState(restTime);
     const [isCounting, setIsCounting] = useState(false);
     const [timeoutAlert, setTimeoutAlert] = useState(false);
+
+    const worker = new Worker('timerWorker.js');
 
     const editTimer = (newRestTime: number) => {
         setSeconds(newRestTime);

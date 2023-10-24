@@ -224,7 +224,11 @@ const Routine = () => {
                                         onKeyDown={(e) => handleEditRoutine(e, item)}
                                     />
                                 ) : (
-                                    <Link className="routine-item" href={`/routine/${item}`}>
+                                    <Link
+                                        className="routine-item"
+                                        href={`/routine/${item}`}
+                                        as={`/routine/${item}`}
+                                    >
                                         {item}
                                     </Link>
                                 )}

@@ -96,44 +96,51 @@
 
 'use client';
 
-import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, useEffect, forwardRef, useImperativeHandle, useRef } from 'react';
 import '@/styles/timer.css';
 
 const Timer = forwardRef((props: { restTime: number }, ref: any) => {
-    const worker = new Worker(new URL('./worker.js', import.meta.url));
-    // const worker = new Worker('./worker.js');
+    const worker = useRef(new Worker(new URL('./worker.js', import.meta.url)));
 
     const { restTime } = props;
     const [seconds, setSeconds] = useState(restTime);
-    const [isCounting, setIsCounting] = useState(false);
+    const [isCounting, setIsCounting] = useState<boolean | null>(null);
     const [timeoutAlert, setTimeoutAlert] = useState(false);
 
     const editTimer = (newRestTime: number) => {
         setSeconds(newRestTime);
     };
 
-    const startTimer = () => {
-        !isCounting && setIsCounting(true);
-        worker.postMessage({ type: 'startTimer', value: seconds });
+    const isCountingOn = () => {
+        setIsCounting(true);
     };
 
     const toggleTimer = () => {
-        if (isCounting) {
-            console.log('정지할때 isCounting', isCounting);
-            setIsCounting(false);
-            setSeconds(restTime);
-        } else {
+        if (!isCounting) {
             if (seconds > 0) {
-                console.log('시작할때 isCounting', isCounting);
                 setIsCounting(true);
             }
+        } else {
+            setIsCounting(false);
+            setSeconds(restTime);
         }
+    };
+
+    const startTimer = () => {
+        worker.current.postMessage({ type: 'startTimer', value: seconds, state: isCounting });
+    };
+
+    const stopTimer = () => {
+        worker.current.postMessage({ type: 'stopTimer', value: restTime, state: isCounting });
     };
 
     useEffect(() => {
         if (isCounting === true) {
             startTimer();
-        } else worker.terminate();
+        } else if (isCounting === false) {
+            stopTimer();
+            setIsCounting(null);
+        }
     }, [isCounting]);
 
     const showTimeoutAlert = () => {
@@ -142,17 +149,15 @@ const Timer = forwardRef((props: { restTime: number }, ref: any) => {
             setTimeoutAlert(false);
         }, 3000);
 
-        setIsCounting(false);
+        setIsCounting(null);
         setSeconds(restTime);
     };
 
-    worker.onmessage = (e) => {
-        console.log(isCounting);
+    worker.current.onmessage = (e) => {
         if (isCounting) {
             if (e.data.type === 'updateSeconds') {
                 setSeconds(e.data.value);
             } else if (e.data.type === 'timeout') {
-                worker.terminate();
                 showTimeoutAlert();
             }
         }
@@ -161,12 +166,9 @@ const Timer = forwardRef((props: { restTime: number }, ref: any) => {
     useImperativeHandle(ref, () => ({
         editTimer,
         startTimer,
+        isCountingOn,
     }));
 
-    useEffect(() => {
-        console.log(isCounting);
-        console.log(seconds);
-    }, []);
     return (
         <div className="timer-feild">
             {restTime !== 0 ? (
@@ -184,7 +186,6 @@ const Timer = forwardRef((props: { restTime: number }, ref: any) => {
                             setTimeoutAlert(false);
                         }}
                     />
-
                     <div className="timeout-alert">Time out !</div>
                 </div>
             )}

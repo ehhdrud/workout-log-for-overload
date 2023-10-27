@@ -82,6 +82,17 @@ function Timer() {
         localStorage.setItem('timerDuration', timerDuration.toString());
     }, [timerType, timerDuration]);
 
+    // 매 초마다 로컬 스토리지에 시간 저장
+    useEffect(() => {
+        const timerInterval = setInterval(() => {
+            localStorage.setItem('timeLeft', timeLeft.toString());
+        }, 1000);
+
+        return () => {
+            clearInterval(timerInterval);
+        };
+    }, [timeLeft]);
+
     // 타이머 로직
     useEffect(() => {
         let timer;

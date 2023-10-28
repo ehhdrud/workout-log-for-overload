@@ -17,6 +17,7 @@ self.onmessage = (e) => {
                 });
             } else if (currentSeconds === 0) {
                 self.postMessage({ type: 'timeout' });
+                clearInterval(interval);
             }
         }, 1000);
     } else if (e.data.type === 'stopTimer') {

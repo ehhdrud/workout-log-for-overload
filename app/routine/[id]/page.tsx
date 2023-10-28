@@ -250,7 +250,7 @@ const Log = (props: any) => {
                     readDocumentField();
 
                     if (setIndex !== lastIndex) timerRefs.current[workoutName].isCountingOn();
-                    // if (setIndex !== lastIndex) timerRefs.current[workoutName].startTimer();
+                    // if (setIndex !== lastIndex) timerRefs.current[workoutName].startTimer(); // web worker를 사용하지 않을 때 코드
 
                     console.log('✏️edit reps✏️:', `${docId}-${workoutName}-${setIndex}번 세트`);
                 } else {

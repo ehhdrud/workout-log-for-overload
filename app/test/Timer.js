@@ -7,18 +7,12 @@ function Timer() {
     const [isCounting, setIsCounting] = useState(false);
     const [timerValue, setTimerValue] = useState('00:00');
 
-    let worker;
-    worker = useRef(new Worker(new URL('./worker.js', import.meta.url)));
+    const worker = useRef(new Worker(new URL('./worker.js', import.meta.url)));
 
     const setupWorker = () => {
         if (!isWebWorkersSupported) {
             return console.log('%c😢 Web Workers are not supported...', 'color:#ff8b56');
         }
-    };
-
-    const terminateWorker = () => {
-        worker.current.terminate();
-        worker.current = null;
     };
 
     const onUpdate = (fn) => {
@@ -37,7 +31,6 @@ function Timer() {
     };
 
     const stop = () => {
-        terminateWorker();
         setIsCounting(false);
         console.log('⏹ Timer has been stopped');
     };

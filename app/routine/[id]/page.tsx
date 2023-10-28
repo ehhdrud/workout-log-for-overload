@@ -249,8 +249,8 @@ const Log = (props: any) => {
 
                     readDocumentField();
 
-                    // if (setIndex !== lastIndex) timerRefs.current[workoutName].isCountingOn();
-                    if (setIndex !== lastIndex) timerRefs.current[workoutName].startTimer();
+                    if (setIndex !== lastIndex) timerRefs.current[workoutName].isCountingOn();
+                    // if (setIndex !== lastIndex) timerRefs.current[workoutName].startTimer();
 
                     console.log('✏️edit reps✏️:', `${docId}-${workoutName}-${setIndex}번 세트`);
                 } else {

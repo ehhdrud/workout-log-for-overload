@@ -1,148 +1,129 @@
 'use client';
 
-// import React, { useState, useEffect } from 'react';
-
-// function Timer() {
-//     const [time, setTime] = useState(10); // 타이머 초기 값 (10초)
-//     const [isRunning, setIsRunning] = useState(false); // 타이머가 실행 중인지 여부
-
-//     useEffect(() => {
-//         let timerInterval;
-
-//         if (isRunning) {
-//             timerInterval = setInterval(() => {
-//                 if (time === 0) {
-//                     clearInterval(timerInterval);
-//                     alert('타이머 종료');
-//                     setIsRunning(false);
-//                     setTime(10);
-//                 } else {
-//                     setTime((prevTime) => prevTime - 1);
-//                 }
-//             }, 1000);
-//         } else {
-//             clearInterval(timerInterval);
-//         }
-
-//         return () => {
-//             clearInterval(timerInterval);
-//         };
-//     }, [isRunning, time]);
-
-//     const startTimer = () => {
-//         setIsRunning(true);
-//     };
-
-//     const stopTimer = () => {
-//         setIsRunning(false);
-//         setTime(10); // 타이머 초기화
-//     };
-
-//     return (
-//         <div>
-//             <h1>10초 타이머</h1>
-//             <p>남은 시간: {time} 초</p>
-//             {isRunning ? (
-//                 <button onClick={stopTimer}>정지</button>
-//             ) : (
-//                 <button onClick={startTimer}>시작</button>
-//             )}
-//         </div>
-//     );
-// }
-
-// export default Timer;
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 function Timer() {
-    const [timerType, setTimerType] = useState('countdown');
-    const [timerDuration, setTimerDuration] = useState(60 * 60);
-    const [timeLeft, setTimeLeft] = useState(timerDuration);
-    const [isRunning, setIsRunning] = useState(false);
+    const isWebWorkersSupported = typeof Worker !== 'undefined';
+    const [isCounting, setIsCounting] = useState(false);
+    const [timerValue, setTimerValue] = useState('00:00');
 
-    // 로컬 스토리지에서 설정 읽기
+    let worker;
+    worker = useRef(new Worker(new URL('./worker.js', import.meta.url)));
+
+    const setupWorker = () => {
+        if (!isWebWorkersSupported) {
+            return console.log('%c😢 Web Workers are not supported...', 'color:#ff8b56');
+        }
+    };
+
+    const terminateWorker = () => {
+        worker.current.terminate();
+        worker.current = null;
+    };
+
+    const onUpdate = (fn) => {
+        worker.current.addEventListener('message', (evt) => fn.call(fn, evt.data));
+    };
+
+    const onError = (fn) => {
+        worker.current.addEventListener('error', (evt) => fn.call(fn, evt.data));
+    };
+
+    const start = () => {
+        setupWorker();
+        worker.current.postMessage('start');
+        setIsCounting(true);
+        console.log('▶ Timer has been started');
+    };
+
+    const stop = () => {
+        terminateWorker();
+        setIsCounting(false);
+        console.log('⏹ Timer has been stopped');
+    };
+
     useEffect(() => {
-        const storedTimerType = localStorage.getItem('timerType');
-        const storedTimerDuration = parseInt(localStorage.getItem('timerDuration'));
+        onUpdate((value) => {
+            setTimerValue(value);
+        });
 
-        if (storedTimerType) {
-            setTimerType(storedTimerType);
-        }
-
-        if (!isNaN(storedTimerDuration)) {
-            setTimerDuration(storedTimerDuration);
-            setTimeLeft(storedTimerDuration);
-        }
+        onError(() => {
+            setTimerValue('--:--');
+            throw new Error('💩 Something goes wrong...');
+        });
     }, []);
-
-    // 로컬 스토리지에 설정 저장
-    useEffect(() => {
-        localStorage.setItem('timerType', timerType);
-        localStorage.setItem('timerDuration', timerDuration.toString());
-    }, [timerType, timerDuration]);
-
-    // 매 초마다 로컬 스토리지에 시간 저장
-    useEffect(() => {
-        const timerInterval = setInterval(() => {
-            localStorage.setItem('timeLeft', timeLeft.toString());
-        }, 1000);
-
-        return () => {
-            clearInterval(timerInterval);
-        };
-    }, [timeLeft]);
-
-    // 타이머 로직
-    useEffect(() => {
-        let timer;
-
-        if (isRunning && timeLeft > 0) {
-            timer = setInterval(() => {
-                setTimeLeft((prevTimeLeft) => prevTimeLeft - 1);
-            }, 1000);
-        }
-
-        return () => {
-            clearInterval(timer);
-        };
-    }, [isRunning, timeLeft]);
-
-    // 시작 버튼 클릭 처리
-    const handleStart = () => {
-        setIsRunning(true);
-    };
-
-    // 중지 버튼 클릭 처리
-    const handleStop = () => {
-        setIsRunning(false);
-    };
-
-    // 재설정 버튼 클릭 처리
-    const handleReset = () => {
-        setIsRunning(false);
-        setTimeLeft(timerDuration);
-    };
 
     return (
         <div>
-            <h1>Timer App</h1>
-            <div>
-                <p>Timer Type: {timerType}</p>
-                <button onClick={() => setTimerType('countdown')}>Countdown</button>
-                <button onClick={() => setTimerType('countup')}>Countup</button>
-            </div>
-            <div>
-                <p>Time Left: {timeLeft} seconds</p>
-                {isRunning ? (
-                    <button onClick={handleStop}>Stop</button>
-                ) : (
-                    <button onClick={handleStart}>Start</button>
-                )}
-                <button onClick={handleReset}>Reset</button>
-            </div>
+            <div id="timer-container">{timerValue}</div>
+
+            <button id="start-timer" type="button" onClick={start}>
+                Start
+            </button>
+            <button id="stop-timer" type="button" onClick={stop}>
+                Stop
+            </button>
         </div>
     );
 }
 
 export default Timer;
+
+// import React, { useRef } from 'react';
+
+// function Timer() {
+//     const isWebWorkersSupported = typeof Worker !== 'undefined';
+//     let worker = null;
+
+//     const setupWorker = () => {
+//         if (!isWebWorkersSupported) {
+//             return console.log('%c😢 Web Workers are not supported...', 'color:#ff8b56');
+//         }
+
+//         if (worker === null) {
+//             createWorker();
+//         }
+//     };
+
+//     const createWorker = () => {
+//         worker = useRef(new Worker(new URL('./worker.js', import.meta.url)));
+//     };
+
+//     const terminateWorker = () => {
+//         worker.terminate();
+//         worker = null;
+//     };
+
+//     const onUpdate = (fn) => {
+//         worker.addEventListener('message', (evt) => fn.call(fn, evt.data));
+//     };
+
+//     const onError = (fn) => {
+//         worker.addEventListener('error', (evt) => fn.call(fn, evt.data));
+//     };
+
+//     const start = () => {
+//         setupWorker();
+//         worker.postMessage('start');
+//     };
+
+//     const stop = () => {
+//         terminateWorker();
+//     };
+
+//     // Render the component and return any JSX if needed
+//     return (
+//         <>
+//             <div id="timer-container">00:00</div>
+
+//             <button id="start-timer" type="button">
+//                 start
+//             </button>
+//             <button id="stop-timer" type="button">
+//                 stop
+//             </button>
+//         </>
+//     ); // You can return JSX here if the component needs to render something
+// }
+
+// export default Timer;

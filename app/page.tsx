@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { isAcceptedAtom } from '@/recoil/atoms';
 
 import { faUnlock } from '@fortawesome/free-solid-svg-icons';
@@ -14,12 +14,7 @@ export default function Home() {
     const router = useRouter();
     const [secretCode, setSecretCode] = useState('');
 
-    const [isAccepted, setClientIsAccepted] = useState<string | boolean>('');
-    const [recoilIsAccepted, setIsAccepted] = useRecoilState(isAcceptedAtom);
-
-    useEffect(() => {
-        setClientIsAccepted(recoilIsAccepted);
-    }, [recoilIsAccepted]);
+    const setIsAccepted = useSetRecoilState(isAcceptedAtom);
 
     const handleFormSubmit = (e: any) => {
         e.preventDefault();

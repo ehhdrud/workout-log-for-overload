@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, forwardRef, useImperativeHandle, useRef } from 'react';
 import '@/styles/timer.css';
+// import alarmSound from '@/assets/Alarm.mp3';
 
 const Timer = forwardRef((props: { restTime: number }, ref: any) => {
     let worker = useRef<Worker | null>(null);
@@ -32,7 +33,7 @@ const Timer = forwardRef((props: { restTime: number }, ref: any) => {
 
     const startTimer = () => {
         if (!worker.current) {
-            worker.current = new Worker(new URL('./worker.js', import.meta.url));
+            worker.current = new Worker(new URL('app/utils/worker.js', import.meta.url));
         }
         worker.current.postMessage({ type: 'startTimer', value: seconds, state: isCounting });
         console.log('start:', worker, worker.current);
@@ -57,6 +58,8 @@ const Timer = forwardRef((props: { restTime: number }, ref: any) => {
     }, [isCounting]);
 
     const showTimeoutAlert = () => {
+        // const sound = new Audio(alarmSound);
+        // sound.play();
         setTimeoutAlert(true);
         setTimeout(() => {
             setTimeoutAlert(false);

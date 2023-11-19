@@ -27,7 +27,7 @@
         "**/*.ts",
         "**/*.tsx",
         ".next/types/**/*.ts",
-        "app/routine/[id]/worker.js"
+        "app/utils/worker.js"
     ],
     "exclude": ["node_modules"]
 }

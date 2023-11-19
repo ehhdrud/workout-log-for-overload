@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSetRecoilState } from 'recoil';
-import { isAcceptedAtom } from '@/recoil/atoms';
+import { isAcceptedAtom } from '@/app/recoil/atoms';
 
 import { faUnlock } from '@fortawesome/free-solid-svg-icons';
 import { faKey } from '@fortawesome/free-solid-svg-icons';

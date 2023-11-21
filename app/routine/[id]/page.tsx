@@ -29,7 +29,7 @@ interface Workout {
     [key: string]: WorkoutData;
 }
 
-const Log = (props: any) => {
+const Log = (props: any): JSX.Element => {
     // docId(루틴 이름) 저장
     const docId = decodeURIComponent(props.params.id);
 
@@ -87,7 +87,7 @@ const Log = (props: any) => {
     };
 
     // 운동을 추가하는 함수
-    const handleAddWorkout = async (e: any) => {
+    const handleAddWorkout = async (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             const workoutExists = workoutData.some((item) => item.hasOwnProperty(workout));
             if (workoutExists) {
@@ -192,7 +192,7 @@ const Log = (props: any) => {
 
     // 무게를 수정하는 함수
     const handleEditWeight = async (
-        e: any,
+        e: React.KeyboardEvent<HTMLInputElement>,
         workoutIndex: number,
         workoutName: string,
         setIndex: number
@@ -227,7 +227,7 @@ const Log = (props: any) => {
 
     // 횟수를 수정하는 함수
     const handleEditReps = async (
-        e: any,
+        e: React.KeyboardEvent<HTMLInputElement>,
         workoutIndex: number,
         workoutName: string,
         setIndex: number,
@@ -250,7 +250,6 @@ const Log = (props: any) => {
                     readDocumentField();
 
                     if (setIndex !== lastIndex) timerRefs.current[workoutName].isCountingOn();
-                    // if (setIndex !== lastIndex) timerRefs.current[workoutName].startTimer(); // web worker를 사용하지 않을 때 코드
 
                     console.log('✏️edit reps✏️:', `${docId}-${workoutName}-${setIndex}번 세트`);
                 } else {
@@ -320,7 +319,11 @@ const Log = (props: any) => {
     };
 
     // 운동 이름을 수정하는 함수
-    const handleEditWorkoutName = async (e: any, workoutIndex: number, workoutName: string) => {
+    const handleEditWorkoutName = async (
+        e: React.KeyboardEvent<HTMLInputElement>,
+        workoutIndex: number,
+        workoutName: string
+    ) => {
         if (e.key === 'Enter') {
             if (editedWorkoutName) {
                 const workoutExists = workoutData.some((item) =>
@@ -369,7 +372,11 @@ const Log = (props: any) => {
     };
 
     // 휴식 시간을 설정하는 함수
-    const handleEditRestTime = async (e: any, workoutIndex: number, workoutName: string) => {
+    const handleEditRestTime = async (
+        e: React.KeyboardEvent<HTMLInputElement>,
+        workoutIndex: number,
+        workoutName: string
+    ) => {
         if (e.key === 'Enter') {
             try {
                 const docRef = doc(db, 'workout-log', docId);

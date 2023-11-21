@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSetRecoilState } from 'recoil';
 import { isAcceptedAtom } from '@/app/recoil/atoms';
@@ -10,13 +10,13 @@ import { faKey } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@/styles/page.css';
 
-export default function Home() {
+export default function Home(): JSX.Element {
     const router = useRouter();
-    const [secretCode, setSecretCode] = useState('');
+    const [secretCode, setSecretCode] = useState<string>('');
 
     const setIsAccepted = useSetRecoilState(isAcceptedAtom);
 
-    const handleFormSubmit = (e: any) => {
+    const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (secretCode === 'ehhdrud') {

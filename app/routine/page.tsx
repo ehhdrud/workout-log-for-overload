@@ -25,10 +25,10 @@ import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@/styles/routine-page.css';
 
-const Routine = () => {
+const Routine = (): JSX.Element => {
     // 시크릿 코드 유지를 위한 State
     const [isAccepted, setClientIsAccepted] = useState<string | boolean>('');
-    const recoilIsAccepted = useRecoilValue(isAcceptedAtom);
+    const recoilIsAccepted = useRecoilValue<boolean>(isAcceptedAtom);
 
     // 취합한 데이터 State
     const [routineList, setRoutineList] = useState<string[]>([]);
@@ -54,7 +54,7 @@ const Routine = () => {
             const docRef = collection(db, 'workout-log');
             const querySnapshot = await getDocs(docRef);
 
-            const documentNames: any = [];
+            const documentNames: string[] = [];
             querySnapshot.forEach((doc) => {
                 documentNames.push(doc.id);
             });
@@ -66,7 +66,7 @@ const Routine = () => {
     };
 
     // 루틴을 생성하는 함수
-    const handleKeyPress = (e: any) => {
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             if (routineList.includes(routine)) {
                 alert('같은 이름이 이미 존재합니다 😢');
@@ -87,7 +87,10 @@ const Routine = () => {
     };
 
     // 루틴 이름을 수정하는 함수
-    const handleEditRoutine = async (e: any, routineName: string) => {
+    const handleEditRoutine = async (
+        e: React.KeyboardEvent<HTMLInputElement>,
+        routineName: string
+    ) => {
         if (e.key === 'Enter') {
             if (routineList.includes(editedRoutine)) {
                 alert('같은 이름이 이미 존재합니다 😢');

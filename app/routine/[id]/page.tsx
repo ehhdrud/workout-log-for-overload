@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import React from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRecoilValue } from 'recoil';
 import { isAcceptedAtom } from '@/app/recoil/atoms';
 import Timer from '../../components/timer';
@@ -70,7 +71,7 @@ const Log = (props: any): JSX.Element => {
     const timerRefs = useRef<any>({});
 
     // 운동을 불러오는 함수
-    const readDocumentField = async () => {
+    const readDocumentField = useCallback(async () => {
         try {
             const docRef = doc(db, 'workout-log', docId);
             const docSnapshot = await getDoc(docRef);
@@ -84,7 +85,7 @@ const Log = (props: any): JSX.Element => {
         } catch (error) {
             console.error('문서를 읽어오는 중 오류 발생:', error);
         }
-    };
+    }, []);
 
     // 운동을 추가하는 함수
     const handleAddWorkout = async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -713,4 +714,4 @@ const Log = (props: any): JSX.Element => {
     );
 };
 
-export default Log;
+export default React.memo(Log);

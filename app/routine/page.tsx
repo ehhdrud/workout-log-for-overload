@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRecoilValue } from 'recoil';
 import { isAcceptedAtom } from '@/app/recoil/atoms';
@@ -49,7 +49,7 @@ const Routine = (): JSX.Element => {
     const [editedRoutine, setEditedRoutine] = useState<string>('');
 
     // 문서(루틴) 읽어오기
-    const readDocumentNames = async () => {
+    const readDocumentNames = useCallback(async () => {
         try {
             const docRef = collection(db, 'workout-log');
             const querySnapshot = await getDocs(docRef);
@@ -63,7 +63,7 @@ const Routine = (): JSX.Element => {
         } catch (error) {
             console.error('문서를 읽어오는 중 오류 발생:', error);
         }
-    };
+    }, []);
 
     // 루틴을 생성하는 함수
     const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {

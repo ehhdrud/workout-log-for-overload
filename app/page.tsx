@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSetRecoilState } from 'recoil';
 import { isAcceptedAtom } from '@/app/recoil/atoms';

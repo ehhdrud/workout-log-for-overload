@@ -53,15 +53,6 @@ const Timer = forwardRef((props: { restTime: number }, ref: any): JSX.Element =>
         }
     };
 
-    useEffect(() => {
-        if (isCounting === true) {
-            startTimer();
-        } else if (isCounting === false) {
-            stopTimer();
-            setIsCounting(null);
-        }
-    }, [isCounting]);
-
     const showTimeoutAlert = () => {
         const sound = new Audio(alarmSound);
         sound.play();
@@ -79,17 +70,26 @@ const Timer = forwardRef((props: { restTime: number }, ref: any): JSX.Element =>
         }
     };
 
-    if (worker.current) {
-        worker.current.onmessage = (e: MessageEvent<WorkerMessage>) => {
-            if (isCounting) {
-                if (e.data.type === 'updateSeconds') {
-                    setSeconds(e.data.value);
-                } else if (e.data.type === 'timeout') {
-                    showTimeoutAlert();
+    useEffect(() => {
+        if (isCounting === true) {
+            startTimer();
+        } else if (isCounting === false) {
+            stopTimer();
+            setIsCounting(null);
+        }
+
+        if (worker.current) {
+            worker.current.onmessage = (e: MessageEvent<WorkerMessage>) => {
+                if (isCounting) {
+                    if (e.data.type === 'updateSeconds') {
+                        setSeconds(e.data.value);
+                    } else if (e.data.type === 'timeout') {
+                        showTimeoutAlert();
+                    }
                 }
-            }
-        };
-    }
+            };
+        }
+    }, [isCounting]);
 
     useImperativeHandle(ref, () => ({
         editTimer,

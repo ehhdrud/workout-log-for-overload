@@ -42,16 +42,19 @@ body {
 
 @font-face {
     font-family: Inter;
+    font-display: swap;
     src: url('../assets/Inter.ttf') format('truetype');
 }
 
 @font-face {
     font-family: VCR_OSD_MONO;
+    font-display: swap;
     src: url('../assets/VCR_OSD_MONO.ttf') format('truetype');
 }
 
 @font-face {
     font-family: CourierPrime-Bold;
+    font-display: swap;
     src: url('../assets/CourierPrime-Bold.ttf') format('truetype');
 }
 

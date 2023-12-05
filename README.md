@@ -90,4 +90,8 @@
 #### 🔹 타이머 종료 시 화면 (with 알람음)
 ![3로그페이지5](https://github.com/ehhdrud/d3sign-dao-studio/assets/106059716/1417e413-726a-48e7-b603-8f534018e4e7)
 
+---
 
+### 🔸 lighthouse 렌더링 성능
+
+![lighthouse경고X](https://github.com/ehhdrud/d3sign-dao-studio/assets/106059716/f7690587-042d-4af9-9ba9-650679912337)

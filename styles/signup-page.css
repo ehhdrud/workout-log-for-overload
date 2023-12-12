@@ -15,6 +15,7 @@
 .input-container input {
     width: 225px;
     border: 1px solid black;
+    outline: none;
 }
 
 .signup-btn {

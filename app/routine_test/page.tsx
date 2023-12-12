@@ -32,7 +32,7 @@ const Routine = (): JSX.Element => {
     const [uid, setUid] = useState<string>('');
 
     // 취합한 데이터 State
-    const [routineList, setRoutineList] = useState<string[]>([]);
+    const [routineList, setRoutineList] = useState<string[] | null>(null);
 
     // '루틴 생성 Input' 렌더링에 필요한 State
     const [createRoutineInput, setCreateRoutineInput] = useState<boolean>(false);
@@ -69,7 +69,7 @@ const Routine = (): JSX.Element => {
     // 루틴을 생성하는 함수
     const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            if (routineList.includes(routine)) {
+            if (routineList?.includes(routine)) {
                 alert('같은 이름이 이미 존재합니다 😢');
                 return;
             }
@@ -93,7 +93,7 @@ const Routine = (): JSX.Element => {
         routineName: string
     ) => {
         if (e.key === 'Enter') {
-            if (routineList.includes(editedRoutine)) {
+            if (routineList?.includes(editedRoutine)) {
                 alert('같은 이름이 이미 존재합니다 😢');
                 return;
             } else if (!editedRoutine) {
@@ -168,6 +168,12 @@ const Routine = (): JSX.Element => {
         }
     }, [uid]);
 
+    useEffect(() => {
+        if (routineList?.length === 0) {
+            setDoc(doc(db, uid, 'Your Routine'), { 'Your Routine': [] });
+        }
+    }, [routineList]);
+
     return loggedIn ? (
         <div className="routine-page">
             {routineNameEditState && (
@@ -229,7 +235,7 @@ const Routine = (): JSX.Element => {
                 </div>
 
                 <div className="routine-items">
-                    {routineList.map((item) => (
+                    {routineList?.map((item) => (
                         <div key={item} className="routine-item-container">
                             <div className="routine-item">
                                 {routineNameEditState && item === selectedRoutine ? (
@@ -244,8 +250,8 @@ const Routine = (): JSX.Element => {
                                 ) : (
                                     <Link
                                         className="routine-item"
-                                        href={`/routine/${item}`}
-                                        as={`/routine/${item}`}
+                                        href={`/routine_test/${item}`}
+                                        as={`/routine_test/${item}`}
                                     >
                                         {item}
                                     </Link>

@@ -1,6 +1,6 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import Recoil from './recoil/Recoil';
+import Recoil from '../recoil/Recoil';
 import Image from 'next/image';
 import backgroundImg from '@/assets/Cloudy.svg';
 

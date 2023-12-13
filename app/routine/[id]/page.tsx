@@ -3,8 +3,8 @@
 import React from 'react';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRecoilValue } from 'recoil';
-import { isAcceptedAtom } from '@/app/recoil/atoms';
-import Timer from '../../components/timer';
+import { isAcceptedAtom } from '@/recoil/atoms';
+import Timer from '../../../components/timer';
 
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/api/firebase';

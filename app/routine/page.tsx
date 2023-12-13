@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRecoilValue } from 'recoil';
-import { isAcceptedAtom } from '@/app/recoil/atoms';
+import { isAcceptedAtom } from '@/recoil/atoms';
 
 import {
     collection,

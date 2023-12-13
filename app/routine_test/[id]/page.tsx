@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import Timer from '../../components/timer';
+import Timer from '../../../components/timer';
 
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/api/firebase';

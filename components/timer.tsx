@@ -38,7 +38,7 @@ const Timer = forwardRef((props: { restTime: number }, ref: any): JSX.Element =>
 
     const startTimer = () => {
         if (!worker.current) {
-            worker.current = new Worker(new URL('app/utils/worker.js', import.meta.url));
+            worker.current = new Worker(new URL('utils/worker.js', import.meta.url));
         }
         worker.current.postMessage({ type: 'startTimer', value: seconds, state: isCounting });
         console.log('start:', worker, worker.current);

@@ -7,10 +7,10 @@ import Link from 'next/link';
 import '@/styles/login-page.css';
 import Image from 'next/image';
 
-const LogIn = () => {
+const LogIn = (): JSX.Element => {
     const router = useRouter();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
 
     const handleEmailLogin = async () => {
         try {
@@ -30,7 +30,7 @@ const LogIn = () => {
         }
     };
 
-    const handleKeyPress = (e) => {
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             handleEmailLogin();
         }

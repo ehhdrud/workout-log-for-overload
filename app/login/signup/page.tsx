@@ -7,14 +7,14 @@ import { doc, setDoc } from 'firebase/firestore';
 import { db } from '@/api/firebase';
 import '@/styles/signup-page.css';
 
-const SignUp = () => {
+const SignUp = (): JSX.Element => {
     const router = useRouter();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [passwordError, setPasswordError] = useState('');
-    const [emailError, setEmailError] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [confirmPassword, setConfirmPassword] = useState<string>('');
+    const [passwordError, setPasswordError] = useState<string>('');
+    const [emailError, setEmailError] = useState<string>('');
+    const [successMessage, setSuccessMessage] = useState<string>('');
 
     const handleSignup = async () => {
         try {
@@ -48,7 +48,7 @@ const SignUp = () => {
         router.push('/login');
     };
 
-    const handleKeyPress = (e) => {
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             handleSignup();
         }

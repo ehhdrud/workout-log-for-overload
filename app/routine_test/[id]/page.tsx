@@ -29,7 +29,7 @@ interface Workout {
     [key: string]: WorkoutData;
 }
 
-const Log = (props: any): JSX.Element => {
+const Log: React.FC = (props: any): JSX.Element => {
     // 로그인 State
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
@@ -419,7 +419,6 @@ const Log = (props: any): JSX.Element => {
 
     useEffect(() => {
         const auth = getAuth();
-
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 console.log('현재 사용자의 UID:', user.uid, 'currentUser:', auth.currentUser);

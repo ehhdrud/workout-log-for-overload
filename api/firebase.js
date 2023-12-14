@@ -6,6 +6,7 @@ import {
     GoogleAuthProvider, //google login 기능
     signInWithEmailAndPassword, // email 로그인
     createUserWithEmailAndPassword, //email 회원가입
+    signOut, // 로그아웃
 } from 'firebase/auth';
 
 const firebaseConfig = {
@@ -20,25 +21,30 @@ const firebaseConfig = {
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
-export const db = getFirestore(app);
-
-// auth 설정 필수!!
-const auth = getAuth();
-
-//Email 로그인
-export const signupEmail = (email, password) => {
-    return createUserWithEmailAndPassword(auth, email, password);
-};
+export const auth = getAuth();
 
 //Email 회원가입
 export const loginEmail = (email, password) => {
     return signInWithEmailAndPassword(auth, email, password);
 };
 
+//Email 로그인
+export const signupEmail = (email, password) => {
+    return createUserWithEmailAndPassword(auth, email, password);
+};
+
 //Google 로그인
 const provider = new GoogleAuthProvider();
+
 export const loginGoogle = () => {
     return signInWithPopup(auth, provider);
 };
+
+//로그아웃
+export const logout = () => {
+    return signOut(auth);
+};
+
+export const db = getFirestore(app);
 
 export default app;

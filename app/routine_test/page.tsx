@@ -3,6 +3,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { userAtom, InfoType } from '@/recoil/atoms';
+import { nicknameSelector } from '@/recoil/selectors';
+
 import {
     collection,
     doc,
@@ -24,30 +28,40 @@ import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@/styles/routine-page.css';
 
-const Routine = (): JSX.Element => {
-    // 로그인 State
-    const [loggedIn, setLoggedIn] = useState<boolean>(false);
+const Routine: React.FC = (): JSX.Element => {
+    // Hydrate 에러를 방지하기 위한 상태
+    const [userInfoRecoil, setUserInfoRecoil] = useRecoilState<InfoType | null>(userAtom);
+    const nicknameRecoil = useRecoilValue<string | undefined>(nicknameSelector);
+    const [userInfo, setUserInfo] = useState<InfoType | null>(null);
+    const [nickname, setNickname] = useState<string | undefined>();
 
-    // UID State
-    const [uid, setUid] = useState<string>('');
+    // Hydrate 에러를 방지하기 위한 useEffect - 1
+    useEffect(() => {
+        setUserInfo(userInfoRecoil);
+    }, [userInfoRecoil]);
+
+    // Hydrate 에러를 방지하기 위한 useEffect - 2
+    useEffect(() => {
+        if (nicknameRecoil) {
+            setNickname(nicknameRecoil);
+        }
+    }, [nicknameRecoil]);
 
     // 취합한 데이터 State
     const [routineList, setRoutineList] = useState<string[] | null>(null);
-
     // '루틴 생성 Input' 렌더링에 필요한 State
     const [createRoutineInput, setCreateRoutineInput] = useState<boolean>(false);
-
     // 루틴 이름을 입력받는 State
     const [routine, setRoutine] = useState<string>('');
-
     // '수정/삭제 button'을 렌더링하기 위한 State
     const [createEditBtn, setCreateEditBtn] = useState<boolean>(false);
     const [createDeleteBtn, setCreateDeleteBtn] = useState<boolean>(false);
-
     // '루틴 수정 Input' 렌더링에 필요한 State
     const [routineNameEditState, setRoutineNameEditState] = useState<boolean>(false);
     const [selectedRoutine, setSelectedRoutine] = useState<string | null>(null);
     const [editedRoutine, setEditedRoutine] = useState<string>('');
+    // null이 아닌 uid 값을 저장하기 위한 State
+    const [uid, setUid] = useState<string>('');
 
     // 문서(루틴) 읽어오기
     const readDocumentNames = useCallback(async () => {
@@ -149,32 +163,37 @@ const Routine = (): JSX.Element => {
 
     useEffect(() => {
         const auth = getAuth();
-
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                console.log('현재 사용자의 UID:', user.uid, 'currentUser:', auth.currentUser);
-                setLoggedIn(true);
-                setUid(user.uid);
+                console.log(user, '현재 사용자의 UID:', user.uid, 'currentUser:', auth.currentUser);
             } else {
-                setLoggedIn(false);
                 console.log('사용자가 로그인되어 있지 않습니다.');
             }
         });
     }, []);
 
+    // null이 아닌 uid 값을 별도의 상태에 저장하여 사용하기 위한 useEffect
+    useEffect(() => {
+        if (userInfo?.uid) {
+            setUid(userInfo.uid);
+        }
+    }, [userInfo]);
+
+    // uid 상태가 바뀌면 문서 읽어오기 위한 useEffect
     useEffect(() => {
         if (uid) {
             readDocumentNames();
         }
     }, [uid]);
 
+    // 루틴이 없을 때, Default를 만들어주기 위한 useEffect
     useEffect(() => {
         if (routineList?.length === 0) {
             setDoc(doc(db, uid, 'Your Routine'), { 'Your Routine': [] });
         }
     }, [routineList]);
 
-    return loggedIn ? (
+    return userInfo ? (
         <div className="routine-page">
             {routineNameEditState && (
                 <div
@@ -301,6 +320,7 @@ const Routine = (): JSX.Element => {
                     />
                 )}
             </div>
+            <button>by&nbsp;{nickname}</button>
         </div>
     ) : (
         <div>

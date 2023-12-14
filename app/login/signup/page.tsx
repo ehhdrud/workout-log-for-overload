@@ -3,18 +3,16 @@
 import React, { useState } from 'react';
 import { signupEmail } from '@/api/firebase';
 import { useRouter } from 'next/navigation';
-import { doc, setDoc } from 'firebase/firestore';
-import { db } from '@/api/firebase';
 import '@/styles/signup-page.css';
 
-const SignUp = (): JSX.Element => {
+const SignUp: React.FC = (): JSX.Element => {
     const router = useRouter();
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [passwordError, setPasswordError] = useState<string>('');
     const [emailError, setEmailError] = useState<string>('');
-    const [successMessage, setSuccessMessage] = useState<string>('');
+    const [isSuccessed, setIsSuccessed] = useState<boolean>(false);
 
     const handleSignup = async () => {
         try {
@@ -27,15 +25,10 @@ const SignUp = (): JSX.Element => {
                 return;
             }
             if (password === confirmPassword) {
-                const result = await signupEmail(email, password);
-                const user = result.user;
-                await setDoc(doc(db, user.uid, 'Your Routine'), { 'Your Routine': [] });
-
-                setSuccessMessage('Sign up successful !');
+                await signupEmail(email, password);
+                setIsSuccessed(true);
                 setPasswordError('');
                 setEmailError('');
-
-                console.log(user.email, user.uid);
             } else {
                 setPasswordError("Passwords don't match");
             }
@@ -85,8 +78,7 @@ const SignUp = (): JSX.Element => {
             {(passwordError || emailError) && (
                 <p className="error-message">{passwordError || emailError}</p>
             )}
-            {successMessage && <div className="success-message">{successMessage}</div>}
-            {successMessage && (
+            {isSuccessed && (
                 <div className="success-message-container">
                     <div className="success-message-overlay" />
                     <div className="success-message">

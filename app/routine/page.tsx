@@ -27,7 +27,7 @@ import '@/styles/routine-page.css';
 
 const Routine = (): JSX.Element => {
     // 시크릿 코드 유지를 위한 State
-    const [isAccepted, setClientIsAccepted] = useState<string | boolean>('');
+    const [isAccepted, setClientIsAccepted] = useState<boolean>(false);
     const recoilIsAccepted = useRecoilValue<boolean>(isAcceptedAtom);
 
     // 취합한 데이터 State

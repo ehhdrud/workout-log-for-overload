@@ -15,6 +15,7 @@ const MainPage: React.FC = (): JSX.Element => {
     const [userInfo, setUserInfo] = useState<InfoType | null>(null);
     const [nickname, setNickname] = useState<string | undefined>();
 
+    // 로그아웃 핸들러
     const handleSignOut = async () => {
         try {
             await logout();
@@ -23,29 +24,28 @@ const MainPage: React.FC = (): JSX.Element => {
         }
     };
 
+    // Hydrate 에러를 방지하기 위한 useEffect - 1
     useEffect(() => {
         setUserInfo(userInfoReocoil);
     }, [userInfoReocoil]);
 
+    // Hydrate 에러를 방지하기 위한 useEffect - 2
     useEffect(() => {
         if (nicknameRecoil) {
             setNickname(nicknameRecoil);
         }
     }, [nicknameRecoil]);
 
+    // 관찰자를 생성하기 위한 useEffect
     useEffect(() => {
+        // 사용자 관찰자 생성
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 setUserInfoRecoil({
                     uid: user.uid,
                     email: user.email,
                 });
-                console.log(
-                    '현재 사용자의 UID:',
-                    user.uid,
-                    '현재 사용자의 Email:',
-                    auth.currentUser
-                );
+                console.log('현재 사용자의 UID:', user.uid, '현재 사용자의 Email:', user.email);
             } else {
                 setUserInfoRecoil(null);
                 console.log('사용자가 로그인되어 있지 않습니다.');
@@ -60,7 +60,7 @@ const MainPage: React.FC = (): JSX.Element => {
             <p>Set the weight, reps, and timer for each exercise.</p>
             {userInfo ? (
                 <div>
-                    <RoutinePageBtn>go to&nbsp;{nickname}'s routine →</RoutinePageBtn>
+                    <RoutinePageBtn>go to&nbsp;{nickname}&apos;s routine →</RoutinePageBtn>
                     <SignOutBtn onClick={handleSignOut}>Sign Out</SignOutBtn>
                 </div>
             ) : (
@@ -71,7 +71,7 @@ const MainPage: React.FC = (): JSX.Element => {
                         </Link>
                     </SignInPageBtn>
                     <SignUpPageBtn>
-                        <Link className="signup-link" href={'/login/signup'} as={'/login/signup'}>
+                        <Link className="signup-link" href={'/signup'} as={'/signup'}>
                             Sign Up →
                         </Link>
                     </SignUpPageBtn>

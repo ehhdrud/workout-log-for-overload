@@ -5,7 +5,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Timer from '../../../components/timer';
 
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { db } from '@/api/firebase';
+import { auth, db } from '@/api/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 import Image from 'next/image';
@@ -418,7 +418,6 @@ const Log: React.FC = (props: any): JSX.Element => {
     };
 
     useEffect(() => {
-        const auth = getAuth();
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 console.log('현재 사용자의 UID:', user.uid, 'currentUser:', auth.currentUser);

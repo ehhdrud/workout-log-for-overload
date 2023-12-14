@@ -1,62 +1,22 @@
 'use client';
 
 import React, { useState } from 'react';
-import { loginEmail, loginGoogle } from '@/api/firebase';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import '@/styles/login-page.css';
 import Image from 'next/image';
 
-import {
-    getAuth,
-    onAuthStateChanged,
-    setPersistence,
-    browserSessionPersistence,
-} from 'firebase/auth';
-import { useSetRecoilState } from 'recoil';
-import { userAtom, InfoType } from '@/recoil/atoms';
+import { loginEmail, loginGoogle } from '@/api/firebase';
 
 const LogIn: React.FC = (): JSX.Element => {
     const router = useRouter();
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const setUserInfo = useSetRecoilState<InfoType | null>(userAtom);
 
-    // 유저 정보 저장 함수
-    const saveUserInfo = () => {
-        const auth = getAuth();
-        // firebase auth instance의 지속성을 session으로 설정
-        setPersistence(auth, browserSessionPersistence)
-            .then(() => {
-                console.log('인증 상태 Session에서 관리 시작');
-            })
-            .catch((error) => {
-                console.error('인증 상태 지속성 수정 실패: ', error);
-            });
-
-        // Recoil을 통해 session storage에 저장
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                setUserInfo({
-                    uid: user.uid,
-                    email: user.email,
-                });
-                console.log(
-                    '현재 사용자의 UID:',
-                    user.uid,
-                    '현재 사용자의 Email:',
-                    auth.currentUser
-                );
-            } else {
-                setUserInfo(null);
-                console.log('사용자가 로그인되어 있지 않습니다.');
-            }
-        });
-    };
-
+    // 이메일 로그인 핸들러
     const handleEmailLogin = async () => {
-        saveUserInfo();
         try {
+            // loginEmail 함수 실행 시, 지속성 Session으로 설정
             await loginEmail(email, password);
             router.push('/routine_test');
         } catch (error) {
@@ -64,9 +24,10 @@ const LogIn: React.FC = (): JSX.Element => {
         }
     };
 
+    // 구글 로그인 핸들러
     const handleGoogleLogin = async () => {
-        saveUserInfo();
         try {
+            // loginGoogle 함수 실행 시, 지속성 Session으로 설정
             await loginGoogle();
             router.push('/routine_test');
         } catch (error) {
@@ -74,6 +35,7 @@ const LogIn: React.FC = (): JSX.Element => {
         }
     };
 
+    // Email 비밀번호 입력란 Enter키 입력 시 동작
     const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             handleEmailLogin();
@@ -114,7 +76,7 @@ const LogIn: React.FC = (): JSX.Element => {
                     Sign In
                 </button>
 
-                <Link className="signup-link" href={'/login/signup'} as={'/login/signup'}>
+                <Link className="signup-link" href={'/signup'} as={'/signup'}>
                     Create Account →
                 </Link>
             </div>

@@ -17,8 +17,7 @@ import {
     deleteDoc,
     deleteField,
 } from 'firebase/firestore';
-import { db } from '@/api/firebase';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { db, logout } from '@/api/firebase';
 
 import Image from 'next/image';
 import Spinner from '@/assets/Spinner.svg';
@@ -160,17 +159,6 @@ const Routine: React.FC = (): JSX.Element => {
                 console.error(error);
             });
     };
-
-    useEffect(() => {
-        const auth = getAuth();
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                console.log(user, '현재 사용자의 UID:', user.uid, 'currentUser:', auth.currentUser);
-            } else {
-                console.log('사용자가 로그인되어 있지 않습니다.');
-            }
-        });
-    }, []);
 
     // null이 아닌 uid 값을 별도의 상태에 저장하여 사용하기 위한 useEffect
     useEffect(() => {
@@ -320,7 +308,7 @@ const Routine: React.FC = (): JSX.Element => {
                     />
                 )}
             </div>
-            <button>by&nbsp;{nickname}</button>
+            <button onClick={logout}>by&nbsp;{nickname}</button>
         </div>
     ) : (
         <div>

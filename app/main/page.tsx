@@ -38,19 +38,22 @@ const MainPage: React.FC = (): JSX.Element => {
 
     // 관찰자를 생성하기 위한 useEffect
     useEffect(() => {
-        // 사용자 관찰자 생성
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                setUserInfoRecoil({
-                    uid: user.uid,
-                    email: user.email,
-                });
-                console.log('현재 사용자의 UID:', user.uid, '현재 사용자의 Email:', user.email);
-            } else {
-                setUserInfoRecoil(null);
-                console.log('사용자가 로그인되어 있지 않습니다.');
-            }
-        });
+        if (!sessionStorage.getItem('sessionStorage')) {
+            console.log("세션 스토리지에 'sessionStorage' Key가 없으므로 관찰자를 생성합니다.");
+            // 사용자 관찰자 생성
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    setUserInfoRecoil({
+                        uid: user.uid,
+                        email: user.email,
+                    });
+                    console.log('현재 사용자의 UID:', user.uid, '현재 사용자의 Email:', user.email);
+                } else {
+                    setUserInfoRecoil(null);
+                    console.log('사용자가 로그인되어 있지 않습니다.');
+                }
+            });
+        }
     }, []);
 
     return (

@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { userAtom, InfoType } from '@/recoil/atoms';
 import { nicknameSelector } from '@/recoil/selectors';
 
@@ -19,7 +20,6 @@ import {
 } from 'firebase/firestore';
 import { db, logout } from '@/api/firebase';
 
-import Image from 'next/image';
 import Spinner from '@/assets/Spinner.svg';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
@@ -29,7 +29,7 @@ import '@/styles/routine-page.css';
 
 const Routine: React.FC = (): JSX.Element => {
     // Hydrate 에러를 방지하기 위한 상태
-    const [userInfoRecoil, setUserInfoRecoil] = useRecoilState<InfoType | null>(userAtom);
+    const userInfoRecoil = useRecoilValue<InfoType | null>(userAtom);
     const nicknameRecoil = useRecoilValue<string | undefined>(nicknameSelector);
     const [userInfo, setUserInfo] = useState<InfoType | null>(null);
     const [nickname, setNickname] = useState<string | undefined>();
@@ -59,7 +59,7 @@ const Routine: React.FC = (): JSX.Element => {
     const [routineNameEditState, setRoutineNameEditState] = useState<boolean>(false);
     const [selectedRoutine, setSelectedRoutine] = useState<string | null>(null);
     const [editedRoutine, setEditedRoutine] = useState<string>('');
-    // null이 아닌 uid 값을 저장하기 위한 State
+    // uid 값을 저장하기 위한 State
     const [uid, setUid] = useState<string>('');
 
     // 문서(루틴) 읽어오기
@@ -113,28 +113,21 @@ const Routine: React.FC = (): JSX.Element => {
                 alert('이름을 입력해주세요 😢');
                 return;
             }
-
             try {
                 const docRefOld = doc(db, uid, routineName);
                 const docRefNew = doc(db, uid, editedRoutine);
                 const docSnap = await getDoc(docRefOld);
-
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    console.log('data', data);
-
                     await setDoc(docRefNew, data);
                     await deleteDoc(docRefOld);
-
                     data[editedRoutine] = data[routineName];
-
                     await updateDoc(docRefNew, data); //data가 undefined !
-
                     await updateDoc(docRefNew, {
                         [routineName]: deleteField(),
                     });
-
                     readDocumentNames();
+
                     console.log('✏️edit routine✏️:', `${routineName} -> ${editedRoutine}`);
                 } else {
                     console.error('수정할 루틴이 존재하지 않습니다.');
@@ -287,7 +280,7 @@ const Routine: React.FC = (): JSX.Element => {
                     ))}
                 </div>
             </div>
-
+            <button onClick={logout}>by&nbsp;{nickname}</button>
             <div className="create-field">
                 {!createRoutineInput ? (
                     <button
@@ -308,7 +301,6 @@ const Routine: React.FC = (): JSX.Element => {
                     />
                 )}
             </div>
-            <button onClick={logout}>by&nbsp;{nickname}</button>
         </div>
     ) : (
         <div>

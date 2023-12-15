@@ -3,20 +3,21 @@
 import React from 'react';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
-
+// firebase 관련 import
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db, logout } from '@/api/firebase';
+// recoil 관련 import
 import { useRecoilValue } from 'recoil';
 import { userAtom, InfoType } from '@/recoil/atoms';
 import { nicknameSelector } from '@/recoil/selectors';
-
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { db, logout } from '@/api/firebase';
-
+// 스타일링 관련 import
 import Spinner from '@/assets/Spinner.svg';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { faBolt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@/styles/routine-id-page.css';
-
+// 컴포넌트 import
+import UserIcon from '@/components/UserIcon';
 import Timer from '@/components/timer';
 
 interface Set {
@@ -33,7 +34,7 @@ interface Workout {
     [key: string]: WorkoutData;
 }
 
-const Log: React.FC = (props: any): JSX.Element => {
+const Log: React.FC<any> = (props: any): JSX.Element => {
     // Hydrate 에러를 방지하기 위한 상태
     const userInfoRecoil = useRecoilValue<InfoType | null>(userAtom);
     const nicknameRecoil = useRecoilValue<string | undefined>(nicknameSelector);
@@ -660,7 +661,7 @@ const Log: React.FC = (props: any): JSX.Element => {
                     ))}
                 </div>
             </div>
-            <button onClick={logout}>by&nbsp;{nickname}</button>
+            <UserIcon nickname={nickname} />
             {!createWorkoutInput ? (
                 <button
                     className="create-input-feild"

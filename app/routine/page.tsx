@@ -3,11 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-
-import { useRecoilValue } from 'recoil';
-import { userAtom, InfoType } from '@/recoil/atoms';
-import { nicknameSelector } from '@/recoil/selectors';
-
+// firebase 관련 import
 import {
     collection,
     doc,
@@ -19,15 +15,21 @@ import {
     deleteField,
 } from 'firebase/firestore';
 import { db, logout } from '@/api/firebase';
-
+// recoil 관련 import
+import { useRecoilValue } from 'recoil';
+import { userAtom, InfoType } from '@/recoil/atoms';
+import { nicknameSelector } from '@/recoil/selectors';
+// 스타일링 관련 import
 import Spinner from '@/assets/Spinner.svg';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@/styles/routine-page.css';
+// 컴포넌트 import
+import UserIcon from '@/components/UserIcon';
 
-const Routine: React.FC = (): JSX.Element => {
+const Routine = (): JSX.Element => {
     // Hydrate 에러를 방지하기 위한 상태
     const userInfoRecoil = useRecoilValue<InfoType | null>(userAtom);
     const nicknameRecoil = useRecoilValue<string | undefined>(nicknameSelector);
@@ -280,7 +282,7 @@ const Routine: React.FC = (): JSX.Element => {
                     ))}
                 </div>
             </div>
-            <button onClick={logout}>by&nbsp;{nickname}</button>
+            <UserIcon nickname={nickname} />
             <div className="create-field">
                 {!createRoutineInput ? (
                     <button

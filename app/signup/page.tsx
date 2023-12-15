@@ -5,7 +5,7 @@ import { signupEmail } from '@/api/firebase';
 import { useRouter } from 'next/navigation';
 import '@/styles/signup-page.css';
 
-const SignUp: React.FC = (): JSX.Element => {
+const SignUp = (): JSX.Element => {
     const router = useRouter();
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');

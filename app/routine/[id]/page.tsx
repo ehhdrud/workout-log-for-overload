@@ -2,19 +2,22 @@
 
 import React from 'react';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import Image from 'next/image';
+
 import { useRecoilValue } from 'recoil';
-import { isAcceptedAtom } from '@/recoil/atoms';
-import Timer from '../../../components/timer';
+import { userAtom, InfoType } from '@/recoil/atoms';
+import { nicknameSelector } from '@/recoil/selectors';
 
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { db } from '@/api/firebase';
+import { db, logout } from '@/api/firebase';
 
-import Image from 'next/image';
 import Spinner from '@/assets/Spinner.svg';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { faBolt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@/styles/routine-id-page.css';
+
+import Timer from '@/components/timer';
 
 interface Set {
     weight: number | null;
@@ -30,52 +33,60 @@ interface Workout {
     [key: string]: WorkoutData;
 }
 
-const Log = (props: any): JSX.Element => {
+const Log: React.FC = (props: any): JSX.Element => {
+    // Hydrate 에러를 방지하기 위한 상태
+    const userInfoRecoil = useRecoilValue<InfoType | null>(userAtom);
+    const nicknameRecoil = useRecoilValue<string | undefined>(nicknameSelector);
+    const [userInfo, setUserInfo] = useState<InfoType | null>(null);
+    const [nickname, setNickname] = useState<string | undefined>();
+
+    // Hydrate 에러를 방지하기 위한 useEffect - 1
+    useEffect(() => {
+        setUserInfo(userInfoRecoil);
+    }, [userInfoRecoil]);
+
+    // Hydrate 에러를 방지하기 위한 useEffect - 2
+    useEffect(() => {
+        if (nicknameRecoil) {
+            setNickname(nicknameRecoil);
+        }
+    }, [nicknameRecoil]);
+
     // docId(루틴 이름) 저장
     const docId = decodeURIComponent(props.params.id);
-
-    // 시크릿 코드 유지를 위한 State
-    const [isAccepted, setClientIsAccepted] = useState<string | boolean>('');
-    const recoilIsAccepted = useRecoilValue(isAcceptedAtom);
-
     // 취합한 데이터 State
     const [workoutData, setWorkoutData] = useState<Workout[]>([]);
-
     // 운동, 무게, 횟수 State
     const [workout, setWorkout] = useState<string>('');
     const [weight, setWeight] = useState<number | null>(null);
     const [reps, setReps] = useState<number | null>(null);
     const [restTime, setRestTime] = useState<number>(0);
-
     // 운동,무게,횟수를 선택했을 때 필요한 State
     const [selectedWorkout, setSelectedWorkout] = useState<string>('');
     const [weightEditIndex, setWeightEditIndex] = useState<number | null>(null);
     const [repsEditIndex, setRepsEditIndex] = useState<number | null>(null);
-
     // '운동 생성 Input' 렌더링에 필요한 State
     const [createWorkoutInput, setCreateWorkoutInput] = useState<boolean>(false);
-
     // '운동 이름 수정 Input' 렌더링에 필요한 State
     const [workoutNameEditState, setWorkoutNameEditState] = useState<boolean>(false);
     const [editedWorkoutName, setEditedWorkoutName] = useState<string | null>(null);
-
     // '운동 삭제' 시 필요한 State
     const [deleteState, setDeleteState] = useState<boolean>(false);
-
     // '휴식시간 수정' 시 필요한 State
     const [createRestTimeInput, setCreateRestTimeInput] = useState<boolean>(false);
-
     // '무게/횟수 수정 Input의 Overlay' 렌더링에 필요한 State
     const [tableRowInputOverlayState, setTableRowInputOverlayState] = useState<boolean>(false);
+    // uid 값을 저장하기 위한 State
+    const [uid, setUid] = useState<string>('');
 
+    // 타이머 컴포넌트를 위한 useRef
     const timerRefs = useRef<any>({});
 
     // 운동을 불러오는 함수
     const readDocumentField = useCallback(async () => {
         try {
-            const docRef = doc(db, 'workout-log', docId);
+            const docRef = doc(db, uid, docId);
             const docSnapshot = await getDoc(docRef);
-
             if (docSnapshot.exists()) {
                 const data = docSnapshot.data();
                 setWorkoutData(Object.values(data)[0]);
@@ -85,7 +96,7 @@ const Log = (props: any): JSX.Element => {
         } catch (error) {
             console.error('문서를 읽어오는 중 오류 발생:', error);
         }
-    }, []);
+    }, [uid]);
 
     // 운동을 추가하는 함수
     const handleAddWorkout = async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -95,14 +106,11 @@ const Log = (props: any): JSX.Element => {
                 alert('같은 이름이 이미 존재합니다 😢');
                 return;
             }
-
             try {
-                const docRef = doc(db, 'workout-log', docId);
+                const docRef = doc(db, uid, docId);
                 const docSnap = await getDoc(docRef);
-
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-
                     const newWorkout = {
                         [workout]: {
                             restTime: restTime,
@@ -114,11 +122,8 @@ const Log = (props: any): JSX.Element => {
                             ],
                         },
                     };
-
                     data[docId].push(newWorkout);
-
                     await updateDoc(docRef, data);
-
                     readDocumentField();
 
                     console.log('⭐create workout⭐:', workout);
@@ -140,21 +145,16 @@ const Log = (props: any): JSX.Element => {
     const addSet = async (workoutIndex: number, workoutName: string) => {
         setDeleteState(false);
         try {
-            const docRef = doc(db, 'workout-log', docId);
+            const docRef = doc(db, uid, docId);
             const docSnap = await getDoc(docRef);
-
             if (docSnap.exists()) {
                 const data = docSnap.data();
-
                 const newSet = {
                     weight: weight,
                     reps: reps,
                 };
-
                 data[docId][workoutIndex][workoutName].set.push(newSet);
-
                 await updateDoc(docRef, data);
-
                 readDocumentField();
 
                 console.log('⭐create set⭐:', `${docId}/${workoutName}`);
@@ -200,16 +200,12 @@ const Log = (props: any): JSX.Element => {
     ) => {
         if (e.key === 'Enter') {
             try {
-                const docRef = doc(db, 'workout-log', docId);
+                const docRef = doc(db, uid, docId);
                 const docSnap = await getDoc(docRef);
-
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-
                     data[docId][workoutIndex][workoutName].set[setIndex].weight = weight;
-
                     await updateDoc(docRef, data);
-
                     readDocumentField();
 
                     console.log('✏️edit weight✏️:', `${docId}-${workoutName}-${setIndex}번 세트`);
@@ -236,20 +232,14 @@ const Log = (props: any): JSX.Element => {
     ) => {
         if (e.key === 'Enter') {
             const lastIndex = setLength - 1;
-
             try {
-                const docRef = doc(db, 'workout-log', docId);
+                const docRef = doc(db, uid, docId);
                 const docSnap = await getDoc(docRef);
-
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-
                     data[docId][workoutIndex][workoutName].set[setIndex].reps = reps;
-
                     await updateDoc(docRef, data);
-
                     readDocumentField();
-
                     if (setIndex !== lastIndex) timerRefs.current[workoutName].isCountingOn();
 
                     console.log('✏️edit reps✏️:', `${docId}-${workoutName}-${setIndex}번 세트`);
@@ -259,7 +249,6 @@ const Log = (props: any): JSX.Element => {
             } catch (error) {
                 console.error(error);
             }
-
             setReps(null);
             setSelectedWorkout('');
             setRepsEditIndex(null);
@@ -270,20 +259,15 @@ const Log = (props: any): JSX.Element => {
     // 운동을 삭제하는 함수
     const handleWorkoutDelete = async (workoutName: string) => {
         try {
-            const docRef = doc(db, 'workout-log', docId);
+            const docRef = doc(db, uid, docId);
             const docSnap = await getDoc(docRef);
-
             if (docSnap.exists()) {
                 const data = docSnap.data();
-
                 const updatedWorkouts = data[docId].filter(
                     (workout: any) => !workout.hasOwnProperty(workoutName)
                 );
-
                 data[docId] = updatedWorkouts;
-
                 await updateDoc(docRef, data);
-
                 readDocumentField();
 
                 console.log(`❌delete workout❌: ${docId}/${workoutName}`);
@@ -298,16 +282,12 @@ const Log = (props: any): JSX.Element => {
     // 세트를 삭제하는 함수
     const handleSetDelete = async (workoutIndex: number, workoutName: string, setIndex: number) => {
         try {
-            const docRef = doc(db, 'workout-log', docId);
+            const docRef = doc(db, uid, docId);
             const docSnap = await getDoc(docRef);
-
             if (docSnap.exists()) {
                 const data = docSnap.data();
-
                 data[docId][workoutIndex][workoutName].set.splice(setIndex, 1);
-
                 await updateDoc(docRef, data);
-
                 readDocumentField();
 
                 console.log('❌delete set❌:', `${docId}-${workoutName}-${setIndex}번 세트`);
@@ -338,21 +318,16 @@ const Log = (props: any): JSX.Element => {
                 alert('이름을 입력해주세요 😢');
                 return;
             }
-
             try {
-                const docRef = doc(db, 'workout-log', docId);
+                const docRef = doc(db, uid, docId);
                 const docSnap = await getDoc(docRef);
-
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-
                     if (editedWorkoutName) {
                         data[docId].splice(workoutIndex, 1, {
                             [editedWorkoutName]: data[docId][workoutIndex][workoutName],
                         });
-
                         await updateDoc(docRef, data);
-
                         readDocumentField();
 
                         console.log(
@@ -380,18 +355,13 @@ const Log = (props: any): JSX.Element => {
     ) => {
         if (e.key === 'Enter') {
             try {
-                const docRef = doc(db, 'workout-log', docId);
+                const docRef = doc(db, uid, docId);
                 const docSnap = await getDoc(docRef);
-
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-
                     data[docId][workoutIndex][workoutName].restTime = restTime;
-
                     await updateDoc(docRef, data);
-
                     readDocumentField();
-
                     timerRefs.current[workoutName].editTimer(restTime);
 
                     console.log('✏️edit rest time✏️:', `${docId}/${workoutName} - ${restTime}초`);
@@ -414,15 +384,21 @@ const Log = (props: any): JSX.Element => {
         setTableRowInputOverlayState(false);
     };
 
+    // null이 아닌 uid 값을 별도의 상태에 저장하여 사용하기 위한 useEffect
     useEffect(() => {
-        setClientIsAccepted(recoilIsAccepted);
-    }, [recoilIsAccepted]);
+        if (userInfo?.uid) {
+            setUid(userInfo.uid);
+        }
+    }, [userInfo]);
 
+    // uid 상태가 바뀌면 문서 읽어오기 위한 useEffect
     useEffect(() => {
-        readDocumentField();
-    }, [readDocumentField]);
+        if (uid) {
+            readDocumentField();
+        }
+    }, [uid, readDocumentField]);
 
-    return isAccepted ? (
+    return userInfo ? (
         <div className="log-page">
             {tableRowInputOverlayState && (
                 <div
@@ -684,7 +660,7 @@ const Log = (props: any): JSX.Element => {
                     ))}
                 </div>
             </div>
-
+            <button onClick={logout}>by&nbsp;{nickname}</button>
             {!createWorkoutInput ? (
                 <button
                     className="create-input-feild"

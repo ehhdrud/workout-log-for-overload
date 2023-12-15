@@ -1,9 +1,12 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
+
 import { useRecoilValue } from 'recoil';
-import { isAcceptedAtom } from '@/recoil/atoms';
+import { userAtom, InfoType } from '@/recoil/atoms';
+import { nicknameSelector } from '@/recoil/selectors';
 
 import {
     collection,
@@ -15,9 +18,8 @@ import {
     deleteDoc,
     deleteField,
 } from 'firebase/firestore';
-import { db } from '@/api/firebase';
+import { db, logout } from '@/api/firebase';
 
-import Image from 'next/image';
 import Spinner from '@/assets/Spinner.svg';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
@@ -25,33 +27,45 @@ import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@/styles/routine-page.css';
 
-const Routine = (): JSX.Element => {
-    // 시크릿 코드 유지를 위한 State
-    const [isAccepted, setClientIsAccepted] = useState<boolean>(false);
-    const recoilIsAccepted = useRecoilValue<boolean>(isAcceptedAtom);
+const Routine: React.FC = (): JSX.Element => {
+    // Hydrate 에러를 방지하기 위한 상태
+    const userInfoRecoil = useRecoilValue<InfoType | null>(userAtom);
+    const nicknameRecoil = useRecoilValue<string | undefined>(nicknameSelector);
+    const [userInfo, setUserInfo] = useState<InfoType | null>(null);
+    const [nickname, setNickname] = useState<string | undefined>();
+
+    // Hydrate 에러를 방지하기 위한 useEffect - 1
+    useEffect(() => {
+        setUserInfo(userInfoRecoil);
+    }, [userInfoRecoil]);
+
+    // Hydrate 에러를 방지하기 위한 useEffect - 2
+    useEffect(() => {
+        if (nicknameRecoil) {
+            setNickname(nicknameRecoil);
+        }
+    }, [nicknameRecoil]);
 
     // 취합한 데이터 State
-    const [routineList, setRoutineList] = useState<string[]>([]);
-
+    const [routineList, setRoutineList] = useState<string[] | null>(null);
     // '루틴 생성 Input' 렌더링에 필요한 State
     const [createRoutineInput, setCreateRoutineInput] = useState<boolean>(false);
-
     // 루틴 이름을 입력받는 State
     const [routine, setRoutine] = useState<string>('');
-
     // '수정/삭제 button'을 렌더링하기 위한 State
     const [createEditBtn, setCreateEditBtn] = useState<boolean>(false);
     const [createDeleteBtn, setCreateDeleteBtn] = useState<boolean>(false);
-
     // '루틴 수정 Input' 렌더링에 필요한 State
     const [routineNameEditState, setRoutineNameEditState] = useState<boolean>(false);
     const [selectedRoutine, setSelectedRoutine] = useState<string | null>(null);
     const [editedRoutine, setEditedRoutine] = useState<string>('');
+    // uid 값을 저장하기 위한 State
+    const [uid, setUid] = useState<string>('');
 
     // 문서(루틴) 읽어오기
     const readDocumentNames = useCallback(async () => {
         try {
-            const docRef = collection(db, 'workout-log');
+            const docRef = collection(db, uid);
             const querySnapshot = await getDocs(docRef);
 
             const documentNames: string[] = [];
@@ -63,16 +77,16 @@ const Routine = (): JSX.Element => {
         } catch (error) {
             console.error('문서를 읽어오는 중 오류 발생:', error);
         }
-    }, []);
+    }, [uid]);
 
     // 루틴을 생성하는 함수
     const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            if (routineList.includes(routine)) {
+            if (routineList?.includes(routine)) {
                 alert('같은 이름이 이미 존재합니다 😢');
                 return;
             }
-            const docRef = doc(db, 'workout-log', routine);
+            const docRef = doc(db, uid, routine);
             setDoc(docRef, { [routine]: [] })
                 .then(() => {
                     console.log('⭐create routine⭐:', routine);
@@ -92,34 +106,28 @@ const Routine = (): JSX.Element => {
         routineName: string
     ) => {
         if (e.key === 'Enter') {
-            if (routineList.includes(editedRoutine)) {
+            if (routineList?.includes(editedRoutine)) {
                 alert('같은 이름이 이미 존재합니다 😢');
                 return;
             } else if (!editedRoutine) {
                 alert('이름을 입력해주세요 😢');
                 return;
             }
-
             try {
-                const docRefOld = doc(db, 'workout-log', routineName);
-                const docRefNew = doc(db, 'workout-log', editedRoutine);
+                const docRefOld = doc(db, uid, routineName);
+                const docRefNew = doc(db, uid, editedRoutine);
                 const docSnap = await getDoc(docRefOld);
-
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-
                     await setDoc(docRefNew, data);
                     await deleteDoc(docRefOld);
-
                     data[editedRoutine] = data[routineName];
-
-                    await updateDoc(docRefNew, data);
-
+                    await updateDoc(docRefNew, data); //data가 undefined !
                     await updateDoc(docRefNew, {
                         [routineName]: deleteField(),
                     });
-
                     readDocumentNames();
+
                     console.log('✏️edit routine✏️:', `${routineName} -> ${editedRoutine}`);
                 } else {
                     console.error('수정할 루틴이 존재하지 않습니다.');
@@ -134,7 +142,7 @@ const Routine = (): JSX.Element => {
 
     // 루틴을 삭제하는 함수
     const handleRoutineDelete = (routineName: string) => {
-        const docRef = doc(db, 'workout-log', routineName);
+        const docRef = doc(db, uid, routineName);
         deleteDoc(docRef)
             .then(() => {
                 readDocumentNames();
@@ -145,15 +153,28 @@ const Routine = (): JSX.Element => {
             });
     };
 
+    // null이 아닌 uid 값을 별도의 상태에 저장하여 사용하기 위한 useEffect
     useEffect(() => {
-        setClientIsAccepted(recoilIsAccepted);
-    }, [recoilIsAccepted]);
+        if (userInfo?.uid) {
+            setUid(userInfo.uid);
+        }
+    }, [userInfo]);
 
+    // uid 상태가 바뀌면 문서 읽어오기 위한 useEffect
     useEffect(() => {
-        readDocumentNames();
-    }, []);
+        if (uid) {
+            readDocumentNames();
+        }
+    }, [uid]);
 
-    return isAccepted ? (
+    // 루틴이 없을 때, Default를 만들어주기 위한 useEffect
+    useEffect(() => {
+        if (routineList?.length === 0) {
+            setDoc(doc(db, uid, 'Your Routine'), { 'Your Routine': [] });
+        }
+    }, [routineList]);
+
+    return userInfo ? (
         <div className="routine-page">
             {routineNameEditState && (
                 <div
@@ -214,7 +235,7 @@ const Routine = (): JSX.Element => {
                 </div>
 
                 <div className="routine-items">
-                    {routineList.map((item) => (
+                    {routineList?.map((item) => (
                         <div key={item} className="routine-item-container">
                             <div className="routine-item">
                                 {routineNameEditState && item === selectedRoutine ? (
@@ -259,7 +280,7 @@ const Routine = (): JSX.Element => {
                     ))}
                 </div>
             </div>
-
+            <button onClick={logout}>by&nbsp;{nickname}</button>
             <div className="create-field">
                 {!createRoutineInput ? (
                     <button

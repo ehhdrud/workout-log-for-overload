@@ -22,7 +22,7 @@ const LogIn: React.FC = (): JSX.Element => {
         try {
             // loginEmail 함수 실행 시, 지속성 Session으로 설정
             await loginEmail(email, password);
-            router.push('/routine_test');
+            router.push('/routine');
         } catch (error) {
             console.log(error);
         }
@@ -33,7 +33,7 @@ const LogIn: React.FC = (): JSX.Element => {
         try {
             // loginGoogle 함수 실행 시, 지속성 Session으로 설정
             await loginGoogle();
-            router.push('/routine_test');
+            router.push('/routine');
         } catch (error) {
             console.log(error);
         }

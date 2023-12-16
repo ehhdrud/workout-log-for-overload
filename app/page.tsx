@@ -11,6 +11,8 @@ import { userAtom, InfoType } from '@/recoil/atoms';
 import { nicknameSelector } from '@/recoil/selectors';
 // 스타일링 관련 import
 import styled from 'styled-components';
+import Lottie from 'react-lottie-player';
+import Animation from '@/assets/Animation.json';
 
 const MainPage = (): JSX.Element => {
     const [userInfoReocoil, setUserInfoRecoil] = useRecoilState<InfoType | null>(userAtom);
@@ -79,28 +81,23 @@ const MainPage = (): JSX.Element => {
 
     return (
         <MainPageContainer>
-            <p>Manage your own weight training routine.</p>
-            <p>Save exercise information in each routine.</p>
-            <p>Set the weight, reps, and timer for each exercise.</p>
+            <Lottie animationData={Animation} loop play style={{ width: 250, height: 250 }} />
             {userInfo ? (
-                <div>
+                <LoginStateBtnContainer>
                     <Link href={'/routine'} as={'/routine'}>
-                        <RoutinePageBtn>
-                            go to&nbsp;
-                            {nickname}&apos;s routine →
-                        </RoutinePageBtn>
+                        <RoutinePageBtn>{nickname}&apos;s routine →</RoutinePageBtn>
                     </Link>
                     <SignOutBtn onClick={handleSignOut}>Sign Out</SignOutBtn>
-                </div>
+                </LoginStateBtnContainer>
             ) : (
-                <div>
+                <LogoutStateBtnContainer>
                     <Link className="signin-link" href={'/login'} as={'/login'}>
                         <SignInPageBtn>Sign In →</SignInPageBtn>
                     </Link>
                     <Link className="signup-link" href={'/signup'} as={'/signup'}>
                         <SignUpPageBtn>Sign Up →</SignUpPageBtn>
                     </Link>
-                </div>
+                </LogoutStateBtnContainer>
             )}
         </MainPageContainer>
     );
@@ -116,9 +113,71 @@ const MainPageContainer = styled.div`
     }
 `;
 
-const RoutinePageBtn = styled.button``;
-const SignOutBtn = styled.button``;
-const SignInPageBtn = styled.button``;
-const SignUpPageBtn = styled.button``;
+const LoginStateBtnContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+`;
+
+const RoutinePageBtn = styled.button`
+    width: 230px;
+    height: 25px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: #00b;
+    border: none;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+`;
+
+const SignOutBtn = styled.button`
+    width: 230px;
+    height: 25px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: #777;
+    border: none;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+`;
+
+const LogoutStateBtnContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+`;
+
+const SignInPageBtn = styled.button`
+    width: 230px;
+    height: 25px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: #55f;
+    border: none;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+`;
+const SignUpPageBtn = styled.button`
+    width: 230px;
+    height: 25px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: #00b;
+    border: none;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+`;
 
 export default MainPage;

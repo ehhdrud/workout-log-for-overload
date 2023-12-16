@@ -14,6 +14,12 @@ body {
     color: white;
 }
 
+.main-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .main-title {
     position: absolute;
     top: 0;

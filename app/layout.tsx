@@ -1,6 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import Recoil from '../recoil/Recoil';
+import Link from 'next/link';
 import Image from 'next/image';
 import backgroundImg from '@/assets/Cloudy.svg';
 
@@ -20,11 +21,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     fill
                     style={{ zIndex: -1, objectFit: 'cover' }}
                 />
-                <h1 className="main-title">
-                    <p className="title-top">WORKOUT LOG</p>
-                    <div className="title-bottom">OVERLOAD</div>
-                </h1>
-
+                <Link className="main-link" href={'/'} as={'/'}>
+                    <h1 className="main-title">
+                        <p className="title-top">WORKOUT LOG</p>
+                        <div className="title-bottom">OVERLOAD</div>
+                    </h1>
+                </Link>
                 <Recoil>{children}</Recoil>
             </body>
         </html>

@@ -47,7 +47,7 @@
     justify-content: center;
     align-items: flex-start;
     position: absolute;
-    top: 15vh;
+    top: 18vh;
 }
 
 .routine-name {
@@ -266,6 +266,7 @@
     font-weight: bold;
     color: black;
     background-color: blue;
+    cursor: pointer;
 }
 
 .workout-input {

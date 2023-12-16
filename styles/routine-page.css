@@ -73,6 +73,7 @@
     background-color: #003;
     color: #d7d7d7;
     border-radius: 15px 15px 0 0;
+    cursor: pointer;
 }
 
 .routine-delete-btn {
@@ -82,6 +83,7 @@
     border-style: none;
     background-color: #003;
     border-radius: 15px 15px 0 0;
+    cursor: pointer;
 }
 
 .done-text {
@@ -95,6 +97,7 @@
     font-weight: 600;
     background-color: #002;
     border-radius: 15px 15px 0 0;
+    cursor: pointer;
 }
 
 .routine-items {
@@ -154,6 +157,7 @@
     border-radius: 10px;
     border-style: none;
     background-color: transparent;
+    cursor: pointer;
 }
 
 .delete-button {
@@ -191,6 +195,7 @@
     font-weight: bold;
     color: black;
     background-color: blue;
+    cursor: pointer;
 }
 
 .routine-input-feild {

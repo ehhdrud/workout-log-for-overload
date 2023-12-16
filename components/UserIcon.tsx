@@ -2,8 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { logout } from '@/api/firebase';
-import { FaUserCircle } from 'react-icons/fa';
-
+import { FaUser } from 'react-icons/fa';
 import styled from 'styled-components';
 import './user-icon.css';
 
@@ -18,41 +17,96 @@ const UserIcon: React.FC<Props> = (props: { nickname: string | undefined }): JSX
 
     const handleLogout = () => {
         logout();
-        router.push('/routine');
+        router.push('/');
     };
     return (
         <div>
-            <div
-                className="UserIconContainer"
+            <UserIconBox
                 onClick={() => {
-                    setPopupState(true);
+                    setPopupState(!popupState);
                 }}
             >
-                <FaUserCircle />
-            </div>
+                <FaUser color="#668" size="15" />
+            </UserIconBox>
             {popupState && (
-                <div className="PopupContainer">
-                    <div className="PopupOverlay" />
-                    <div>
-                        <p className="PopupTxt">{nickname}</p>
-                        <button className="PopupSignoutBtn" onClick={handleLogout}>
-                            Sign Out
-                        </button>
-                    </div>
-                </div>
+                <PopupContainer>
+                    <PopupOverlay
+                        onClick={() => {
+                            setPopupState(!popupState);
+                        }}
+                    />
+                    <PopupModal>
+                        <PopupTxt>{nickname}</PopupTxt>
+                        <PopupSignoutBtn onClick={handleLogout}>Sign Out</PopupSignoutBtn>
+                    </PopupModal>
+                </PopupContainer>
             )}
         </div>
     );
 };
 
-const UserIconContainer = styled.div``;
+const UserIconBox = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 25px;
+    height: 25px;
+    border: 3px solid #002;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #002;
+    z-index: 22;
+    cursor: pointer;
+`;
 
-const PopupContainer = styled.div``;
+const PopupContainer = styled.div`
+    position: relative;
+`;
 
-const PopupOverlay = styled.div``;
+const PopupOverlay = styled.div`
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 20;
+`;
 
-const PopupTxt = styled.p``;
+const PopupModal = styled.div`
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 30px;
+    border-radius: 10px;
+    background-color: #333;
+    z-index: 21;
+    white-space: nowrap;
+`;
 
-const PopupSignoutBtn = styled.div``;
+const PopupTxt = styled.p`
+    color: white;
+    font-weight: bold;
+    white-space: nowrap;
+`;
+
+const PopupSignoutBtn = styled.div`
+    padding: 5px 15px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    border-bottom: 4px solid #500;
+    color: white;
+    background-color: #c44;
+`;
 
 export default UserIcon;

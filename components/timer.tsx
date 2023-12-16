@@ -22,7 +22,9 @@ const Timer = forwardRef((props: { restTime: number }, ref: any): JSX.Element =>
     };
 
     const isCountingOn = () => {
-        setIsCounting(true);
+        if (restTime > 0) {
+            setIsCounting(true);
+        }
     };
 
     const toggleTimer = () => {

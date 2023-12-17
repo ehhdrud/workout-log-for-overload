@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, forwardRef, useImperativeHandle, useRef } from 'react';
-import '@/styles/timer.css';
+import styled from 'styled-components';
 import alarmSound from '@/assets/Alarm.MP3';
 
 interface WorkerMessage {
@@ -100,28 +100,63 @@ const Timer = forwardRef((props: { restTime: number }, ref: any): JSX.Element =>
     }));
 
     return (
-        <div className="timer-feild">
+        <TimerField>
             {restTime !== 0 ? (
-                <p className="timer-on" onClick={() => toggleTimer()}>
-                    {seconds} seconds
-                </p>
+                <TimerOn onClick={() => toggleTimer()}>{seconds} seconds</TimerOn>
             ) : (
-                <p className="timer-off">No rest-time setting</p>
+                <TimerOff>No rest-time setting</TimerOff>
             )}
             {timeoutAlert && (
-                <div className="timoeout-alert-container">
-                    <div
-                        className="timeout-alert-overlay"
+                <div>
+                    <TimerAlertOverlay
                         onClick={() => {
                             setTimeoutAlert(false);
                         }}
                     />
-                    <div className="timeout-alert">Time out !</div>
+                    <TimerAlertMessage>Time out !</TimerAlertMessage>
                 </div>
             )}
-        </div>
+        </TimerField>
     );
 });
+
+const TimerField = styled.div`
+    margin-left: 15px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #aaa;
+`;
+
+const TimerOn = styled.p`
+    margin: 0px;
+    cursor: pointer;
+`;
+
+const TimerOff = styled.p`
+    margin: 0px;
+`;
+
+const TimerAlertOverlay = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 31;
+`;
+
+const TimerAlertMessage = styled.p`
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 40px;
+    font-weight: 900;
+    white-space: nowrap;
+    z-index: 32;
+`;
 
 Timer.displayName = 'Timer';
 

@@ -9,7 +9,7 @@ import { loginEmail, loginGoogle } from '@/api/firebase';
 import { useRecoilValue } from 'recoil';
 import { userAtom, InfoType } from '@/recoil/atoms';
 // 스타일링 관련 import
-import '@/styles/login-page.css';
+import styled from 'styled-components';
 import Spinner from '@/assets/Spinner.svg';
 
 const LogIn = (): JSX.Element => {
@@ -71,45 +71,113 @@ const LogIn = (): JSX.Element => {
             <Image src={Spinner} alt="Loading" />
         </div>
     ) : (
-        <div className="login-page">
-            <div className="google-login-container" onClick={handleGoogleLogin}>
-                <Image
-                    className="google-logo"
-                    src="/google_logo.png"
-                    alt="Google Logo"
-                    width={30}
-                    height={30}
-                />
-                <span className="google-login-text">Sign in with Google</span>
-            </div>
-            <p className="or">OR</p>
-            <div className="email-login-container">
-                <div className="input-container">
-                    <input
+        <LoginPage>
+            <GoogleLoginContainer onClick={handleGoogleLogin}>
+                <GoogleLogo src="/google_logo.png" alt="Google Logo" width={30} height={30} />
+                <GoogleLoginText>Sign in with Google</GoogleLoginText>
+            </GoogleLoginContainer>
+            <OrText>OR</OrText>
+            <EmailLoginContainer>
+                <InputContainer>
+                    <InputContainerItem
                         type="email"
                         placeholder="Email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
-                    <input
+                    <InputContainerItem
                         type="password"
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         onKeyDown={(e) => handleKeyPress(e)}
                     />
-                </div>
-
-                <button className="login-btn" onClick={handleEmailLogin}>
-                    Sign In
-                </button>
-
-                <Link className="signup-link" href={'/signup'} as={'/signup'}>
-                    Create Account →
+                </InputContainer>
+                <LoginBtn onClick={handleEmailLogin}>Sign In</LoginBtn>
+                <Link href={'/signup'} as={'/signup'}>
+                    <SignupBtn>Create Account →</SignupBtn>
                 </Link>
-            </div>
-        </div>
+            </EmailLoginContainer>
+        </LoginPage>
     );
 };
+
+const LoginPage = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`;
+
+const GoogleLogo = styled(Image)`
+    margin-right: 10px;
+`;
+
+const GoogleLoginContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #55f;
+    padding: 5px 15px;
+    border-radius: 8px;
+    width: 200px;
+    cursor: pointer;
+`;
+
+const GoogleLoginText = styled.span`
+    font-weight: bold;
+`;
+
+const OrText = styled.p`
+    margin: 20px;
+    font-size: 12px;
+    font-weight: bold;
+`;
+
+const EmailLoginContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 230px;
+    gap: 5px;
+`;
+
+const InputContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+`;
+
+const InputContainerItem = styled.input`
+    width: 225px;
+    border: 1px solid black;
+    outline: none;
+`;
+
+const LoginBtn = styled.button`
+    width: 230px;
+    height: 25px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: #55f;
+    border: none;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+`;
+
+const SignupBtn = styled.button`
+    width: 230px;
+    height: 25px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: #00b;
+    border: none;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+`;
 
 export default LogIn;

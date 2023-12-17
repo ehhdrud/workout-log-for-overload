@@ -1,10 +1,10 @@
-import './globals.css';
 import type { Metadata } from 'next';
 import Recoil from '../recoil/Recoil';
 import Link from 'next/link';
 import Image from 'next/image';
 import backgroundImg from '@/assets/Cloudy.svg';
 import StyledComponentsRegistry from '@/styles/registry';
+import './globals.css';
 
 export const metadata: Metadata = {
     title: 'workout log for overload',
@@ -25,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Link className="main-link" href={'/'} as={'/'}>
                     <h1 className="main-title">
                         <p className="title-top">WORKOUT LOG</p>
-                        <div className="title-bottom">OVERLOAD</div>
+                        <p className="title-bottom">OVERLOAD</p>
                     </h1>
                 </Link>
                 <StyledComponentsRegistry>

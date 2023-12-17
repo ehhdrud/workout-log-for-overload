@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation';
 import { logout } from '@/api/firebase';
 import { FaUser } from 'react-icons/fa';
 import styled from 'styled-components';
-import './user-icon.css';
 
 interface Props {
     nickname: string | undefined;

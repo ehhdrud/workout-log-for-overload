@@ -108,9 +108,6 @@ const MainPageContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
-    p {
-    }
 `;
 
 const LoginStateBtnContainer = styled.div`

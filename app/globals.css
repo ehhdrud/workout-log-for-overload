@@ -27,23 +27,20 @@ body {
 }
 
 .title-top {
+    color: #ffffd7;
+    font-family: VCR_OSD_MONO;
+    font-size: 25px;
     margin: 0;
     line-height: 1.2;
-    font-family: VCR_OSD_MONO;
-    color: #ffffd7;
-    font-size: 25px;
 }
 
 .title-bottom {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     color: #fe3;
+    font-family: VCR_OSD_MONO;
     font-size: 35px;
+    font-weight: bold;
     margin: 0;
     line-height: 1.2;
-    font-weight: bold;
-    font-family: VCR_OSD_MONO;
 }
 
 @font-face {

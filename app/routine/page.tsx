@@ -14,18 +14,18 @@ import {
     deleteDoc,
     deleteField,
 } from 'firebase/firestore';
-import { db, logout } from '@/api/firebase';
+import { db } from '@/api/firebase';
 // recoil 관련 import
 import { useRecoilValue } from 'recoil';
 import { userAtom, InfoType } from '@/recoil/atoms';
 import { nicknameSelector } from '@/recoil/selectors';
 // 스타일링 관련 import
+import styled from 'styled-components';
 import Spinner from '@/assets/Spinner.svg';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import '@/styles/routine-page.css';
 // 컴포넌트 import
 import UserIcon from '@/components/UserIcon';
 
@@ -177,37 +177,32 @@ const Routine = (): JSX.Element => {
     }, [routineList]);
 
     return userInfo ? (
-        <div className="routine-page">
+        <RoutinePage>
             {routineNameEditState && (
-                <div
-                    className="edit-input-overlay"
+                <EditInputOverlay
                     onClick={() => {
                         setRoutineNameEditState(false);
                     }}
                 />
             )}
             {createRoutineInput && (
-                <div
-                    className="create-input-overlay"
+                <CreateInputOverlay
                     onClick={() => {
                         setCreateRoutineInput(false);
                     }}
                 />
             )}
-            <div className="routine-container">
-                <div className="routine-header">
-                    <h2 className="sub-title">
+            <RoutineContainer>
+                <RoutineHeader>
+                    <SubTitle>
                         <FontAwesomeIcon icon={faStar} fontSize="18px" color="#dd0" />
-                        <span className="sub-title-text">ROUTINE</span>
-                    </h2>
-                    <div className="edit-or-delete-container">
+                        <SubTitleTxt>ROUTINE</SubTitleTxt>
+                    </SubTitle>
+                    <EditOrDeleteContainer>
                         {createEditBtn ? (
-                            <div className="done-text" onClick={() => setCreateEditBtn(false)}>
-                                Done
-                            </div>
+                            <DoneBtn onClick={() => setCreateEditBtn(false)}>Done</DoneBtn>
                         ) : (
-                            <button
-                                className="routine-edit-btn"
+                            <RoutineBtn
                                 type="button"
                                 onClick={() => {
                                     setCreateEditBtn(true);
@@ -215,15 +210,12 @@ const Routine = (): JSX.Element => {
                                 }}
                             >
                                 <FontAwesomeIcon icon={faPen} fontSize="16px" color="#668" />
-                            </button>
+                            </RoutineBtn>
                         )}
                         {createDeleteBtn ? (
-                            <div className="done-text" onClick={() => setCreateDeleteBtn(false)}>
-                                Done
-                            </div>
+                            <DoneBtn onClick={() => setCreateDeleteBtn(false)}>Done</DoneBtn>
                         ) : (
-                            <button
-                                className="routine-delete-btn"
+                            <RoutineBtn
                                 type="button"
                                 onClick={() => {
                                     setCreateDeleteBtn(true);
@@ -231,18 +223,17 @@ const Routine = (): JSX.Element => {
                                 }}
                             >
                                 <FontAwesomeIcon icon={faTrashCan} fontSize="16px" color="#668" />
-                            </button>
+                            </RoutineBtn>
                         )}
-                    </div>
-                </div>
+                    </EditOrDeleteContainer>
+                </RoutineHeader>
 
-                <div className="routine-items">
+                <RoutineItems>
                     {routineList?.map((item) => (
-                        <div key={item} className="routine-item-container">
-                            <div className="routine-item">
+                        <RoutineItem key={item}>
+                            <div>
                                 {routineNameEditState && item === selectedRoutine ? (
-                                    <input
-                                        className="routine-item-input"
+                                    <RoutineItemInput
                                         type="text"
                                         defaultValue={item}
                                         autoFocus
@@ -251,49 +242,39 @@ const Routine = (): JSX.Element => {
                                     />
                                 ) : (
                                     <Link
-                                        className="routine-item"
+                                        style={{ textDecoration: 'none' }}
                                         href={`/routine/${item}`}
                                         as={`/routine/${item}`}
                                     >
-                                        {item}
+                                        <RoutineItemLink>{item}</RoutineItemLink>
                                     </Link>
                                 )}
                             </div>
                             {createEditBtn && (
-                                <button
-                                    className="edit-button"
+                                <EditBtn
                                     onClick={() => {
                                         setRoutineNameEditState(true);
                                         setSelectedRoutine(item);
                                     }}
                                 >
                                     <FontAwesomeIcon icon={faPen} fontSize="16px" color="#668" />
-                                </button>
+                                </EditBtn>
                             )}
                             {createDeleteBtn && (
-                                <button
-                                    className="delete-button"
-                                    onClick={() => handleRoutineDelete(item)}
-                                >
-                                    X
-                                </button>
+                                <DeleteBtn onClick={() => handleRoutineDelete(item)}>X</DeleteBtn>
                             )}
-                        </div>
+                        </RoutineItem>
                     ))}
-                </div>
-            </div>
+                </RoutineItems>
+            </RoutineContainer>
             <UserIcon nickname={nickname} />
-            <div className="create-field">
+            <CreateRoutineField>
                 {!createRoutineInput ? (
-                    <button
-                        className="create-routine-input-feild"
-                        onClick={() => setCreateRoutineInput(true)}
-                    >
+                    <CreateRoutineFieldBtn onClick={() => setCreateRoutineInput(true)}>
                         Create new routine
-                    </button>
+                    </CreateRoutineFieldBtn>
                 ) : (
-                    <input
-                        className="routine-input-feild"
+                    <CreateRoutineFieldInput
                         type="text"
                         value={routine}
                         placeholder="routine name..."
@@ -302,13 +283,216 @@ const Routine = (): JSX.Element => {
                         onKeyDown={handleKeyPress}
                     />
                 )}
-            </div>
-        </div>
+            </CreateRoutineField>
+        </RoutinePage>
     ) : (
         <div>
             <Image src={Spinner} alt="Loading" />
         </div>
     );
 };
+
+const RoutinePage = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`;
+
+const EditInputOverlay = styled.div`
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+`;
+
+const CreateInputOverlay = styled.div`
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 3;
+`;
+
+const RoutineContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+`;
+
+const RoutineHeader = styled.div`
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    width: 338px;
+`;
+
+const SubTitle = styled.h2`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    margin: 0px;
+    background-color: #000025;
+    border-bottom: 0;
+    border-radius: 15px 15px 0 0;
+`;
+
+const SubTitleTxt = styled.span`
+    font-family: VCR_OSD_MONO;
+    font-weight: 400;
+    font-size: 24px;
+`;
+
+const EditOrDeleteContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    position: relative;
+    top: 0px;
+    right: 10px;
+    width: 105px;
+`;
+
+const DoneBtn = styled.button`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 30px;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    background-color: #002;
+    border-style: none;
+    border-radius: 15px 15px 0 0;
+    cursor: pointer;
+`;
+
+const RoutineBtn = styled.button`
+    width: 50px;
+    height: 30px;
+    border-style: none;
+    background-color: #003;
+    color: #d7d7d7;
+    border-radius: 15px 15px 0 0;
+    cursor: pointer;
+`;
+
+const RoutineItems = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 240px;
+    min-height: 180px;
+    height: max-content;
+    max-height: 360px;
+    padding: 0px 50px;
+    background-color: rgba(0, 0, 40, 0.5);
+    border-radius: 0px 15px 15px 15px;
+    overflow: auto;
+`;
+
+const RoutineItem = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 30px;
+    margin: 15px 0;
+`;
+
+const RoutineItemInput = styled.input`
+    position: relative;
+    width: 150px;
+    height: 30px;
+    padding: 0 10px;
+    border-style: none;
+    border-radius: 10px;
+    font-size: 16px;
+    z-index: 2;
+`;
+
+const RoutineItemLink = styled.div`
+    max-width: 180px;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: #000025;
+    color: white;
+    border-radius: 7.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none;
+`;
+
+const EditBtn = styled.button`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    color: #bbb;
+    border-radius: 10px;
+    border-style: none;
+    background-color: transparent;
+    cursor: pointer;
+`;
+
+const DeleteBtn = styled.button`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    color: Black;
+    font-weight: 400;
+    font-size: 15px;
+    font-weight: bold;
+    border-style: none;
+    border: 3px solid black;
+    border-radius: 5px;
+    background-color: red;
+`;
+
+const CreateRoutineField = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 1vh;
+`;
+
+const CreateRoutineFieldBtn = styled.button`
+    width: 260px;
+    padding: 5px 0px;
+    border-style: none;
+    border: 3px solid black;
+    border-bottom: 8px solid black;
+    border-radius: 20px;
+    font-family: VCR_OSD_MONO;
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+    background-color: blue;
+    cursor: pointer;
+`;
+
+const CreateRoutineFieldInput = styled.input`
+    position: relative;
+    width: 215px;
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 16px;
+    outline: none;
+    border: none;
+    z-index: 4;
+`;
 
 export default Routine;

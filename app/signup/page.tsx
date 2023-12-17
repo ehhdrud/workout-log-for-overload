@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { signupEmail } from '@/api/firebase';
 import { useRouter } from 'next/navigation';
-import '@/styles/signup-page.css';
+import { signupEmail } from '@/api/firebase';
+import styled from 'styled-components';
 
 const SignUp = (): JSX.Element => {
     const router = useRouter();
@@ -48,49 +48,131 @@ const SignUp = (): JSX.Element => {
     };
 
     return (
-        <div className="signup-page">
-            <div className="signup-container">
-                <div className="input-container">
-                    <input
+        <div>
+            <SignupContainer>
+                <InputContainer>
+                    <InputContainerItem
                         type="email"
                         placeholder="Email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
-                    <input
+                    <InputContainerItem
                         type="password"
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <input
+                    <InputContainerItem
                         type="password"
                         placeholder="Confirm Password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         onKeyDown={(e) => handleKeyPress(e)}
                     />
-                </div>
-                <button className="signup-btn" onClick={handleSignup}>
-                    Sign Up
-                </button>
-            </div>
+                </InputContainer>
+                <SignupBtn onClick={handleSignup}>Sign Up</SignupBtn>
+            </SignupContainer>
             {(passwordError || emailError) && (
-                <p className="error-message">{passwordError || emailError}</p>
+                <ErrorMessage>{passwordError || emailError}</ErrorMessage>
             )}
             {isSuccessed && (
-                <div className="success-message-container">
-                    <div className="success-message-overlay" />
-                    <div className="success-message">
-                        <p className="success-message-txt">Sign up successful !</p>
-                        <button className="success-message-btn" onClick={goToSignIn}>
-                            Go to sign in →
-                        </button>
-                    </div>
+                <div>
+                    <SuccessMessageOverlay />
+                    <SuccessMessage>
+                        <SuccessMessageTxt>Sign up successful !</SuccessMessageTxt>
+                        <SuccessMessageBtn onClick={goToSignIn}>Go to Main →</SuccessMessageBtn>
+                    </SuccessMessage>
                 </div>
             )}
         </div>
     );
 };
+
+const SignupContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`;
+
+const InputContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`;
+
+const InputContainerItem = styled.input`
+    width: 225px;
+    border: 1px solid black;
+    outline: none;
+`;
+
+const SignupBtn = styled.button`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 230px;
+    height: 25px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: #228;
+    border: none;
+    border-radius: 3px;
+    margin-top: 10px;
+    text-decoration: none;
+    color: white;
+    outline: none;
+`;
+
+const ErrorMessage = styled.p`
+    text-align: center;
+    font-weight: bold;
+    color: gray;
+`;
+
+const SuccessMessageOverlay = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 1;
+`;
+
+const SuccessMessage = styled.div`
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 40px;
+    border-radius: 15px;
+    background-color: #333;
+    z-index: 2;
+    white-space: nowrap;
+`;
+
+const SuccessMessageTxt = styled.p`
+    font-weight: bold;
+    white-space: nowrap;
+`;
+
+const SuccessMessageBtn = styled.button`
+    padding: 5px 15px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    border-bottom: 4px solid #005;
+    color: white;
+    background-color: #44c;
+`;
 
 export default SignUp;

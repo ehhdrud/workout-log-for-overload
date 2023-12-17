@@ -4,6 +4,7 @@ import Recoil from '../recoil/Recoil';
 import Link from 'next/link';
 import Image from 'next/image';
 import backgroundImg from '@/assets/Cloudy.svg';
+import StyledComponentsRegistry from '@/styles/registry';
 
 export const metadata: Metadata = {
     title: 'workout log for overload',
@@ -27,7 +28,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         <div className="title-bottom">OVERLOAD</div>
                     </h1>
                 </Link>
-                <Recoil>{children}</Recoil>
+                <StyledComponentsRegistry>
+                    <Recoil>{children}</Recoil>
+                </StyledComponentsRegistry>
             </body>
         </html>
     );

@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 // firebase 관련 import
 import { auth, logout } from '@/api/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -15,10 +16,52 @@ import Lottie from 'react-lottie-player';
 import Animation from '@/assets/Animation.json';
 
 const MainPage = (): JSX.Element => {
+    const router = useRouter();
+    // 사용자 정보 상태 관리를 위한 State
     const [userInfoReocoil, setUserInfoRecoil] = useRecoilState<InfoType | null>(userAtom);
     const nicknameRecoil = useRecoilValue<string | undefined>(nicknameSelector);
     const [userInfo, setUserInfo] = useState<InfoType | null>(null);
     const [nickname, setNickname] = useState<string | undefined>();
+    // 부드러운 애니메이션 효과를 위한 State
+    const [opacity, setOpacity] = useState(0);
+
+    // 로그인 페이지로 이동하는 함수
+    const moveToSignIn = () => {
+        console.log("세션 스토리지에 'sessionStorage' Key가 없으므로 관찰자를 생성합니다.");
+        // 사용자 관찰자 생성
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUserInfoRecoil({
+                    uid: user.uid,
+                    email: user.email,
+                });
+                console.log('현재 사용자의 UID:', user.uid, '현재 사용자의 Email:', user.email);
+            } else {
+                setUserInfoRecoil(null);
+                console.log('사용자가 로그인되어 있지 않습니다.');
+            }
+        });
+        router.push('/login');
+    };
+
+    // 회원가입 페이지로 이동하는 함수
+    const moveToSignOut = () => {
+        console.log("세션 스토리지에 'sessionStorage' Key가 없으므로 관찰자를 생성합니다.");
+        // 사용자 관찰자 생성
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUserInfoRecoil({
+                    uid: user.uid,
+                    email: user.email,
+                });
+                console.log('현재 사용자의 UID:', user.uid, '현재 사용자의 Email:', user.email);
+            } else {
+                setUserInfoRecoil(null);
+                console.log('사용자가 로그인되어 있지 않습니다.');
+            }
+        });
+        router.push('/signup');
+    };
 
     // 로그아웃 핸들러
     const handleSignOut = async () => {
@@ -41,47 +84,21 @@ const MainPage = (): JSX.Element => {
         }
     }, [nicknameRecoil]);
 
-    // 관찰자를 생성하기 위한 useEffect
+    // 애니메이션의 부드러운 렌더링을 위한 useEffect
     useEffect(() => {
-        if (!sessionStorage.getItem('sessionStorage')) {
-            console.log("세션 스토리지에 'sessionStorage' Key가 없으므로 관찰자를 생성합니다.");
-            // 사용자 관찰자 생성
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    setUserInfoRecoil({
-                        uid: user.uid,
-                        email: user.email,
-                    });
-                    console.log('현재 사용자의 UID:', user.uid, '현재 사용자의 Email:', user.email);
-                } else {
-                    setUserInfoRecoil(null);
-                    console.log('사용자가 로그인되어 있지 않습니다.');
-                }
-            });
-        }
+        setOpacity(1);
     }, []);
 
-    // 관찰자를 생성하기 위한 useEffect
-    useEffect(() => {
-        console.log("세션 스토리지에 'sessionStorage' Key가 없으므로 관찰자를 생성합니다.");
-        // 사용자 관찰자 생성
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                setUserInfoRecoil({
-                    uid: user.uid,
-                    email: user.email,
-                });
-                console.log('현재 사용자의 UID:', user.uid, '현재 사용자의 Email:', user.email);
-            } else {
-                setUserInfoRecoil(null);
-                console.log('사용자가 로그인되어 있지 않습니다.');
-            }
-        });
-    }, []);
+    const elementStyle = {
+        width: '250px',
+        height: '250px',
+        opacity: opacity,
+        transition: 'opacity 2s',
+    };
 
     return (
         <MainPageContainer>
-            <Lottie animationData={Animation} loop play style={{ width: 250, height: 250 }} />
+            <Lottie animationData={Animation} loop play style={elementStyle} />
             {userInfo ? (
                 <LoginStateBtnContainer>
                     <Link href={'/routine'} as={'/routine'}>
@@ -91,12 +108,12 @@ const MainPage = (): JSX.Element => {
                 </LoginStateBtnContainer>
             ) : (
                 <LogoutStateBtnContainer>
-                    <Link className="signin-link" href={'/login'} as={'/login'}>
-                        <SignInPageBtn>Sign In →</SignInPageBtn>
-                    </Link>
-                    <Link className="signup-link" href={'/signup'} as={'/signup'}>
-                        <SignUpPageBtn>Sign Up →</SignUpPageBtn>
-                    </Link>
+                    {/* <Link className="signin-link" href={'/login'} as={'/login'}> */}
+                    <SignInPageBtn onClick={moveToSignIn}>Sign In →</SignInPageBtn>
+                    {/* </Link> */}
+                    {/* <Link className="signup-link" href={'/signup'} as={'/signup'}> */}
+                    <SignUpPageBtn onClick={moveToSignOut}>Sign Up →</SignUpPageBtn>
+                    {/* </Link> */}
                 </LogoutStateBtnContainer>
             )}
         </MainPageContainer>

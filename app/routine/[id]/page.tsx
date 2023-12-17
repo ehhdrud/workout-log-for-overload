@@ -2,19 +2,23 @@
 
 import React from 'react';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useRecoilValue } from 'recoil';
-import { isAcceptedAtom } from '@/app/recoil/atoms';
-import Timer from '../../components/timer';
-
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { db } from '@/api/firebase';
-
 import Image from 'next/image';
+// firebase 관련 import
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db, logout } from '@/api/firebase';
+// recoil 관련 import
+import { useRecoilValue } from 'recoil';
+import { userAtom, InfoType } from '@/recoil/atoms';
+import { nicknameSelector } from '@/recoil/selectors';
+// 스타일링 관련 import
+import styled from 'styled-components';
 import Spinner from '@/assets/Spinner.svg';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { faBolt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import '@/styles/routine-id-page.css';
+// 컴포넌트 import
+import UserIcon from '@/components/UserIcon';
+import Timer from '@/components/Timer';
 
 interface Set {
     weight: number | null;
@@ -30,52 +34,60 @@ interface Workout {
     [key: string]: WorkoutData;
 }
 
-const Log = (props: any): JSX.Element => {
+const Log: React.FC<any> = (props: any): JSX.Element => {
+    // Hydrate 에러를 방지하기 위한 상태
+    const userInfoRecoil = useRecoilValue<InfoType | null>(userAtom);
+    const nicknameRecoil = useRecoilValue<string | undefined>(nicknameSelector);
+    const [userInfo, setUserInfo] = useState<InfoType | null>(null);
+    const [nickname, setNickname] = useState<string | undefined>();
+
+    // Hydrate 에러를 방지하기 위한 useEffect - 1
+    useEffect(() => {
+        setUserInfo(userInfoRecoil);
+    }, [userInfoRecoil]);
+
+    // Hydrate 에러를 방지하기 위한 useEffect - 2
+    useEffect(() => {
+        if (nicknameRecoil) {
+            setNickname(nicknameRecoil);
+        }
+    }, [nicknameRecoil]);
+
     // docId(루틴 이름) 저장
     const docId = decodeURIComponent(props.params.id);
-
-    // 시크릿 코드 유지를 위한 State
-    const [isAccepted, setClientIsAccepted] = useState<string | boolean>('');
-    const recoilIsAccepted = useRecoilValue(isAcceptedAtom);
-
     // 취합한 데이터 State
     const [workoutData, setWorkoutData] = useState<Workout[]>([]);
-
     // 운동, 무게, 횟수 State
     const [workout, setWorkout] = useState<string>('');
     const [weight, setWeight] = useState<number | null>(null);
     const [reps, setReps] = useState<number | null>(null);
     const [restTime, setRestTime] = useState<number>(0);
-
     // 운동,무게,횟수를 선택했을 때 필요한 State
     const [selectedWorkout, setSelectedWorkout] = useState<string>('');
     const [weightEditIndex, setWeightEditIndex] = useState<number | null>(null);
     const [repsEditIndex, setRepsEditIndex] = useState<number | null>(null);
-
     // '운동 생성 Input' 렌더링에 필요한 State
     const [createWorkoutInput, setCreateWorkoutInput] = useState<boolean>(false);
-
     // '운동 이름 수정 Input' 렌더링에 필요한 State
     const [workoutNameEditState, setWorkoutNameEditState] = useState<boolean>(false);
     const [editedWorkoutName, setEditedWorkoutName] = useState<string | null>(null);
-
     // '운동 삭제' 시 필요한 State
     const [deleteState, setDeleteState] = useState<boolean>(false);
-
     // '휴식시간 수정' 시 필요한 State
     const [createRestTimeInput, setCreateRestTimeInput] = useState<boolean>(false);
-
     // '무게/횟수 수정 Input의 Overlay' 렌더링에 필요한 State
     const [tableRowInputOverlayState, setTableRowInputOverlayState] = useState<boolean>(false);
+    // uid 값을 저장하기 위한 State
+    const [uid, setUid] = useState<string>('');
 
+    // 타이머 컴포넌트를 위한 useRef
     const timerRefs = useRef<any>({});
 
     // 운동을 불러오는 함수
     const readDocumentField = useCallback(async () => {
         try {
-            const docRef = doc(db, 'workout-log', docId);
+            const docRef = doc(db, uid, docId);
             const docSnapshot = await getDoc(docRef);
-
             if (docSnapshot.exists()) {
                 const data = docSnapshot.data();
                 setWorkoutData(Object.values(data)[0]);
@@ -85,7 +97,7 @@ const Log = (props: any): JSX.Element => {
         } catch (error) {
             console.error('문서를 읽어오는 중 오류 발생:', error);
         }
-    }, []);
+    }, [uid]);
 
     // 운동을 추가하는 함수
     const handleAddWorkout = async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -95,14 +107,11 @@ const Log = (props: any): JSX.Element => {
                 alert('같은 이름이 이미 존재합니다 😢');
                 return;
             }
-
             try {
-                const docRef = doc(db, 'workout-log', docId);
+                const docRef = doc(db, uid, docId);
                 const docSnap = await getDoc(docRef);
-
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-
                     const newWorkout = {
                         [workout]: {
                             restTime: restTime,
@@ -114,11 +123,8 @@ const Log = (props: any): JSX.Element => {
                             ],
                         },
                     };
-
                     data[docId].push(newWorkout);
-
                     await updateDoc(docRef, data);
-
                     readDocumentField();
 
                     console.log('⭐create workout⭐:', workout);
@@ -140,21 +146,16 @@ const Log = (props: any): JSX.Element => {
     const addSet = async (workoutIndex: number, workoutName: string) => {
         setDeleteState(false);
         try {
-            const docRef = doc(db, 'workout-log', docId);
+            const docRef = doc(db, uid, docId);
             const docSnap = await getDoc(docRef);
-
             if (docSnap.exists()) {
                 const data = docSnap.data();
-
                 const newSet = {
                     weight: weight,
                     reps: reps,
                 };
-
                 data[docId][workoutIndex][workoutName].set.push(newSet);
-
                 await updateDoc(docRef, data);
-
                 readDocumentField();
 
                 console.log('⭐create set⭐:', `${docId}/${workoutName}`);
@@ -200,16 +201,12 @@ const Log = (props: any): JSX.Element => {
     ) => {
         if (e.key === 'Enter') {
             try {
-                const docRef = doc(db, 'workout-log', docId);
+                const docRef = doc(db, uid, docId);
                 const docSnap = await getDoc(docRef);
-
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-
                     data[docId][workoutIndex][workoutName].set[setIndex].weight = weight;
-
                     await updateDoc(docRef, data);
-
                     readDocumentField();
 
                     console.log('✏️edit weight✏️:', `${docId}-${workoutName}-${setIndex}번 세트`);
@@ -236,20 +233,14 @@ const Log = (props: any): JSX.Element => {
     ) => {
         if (e.key === 'Enter') {
             const lastIndex = setLength - 1;
-
             try {
-                const docRef = doc(db, 'workout-log', docId);
+                const docRef = doc(db, uid, docId);
                 const docSnap = await getDoc(docRef);
-
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-
                     data[docId][workoutIndex][workoutName].set[setIndex].reps = reps;
-
                     await updateDoc(docRef, data);
-
                     readDocumentField();
-
                     if (setIndex !== lastIndex) timerRefs.current[workoutName].isCountingOn();
 
                     console.log('✏️edit reps✏️:', `${docId}-${workoutName}-${setIndex}번 세트`);
@@ -259,7 +250,6 @@ const Log = (props: any): JSX.Element => {
             } catch (error) {
                 console.error(error);
             }
-
             setReps(null);
             setSelectedWorkout('');
             setRepsEditIndex(null);
@@ -270,20 +260,15 @@ const Log = (props: any): JSX.Element => {
     // 운동을 삭제하는 함수
     const handleWorkoutDelete = async (workoutName: string) => {
         try {
-            const docRef = doc(db, 'workout-log', docId);
+            const docRef = doc(db, uid, docId);
             const docSnap = await getDoc(docRef);
-
             if (docSnap.exists()) {
                 const data = docSnap.data();
-
                 const updatedWorkouts = data[docId].filter(
                     (workout: any) => !workout.hasOwnProperty(workoutName)
                 );
-
                 data[docId] = updatedWorkouts;
-
                 await updateDoc(docRef, data);
-
                 readDocumentField();
 
                 console.log(`❌delete workout❌: ${docId}/${workoutName}`);
@@ -298,16 +283,12 @@ const Log = (props: any): JSX.Element => {
     // 세트를 삭제하는 함수
     const handleSetDelete = async (workoutIndex: number, workoutName: string, setIndex: number) => {
         try {
-            const docRef = doc(db, 'workout-log', docId);
+            const docRef = doc(db, uid, docId);
             const docSnap = await getDoc(docRef);
-
             if (docSnap.exists()) {
                 const data = docSnap.data();
-
                 data[docId][workoutIndex][workoutName].set.splice(setIndex, 1);
-
                 await updateDoc(docRef, data);
-
                 readDocumentField();
 
                 console.log('❌delete set❌:', `${docId}-${workoutName}-${setIndex}번 세트`);
@@ -338,21 +319,16 @@ const Log = (props: any): JSX.Element => {
                 alert('이름을 입력해주세요 😢');
                 return;
             }
-
             try {
-                const docRef = doc(db, 'workout-log', docId);
+                const docRef = doc(db, uid, docId);
                 const docSnap = await getDoc(docRef);
-
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-
                     if (editedWorkoutName) {
                         data[docId].splice(workoutIndex, 1, {
                             [editedWorkoutName]: data[docId][workoutIndex][workoutName],
                         });
-
                         await updateDoc(docRef, data);
-
                         readDocumentField();
 
                         console.log(
@@ -380,18 +356,13 @@ const Log = (props: any): JSX.Element => {
     ) => {
         if (e.key === 'Enter') {
             try {
-                const docRef = doc(db, 'workout-log', docId);
+                const docRef = doc(db, uid, docId);
                 const docSnap = await getDoc(docRef);
-
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-
                     data[docId][workoutIndex][workoutName].restTime = restTime;
-
                     await updateDoc(docRef, data);
-
                     readDocumentField();
-
                     timerRefs.current[workoutName].editTimer(restTime);
 
                     console.log('✏️edit rest time✏️:', `${docId}/${workoutName} - ${restTime}초`);
@@ -414,73 +385,73 @@ const Log = (props: any): JSX.Element => {
         setTableRowInputOverlayState(false);
     };
 
+    // null이 아닌 uid 값을 별도의 상태에 저장하여 사용하기 위한 useEffect
     useEffect(() => {
-        setClientIsAccepted(recoilIsAccepted);
-    }, [recoilIsAccepted]);
+        if (userInfo?.uid) {
+            setUid(userInfo.uid);
+        }
+    }, [userInfo]);
 
+    // uid 상태가 바뀌면 문서 읽어오기 위한 useEffect
     useEffect(() => {
-        readDocumentField();
-    }, [readDocumentField]);
+        if (uid) {
+            readDocumentField();
+        }
+    }, [uid, readDocumentField]);
 
-    return isAccepted ? (
-        <div className="log-page">
+    return userInfo ? (
+        <LogPage>
             {tableRowInputOverlayState && (
-                <div
-                    className="table-row-input-overlay"
+                <TableRowInputOverlay
                     onClick={() => {
                         resetTableRowInputEditState();
                     }}
                 />
             )}
             {workoutNameEditState && (
-                <div
-                    className="table-caption-input-overlay"
+                <TableCaptionInputOverlay
                     onClick={() => {
                         setWorkoutNameEditState(false);
                     }}
                 />
             )}
             {createWorkoutInput && (
-                <div
-                    className="workout-input-overlay"
+                <WorkoutInputOverlay
                     onClick={() => {
                         setCreateWorkoutInput(false);
                     }}
                 />
             )}
             {createRestTimeInput && (
-                <div
-                    className="rest-time-input-overlay"
+                <RestTimeInputOverlay
                     onClick={() => {
                         setCreateRestTimeInput(false);
                     }}
                 />
             )}
-            <div className="log-container">
-                <h2 className="routine-name">
+            <LogContainer>
+                <RoutineName>
                     <FontAwesomeIcon icon={faBolt} fontSize="16px" color="#dd0" />
                     {decodeURIComponent(props.params.id)}
-                </h2>
-                <div className="log-data-container">
+                </RoutineName>
+                <LogDataContainer>
                     {workoutData?.map((item, index) => (
-                        <div key={String(Object.keys(item))} className="log-data">
-                            <table className="workout-table">
-                                <caption className="workout-table-caption">
+                        <LogData key={String(Object.keys(item))}>
+                            <WorkoutTable>
+                                <WorkoutTableCaption>
                                     {deleteState &&
                                         selectedWorkout === String(Object.keys(item)) && (
-                                            <div
-                                                className="workout-delete-btn"
+                                            <WorkoutDeleteBtn
                                                 onClick={() =>
                                                     handleWorkoutDelete(String(Object.keys(item)))
                                                 }
                                             >
                                                 X
-                                            </div>
+                                            </WorkoutDeleteBtn>
                                         )}
                                     {workoutNameEditState &&
                                     selectedWorkout === String(Object.keys(item)) ? (
-                                        <input
-                                            className="workout-table-caption-input"
+                                        <WorkoutTableCaptionInput
                                             type="text"
                                             defaultValue={Object.keys(item)}
                                             autoFocus
@@ -494,8 +465,7 @@ const Log = (props: any): JSX.Element => {
                                             }
                                         />
                                     ) : (
-                                        <p
-                                            className="workout-name-txt"
+                                        <WorkoutNameTxt
                                             onClick={() => {
                                                 setDeleteState(false);
                                                 setSelectedWorkout(String(Object.keys(item)));
@@ -503,28 +473,26 @@ const Log = (props: any): JSX.Element => {
                                             }}
                                         >
                                             {Object.keys(item)}
-                                        </p>
+                                        </WorkoutNameTxt>
                                     )}
-                                </caption>
-                                <thead className="table-header">
-                                    <tr className="table-row">
-                                        <th className="table-header-cell">SET</th>
-                                        <th className="table-header-cell">KG</th>
-                                        <th className="table-header-cell">REPS</th>
-                                    </tr>
+                                </WorkoutTableCaption>
+                                <thead>
+                                    <TableRow>
+                                        <TableHeaderCell>SET</TableHeaderCell>
+                                        <TableHeaderCell>KG</TableHeaderCell>
+                                        <TableHeaderCell>REPS</TableHeaderCell>
+                                    </TableRow>
                                 </thead>
-                                <tbody className="table-body">
+                                <TableBody>
                                     {Object.values(item)[0].set.map((subItem, subIndex) => (
-                                        <tr
+                                        <TableRow
                                             key={`${String(
                                                 Object.keys(item)
                                             )}: ${subIndex}번째 세트`}
-                                            className="table-row"
                                         >
                                             {deleteState &&
                                                 selectedWorkout === String(Object.keys(item)) && (
-                                                    <div
-                                                        className="set-delete-btn"
+                                                    <TableDeleteBtn
                                                         onClick={() =>
                                                             handleSetDelete(
                                                                 index,
@@ -534,16 +502,15 @@ const Log = (props: any): JSX.Element => {
                                                         }
                                                     >
                                                         X
-                                                    </div>
+                                                    </TableDeleteBtn>
                                                 )}
-                                            <td className="table-data-cell">
-                                                <p className="workout-table-info">{subIndex + 1}</p>
-                                            </td>
-                                            <td className="table-data-cell">
+                                            <TableDataCell>
+                                                <WorkoutTableInfo>{subIndex + 1}</WorkoutTableInfo>
+                                            </TableDataCell>
+                                            <TableDataCell>
                                                 {weightEditIndex === subIndex &&
                                                 selectedWorkout === String(Object.keys(item)) ? (
-                                                    <input
-                                                        className="workout-table-input"
+                                                    <WorkoutTableInput
                                                         type="text"
                                                         defaultValue={subItem.weight || undefined}
                                                         placeholder={
@@ -563,8 +530,7 @@ const Log = (props: any): JSX.Element => {
                                                         }
                                                     />
                                                 ) : (
-                                                    <p
-                                                        className="workout-table-info"
+                                                    <WorkoutTableInfo
                                                         onClick={() =>
                                                             handleWeightDataCellClick(
                                                                 subIndex,
@@ -574,14 +540,13 @@ const Log = (props: any): JSX.Element => {
                                                         }
                                                     >
                                                         {subItem.weight || '-'}
-                                                    </p>
+                                                    </WorkoutTableInfo>
                                                 )}
-                                            </td>
-                                            <td className="table-data-cell">
+                                            </TableDataCell>
+                                            <TableDataCell>
                                                 {repsEditIndex === subIndex &&
                                                 selectedWorkout === String(Object.keys(item)) ? (
-                                                    <input
-                                                        className="workout-table-input"
+                                                    <WorkoutTableInput
                                                         type="text"
                                                         defaultValue={subItem.reps || undefined}
                                                         placeholder={reps ? String(reps) : '? reps'}
@@ -600,8 +565,7 @@ const Log = (props: any): JSX.Element => {
                                                         }
                                                     />
                                                 ) : (
-                                                    <p
-                                                        className="workout-table-info"
+                                                    <WorkoutTableInfo
                                                         onClick={() =>
                                                             handleRepsDataCellClick(
                                                                 subIndex,
@@ -611,46 +575,42 @@ const Log = (props: any): JSX.Element => {
                                                         }
                                                     >
                                                         {subItem.reps || '-'}
-                                                    </p>
+                                                    </WorkoutTableInfo>
                                                 )}
-                                            </td>
-                                        </tr>
+                                            </TableDataCell>
+                                        </TableRow>
                                     ))}
-                                </tbody>
-                            </table>
-                            <button
-                                className="add-set-btn"
+                                </TableBody>
+                            </WorkoutTable>
+                            <AddSetBtn
                                 type="button"
                                 onClick={() => addSet(index, String(Object.keys(item)))}
                             >
                                 + SET
-                            </button>
+                            </AddSetBtn>
                             {deleteState && selectedWorkout === String(Object.keys(item)) ? (
-                                <button
-                                    className="close-delete-btn"
+                                <CloseDeleteBtn
                                     onClick={() => {
                                         setDeleteState(false);
                                         setSelectedWorkout('');
                                     }}
                                 >
-                                    <p className="done-txt">Done</p>
-                                </button>
+                                    <DoneTxt>Done</DoneTxt>
+                                </CloseDeleteBtn>
                             ) : (
-                                <button
-                                    className="create-delete-btn"
+                                <CreateDeleteBtn
                                     onClick={() => {
                                         setDeleteState(true);
                                         setSelectedWorkout(String(Object.keys(item)));
                                     }}
                                 >
                                     <FontAwesomeIcon icon={faTrashCan} fontSize="14px" />
-                                </button>
+                                </CreateDeleteBtn>
                             )}
-                            <div className="timer-container">
+                            <TimerContainer>
                                 {createRestTimeInput &&
                                 selectedWorkout === String(Object.keys(item)) ? (
-                                    <input
-                                        className="rest-time-input"
+                                    <RestTimeInput
                                         type="text"
                                         placeholder="seconds..."
                                         autoFocus
@@ -660,8 +620,7 @@ const Log = (props: any): JSX.Element => {
                                         }
                                     />
                                 ) : (
-                                    <button
-                                        className="create-rest-time-input"
+                                    <RestTimeBtn
                                         type="button"
                                         onClick={() => {
                                             setCreateRestTimeInput(true);
@@ -669,7 +628,7 @@ const Log = (props: any): JSX.Element => {
                                         }}
                                     >
                                         Set timer
-                                    </button>
+                                    </RestTimeBtn>
                                 )}
                                 <Timer
                                     restTime={Object.values(item)[0].restTime}
@@ -679,25 +638,23 @@ const Log = (props: any): JSX.Element => {
                                         }
                                     }}
                                 />
-                            </div>
-                        </div>
+                            </TimerContainer>
+                        </LogData>
                     ))}
-                </div>
-            </div>
-
+                </LogDataContainer>
+            </LogContainer>
+            <UserIcon nickname={nickname} />
             {!createWorkoutInput ? (
-                <button
-                    className="create-input-feild"
+                <CreateWorkoutBtn
                     onClick={() => {
                         setDeleteState(false);
                         setCreateWorkoutInput(true);
                     }}
                 >
                     Create new workout
-                </button>
+                </CreateWorkoutBtn>
             ) : (
-                <input
-                    className="workout-input"
+                <CreateWorkoutInput
                     type="text"
                     value={workout}
                     placeholder="workout name"
@@ -706,12 +663,340 @@ const Log = (props: any): JSX.Element => {
                     autoFocus
                 />
             )}
-        </div>
+        </LogPage>
     ) : (
         <div>
             <Image src={Spinner} alt="Loading" />
         </div>
     );
 };
+
+const LogPage = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+`;
+
+const TableRowInputOverlay = styled.div`
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+`;
+
+const TableCaptionInputOverlay = styled.div`
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 3;
+`;
+
+const WorkoutInputOverlay = styled.div`
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 5;
+`;
+
+const RestTimeInputOverlay = styled.div`
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 7;
+`;
+
+const LogContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    position: absolute;
+    top: 18vh;
+`;
+
+const RoutineName = styled.h2`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    max-width: 250px;
+    padding: 5px 20px;
+    margin: 0px;
+    background-color: #000025;
+    border-bottom: 0;
+    border-radius: 15px 15px 0 0;
+    font-size: 18px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+`;
+
+const LogDataContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    height: 60vh;
+    padding: 0px 20px;
+    background-color: rgba(0, 0, 40, 0.6);
+    border-radius: 0px 15px 15px 15px;
+    border-bottom: 0;
+    overflow: auto;
+`;
+
+const LogData = styled.div`
+    position: relative;
+    color: black;
+    margin: 20px 0px 30px;
+`;
+
+const WorkoutTable = styled.table`
+    width: 300px;
+`;
+
+const WorkoutTableCaption = styled.caption`
+    position: relative;
+    left: 2px;
+    width: max-content;
+    max-width: 135px;
+    padding: 2px 5px;
+    color: black;
+    font-weight: bold;
+    text-align: start;
+    background-color: #88a;
+    border-radius: 10px 10px 0 00;
+`;
+
+const WorkoutDeleteBtn = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0px;
+    left: -20px;
+    width: 18px;
+    height: 18px;
+    padding: 1px;
+    font-weight: 400;
+    font-size: 16px;
+    color: white;
+    border-radius: 5px;
+    border-style: none;
+    border: 2px solid black;
+    background-color: red;
+`;
+
+const WorkoutTableCaptionInput = styled.input`
+    position: relative;
+    width: 75px;
+    padding: 0;
+    border-style: none;
+    border-radius: 5px;
+    z-index: 4;
+`;
+
+const WorkoutNameTxt = styled.p`
+    padding: 0 5px;
+    margin: 0px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+`;
+
+const TableRow = styled.tr`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    background-color: white;
+`;
+
+const TableHeaderCell = styled.th`
+    display: flex;
+    width: 90px;
+`;
+
+const TableBody = styled.tbody`
+    display: flex;
+    flex-direction: column;
+    border-radius: 15px;
+`;
+
+const TableDeleteBtn = styled.button`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 3px;
+    left: -15px;
+    width: 12px;
+    height: 12px;
+    font-weight: 400;
+    font-size: 12px;
+    color: white;
+    border-radius: 3px;
+    border-style: none;
+    border: 2px solid black;
+    background-color: red;
+`;
+
+const TableDataCell = styled.td`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90px;
+    height: 20px;
+`;
+
+const WorkoutTableInfo = styled.p`
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 75px;
+    height: 10px;
+`;
+
+const WorkoutTableInput = styled.input`
+    width: 75px;
+    position: relative;
+    border: 2px solid #666;
+    z-index: 2;
+`;
+
+const AddSetBtn = styled.button`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: max-content;
+    height: 20px;
+    padding: 3.5px 15px;
+    font-weight: bold;
+    font-size: 14px;
+    border-style: none;
+    border-radius: 15px;
+    background-color: #dddd88;
+    color: black;
+`;
+
+const CloseDeleteBtn = styled.button`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 3px;
+    right: 80px;
+    width: max-content;
+    height: 20px;
+    padding: 3.5px 7.5px;
+    border-style: none;
+    border-radius: 10px;
+    background-color: #88a;
+    color: black;
+`;
+
+const DoneTxt = styled.p`
+    font-weight: bold;
+    margin: 0;
+`;
+
+const CreateDeleteBtn = styled.button`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 3px;
+    right: 80px;
+    width: max-content;
+    height: 20px;
+    padding: 3.5px 15px;
+    border-style: none;
+    border-radius: 10px;
+    background-color: #ee5544;
+    color: black;
+`;
+
+const TimerContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    bottom: -28px;
+    height: 25px;
+    padding-right: 10px;
+    border-radius: 7.5px;
+    background-color: #006;
+    border-right: 1px solid black;
+    border-bottom: 3px solid black;
+    border-left: 1px solid black;
+`;
+
+const RestTimeInput = styled.input`
+    height: 22px;
+
+    width: 68px;
+    height: 20px;
+    padding-left: 5px;
+    border-style: none;
+    border-radius: 5px;
+    margin-left: 2px;
+    z-index: 8;
+`;
+
+const RestTimeBtn = styled.button`
+    border-style: none;
+    border-radius: 6px;
+    padding: 0 10px;
+    margin-left: 2px;
+    background-color: #008;
+    color: #ccc;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    margin-top: 2px;
+    border-right: 1px solid black;
+    border-bottom: 3px solid black;
+    border-left: 1px solid black;
+`;
+
+const CreateWorkoutBtn = styled.button`
+    position: absolute;
+    bottom: 1vh;
+    width: 260px;
+    padding: 5px 0px;
+    border-style: none;
+    border: 3px solid black;
+    border-bottom: 8px solid black;
+    border-radius: 20px;
+    font-family: VCR_OSD_MONO;
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+    background-color: blue;
+    cursor: pointer;
+`;
+
+const CreateWorkoutInput = styled.input`
+    position: absolute;
+    bottom: 1vh;
+    width: 215px;
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 16px;
+    outline: none;
+    border: none;
+    z-index: 6;
+`;
 
 export default React.memo(Log);

@@ -11,6 +11,18 @@ const { persistAtom } = recoilPersist({
     storage: sessionStorage,
 });
 
+export interface InfoType {
+    uid: string | null;
+    email: string | null;
+}
+
+export const userAtom = atom<InfoType | null>({
+    key: 'userAtom',
+    default: null,
+    // persistAtom을 effects_UNSTABLE 배열에 추가하여 위 효과를 적용
+    effects_UNSTABLE: [persistAtom],
+});
+
 export const isAcceptedAtom = atom<boolean>({
     key: 'isAcceptedAtom',
     default: false,

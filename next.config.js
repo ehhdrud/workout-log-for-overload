@@ -4,6 +4,7 @@ const nextConfig = {
     experimental: {
         appDir: true,
     },
+    compiler: { styledComponents: true },
     webpack: (config, options) => {
         config.module.rules.push({
             test: /\.(MP3)$/,

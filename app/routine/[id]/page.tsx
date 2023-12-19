@@ -785,9 +785,8 @@ const WorkoutDeleteBtn = styled.div`
     width: 18px;
     height: 18px;
     padding: 1px;
-    font-weight: 400;
+    font-weight: bold;
     font-size: 16px;
-    color: white;
     border-radius: 5px;
     border-style: none;
     border: 2px solid black;
@@ -838,10 +837,9 @@ const TableDeleteBtn = styled.button`
     top: 3px;
     left: -15px;
     width: 12px;
-    height: 12px;
-    font-weight: 400;
+    height: 15px;
+    font-weight: bold;
     font-size: 12px;
-    color: white;
     border-radius: 3px;
     border-style: none;
     border: 2px solid black;

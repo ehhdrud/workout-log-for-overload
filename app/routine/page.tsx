@@ -35,6 +35,8 @@ const Routine = (): JSX.Element => {
     const nicknameRecoil = useRecoilValue<string | undefined>(nicknameSelector);
     const [userInfo, setUserInfo] = useState<InfoType | null>(null);
     const [nickname, setNickname] = useState<string | undefined>();
+    const [deletePopup, setDeletePopup] = useState<boolean>(false);
+    const [deleteItem, setDeleteItem] = useState<string>('');
 
     // Hydrate 에러를 방지하기 위한 useEffect - 1
     useEffect(() => {
@@ -153,6 +155,8 @@ const Routine = (): JSX.Element => {
             .catch((error) => {
                 console.error(error);
             });
+        setDeletePopup(false);
+        setDeleteItem('');
     };
 
     // null이 아닌 uid 값을 별도의 상태에 저장하여 사용하기 위한 useEffect
@@ -261,7 +265,14 @@ const Routine = (): JSX.Element => {
                                 </EditBtn>
                             )}
                             {createDeleteBtn && (
-                                <DeleteBtn onClick={() => handleRoutineDelete(item)}>X</DeleteBtn>
+                                <DeleteBtn
+                                    onClick={() => {
+                                        setDeletePopup(true);
+                                        setDeleteItem(item);
+                                    }}
+                                >
+                                    X
+                                </DeleteBtn>
                             )}
                         </RoutineItem>
                     ))}
@@ -284,6 +295,21 @@ const Routine = (): JSX.Element => {
                     />
                 )}
             </CreateRoutineField>
+            {deletePopup && (
+                <DeletePopupContainer>
+                    <DeletePopupOverlay
+                        onClick={() => {
+                            setDeletePopup(!deletePopup);
+                        }}
+                    />
+                    <DeletePopupModal>
+                        <DeletePopupTxt>Routine: {deleteItem}</DeletePopupTxt>
+                        <DeletePopupBtn onClick={() => handleRoutineDelete(deleteItem)}>
+                            Delete
+                        </DeletePopupBtn>
+                    </DeletePopupModal>
+                </DeletePopupContainer>
+            )}
         </RoutinePage>
     ) : (
         <div>
@@ -493,6 +519,53 @@ const CreateRoutineFieldInput = styled.input`
     outline: none;
     border: none;
     z-index: 4;
+`;
+
+const DeletePopupContainer = styled.div`
+    position: relative;
+`;
+
+const DeletePopupOverlay = styled.div`
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 20;
+`;
+
+const DeletePopupModal = styled.div`
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 30px;
+    border-radius: 10px;
+    background-color: #333;
+    z-index: 21;
+    white-space: nowrap;
+`;
+
+const DeletePopupTxt = styled.p`
+    color: white;
+    font-weight: bold;
+    white-space: nowrap;
+`;
+
+const DeletePopupBtn = styled.div`
+    padding: 5px 15px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    border-bottom: 4px solid #500;
+    color: white;
+    background-color: #c44;
 `;
 
 export default Routine;

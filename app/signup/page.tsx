@@ -1,8 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+// firebase, recoil 관련 import
 import { signupEmail } from '@/api/firebase';
+import { useRecoilValue } from 'recoil';
+import { userAtom, InfoType } from '@/recoil/atoms';
+// 스타일링 관련 import
 import styled from 'styled-components';
 
 const SignUp = (): JSX.Element => {
@@ -13,6 +17,7 @@ const SignUp = (): JSX.Element => {
     const [passwordError, setPasswordError] = useState<string>('');
     const [emailError, setEmailError] = useState<string>('');
     const [isSuccessed, setIsSuccessed] = useState<boolean>(false);
+    const userInfoRecoil = useRecoilValue<InfoType | null>(userAtom);
 
     const handleSignup = async () => {
         try {
@@ -46,6 +51,14 @@ const SignUp = (): JSX.Element => {
             handleSignup();
         }
     };
+
+    // 메인 화면을 거치지 않은 경우 혹은 로그인이 된 상태에선 메인 화면으로 이동
+    // (메인 화면을 거처야 사용자 관찰자가 생성됨)
+    useEffect(() => {
+        if (!sessionStorage.getItem('sessionStorage') || userInfoRecoil !== null) {
+            router.push('/');
+        }
+    }, [userInfoRecoil]);
 
     return (
         <div>

@@ -17,7 +17,15 @@ const LogIn = (): JSX.Element => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [isSignedIn, setIsSignedIn] = useState<boolean | null>(null);
+    const [isFailed, setIsFailed] = useState<boolean>(false);
+    const [isMobile, setIsMobile] = useState<boolean>(false);
     const userInfoRecoil = useRecoilValue<InfoType | null>(userAtom);
+
+    const checkMobile = () => {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+            navigator.userAgent
+        );
+    };
 
     // 이메일 로그인 핸들러
     const handleEmailLogin = async () => {
@@ -26,14 +34,15 @@ const LogIn = (): JSX.Element => {
             await loginEmail(email, password);
             router.push('/routine');
         } catch (error) {
+            setIsFailed(true);
             console.log(error);
         }
     };
 
     // 구글 로그인 핸들러
+    // loginGoogle 함수 실행 시, 지속성 Session으로 설정
     const handleGoogleLogin = async () => {
         try {
-            // loginGoogle 함수 실행 시, 지속성 Session으로 설정
             await loginGoogle();
             router.push('/routine');
         } catch (error) {
@@ -48,6 +57,12 @@ const LogIn = (): JSX.Element => {
         }
     };
 
+    // 모바일 기기인지 확인하기 위한 useEffect
+    useEffect(() => {
+        setIsMobile(checkMobile());
+    }, []);
+
+    // Hydrate 에러를 방지하기 위한 useEffect
     useEffect(() => {
         if (userInfoRecoil) {
             setIsSignedIn(true);
@@ -62,6 +77,8 @@ const LogIn = (): JSX.Element => {
         }
     }, [userInfoRecoil]);
 
+    useEffect(() => {}, []);
+
     return isSignedIn === null ? (
         <div>
             <Image src={Spinner} alt="Loading" />
@@ -72,11 +89,21 @@ const LogIn = (): JSX.Element => {
         </div>
     ) : (
         <LoginPage>
-            <GoogleLoginContainer onClick={handleGoogleLogin}>
-                <GoogleLogo src="/google_logo.png" alt="Google Logo" width={30} height={30} />
-                <GoogleLoginText>Sign in with Google</GoogleLoginText>
-            </GoogleLoginContainer>
-            <OrText>OR</OrText>
+            {!isMobile && (
+                <>
+                    <GoogleLoginContainer onClick={handleGoogleLogin}>
+                        <GoogleLogo
+                            src="/google_logo.png"
+                            alt="Google Logo"
+                            width={30}
+                            height={30}
+                        />
+                        <GoogleLoginText>Sign in with Google</GoogleLoginText>
+                    </GoogleLoginContainer>
+                    <OrText>OR</OrText>
+                </>
+            )}
+
             <EmailLoginContainer>
                 <InputContainer>
                     <InputContainerItem
@@ -97,6 +124,7 @@ const LogIn = (): JSX.Element => {
                 <Link href={'/signup'} as={'/signup'}>
                     <SignupBtn>Create Account →</SignupBtn>
                 </Link>
+                {isFailed && <ErrorMessage>Check the account!</ErrorMessage>}
             </EmailLoginContainer>
         </LoginPage>
     );
@@ -107,6 +135,7 @@ const LoginPage = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-top: 40px;
 `;
 
 const GoogleLogo = styled(Image)`
@@ -121,11 +150,14 @@ const GoogleLoginContainer = styled.div`
     padding: 5px 15px;
     border-radius: 8px;
     width: 200px;
+    height: 35px;
     cursor: pointer;
 `;
 
 const GoogleLoginText = styled.span`
+    font-size: 15px;
     font-weight: bold;
+    white-space: nowrap;
 `;
 
 const OrText = styled.p`
@@ -139,6 +171,7 @@ const EmailLoginContainer = styled.div`
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    position: relative;
     width: 230px;
     gap: 5px;
 `;
@@ -150,13 +183,14 @@ const InputContainer = styled.div`
 
 const InputContainerItem = styled.input`
     width: 225px;
+    height: 25px;
     border: 1px solid black;
     outline: none;
 `;
 
 const LoginBtn = styled.button`
     width: 230px;
-    height: 25px;
+    height: 30px;
     color: white;
     font-size: 14px;
     font-weight: bold;
@@ -169,7 +203,7 @@ const LoginBtn = styled.button`
 
 const SignupBtn = styled.button`
     width: 230px;
-    height: 25px;
+    height: 30px;
     color: white;
     font-size: 14px;
     font-weight: bold;
@@ -178,6 +212,14 @@ const SignupBtn = styled.button`
     border-radius: 3px;
     outline: none;
     cursor: pointer;
+`;
+
+const ErrorMessage = styled.p`
+    position: absolute;
+    top: 100%;
+    text-align: center;
+    font-weight: bold;
+    color: gray;
 `;
 
 export default LogIn;

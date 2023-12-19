@@ -58,7 +58,7 @@ const SignUp = (): JSX.Element => {
         if (!sessionStorage.getItem('sessionStorage') || userInfoRecoil !== null) {
             router.push('/');
         }
-    }, [userInfoRecoil]);
+    }, []);
 
     return (
         <div>
@@ -84,7 +84,7 @@ const SignUp = (): JSX.Element => {
                         onKeyDown={(e) => handleKeyPress(e)}
                     />
                 </InputContainer>
-                <SignupBtn onClick={handleSignup}>Sign Up</SignupBtn>
+                <SignupBtn onClick={handleSignup}>Sign Up !</SignupBtn>
             </SignupContainer>
             {(passwordError || emailError) && (
                 <ErrorMessage>{passwordError || emailError}</ErrorMessage>
@@ -118,6 +118,7 @@ const InputContainer = styled.div`
 
 const InputContainerItem = styled.input`
     width: 225px;
+    height: 25px;
     border: 1px solid black;
     outline: none;
 `;
@@ -127,11 +128,11 @@ const SignupBtn = styled.button`
     justify-content: center;
     align-items: center;
     width: 230px;
-    height: 25px;
+    height: 35px;
     color: white;
     font-size: 14px;
     font-weight: bold;
-    background-color: #228;
+    background-color: #08b;
     border: none;
     border-radius: 3px;
     margin-top: 10px;

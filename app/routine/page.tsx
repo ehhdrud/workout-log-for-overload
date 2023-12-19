@@ -178,6 +178,7 @@ const Routine = (): JSX.Element => {
         if (routineList?.length === 0) {
             setDoc(doc(db, uid, 'Your Routine'), { 'Your Routine': [] });
         }
+        readDocumentNames();
     }, [routineList]);
 
     return userInfo ? (

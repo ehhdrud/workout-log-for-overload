@@ -676,6 +676,9 @@ const LogPage = styled.div`
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    position: relative;
+    width: 100vw;
+    height: 100vh;
 `;
 
 const TableRowInputOverlay = styled.div`
@@ -719,14 +722,16 @@ const LogContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    position: absolute;
-    top: 18vh;
+    position: relative;
+    top: 20px;
 `;
 
 const RoutineName = styled.h2`
     display: flex;
     justify-content: center;
     align-items: center;
+    position: absolute;
+    top: 88px;
     gap: 10px;
     max-width: 250px;
     padding: 5px 20px;
@@ -738,13 +743,15 @@ const RoutineName = styled.h2`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    z-index: 0;
 `;
 
 const LogDataContainer = styled.div`
     display: flex;
     flex-direction: column;
     width: 300px;
-    height: 60vh;
+    height: 68vh;
+    margin-top: 120px;
     padding: 0px 20px;
     background-color: rgba(0, 0, 40, 0.6);
     border-radius: 0px 15px 15px 15px;
@@ -970,7 +977,7 @@ const RestTimeBtn = styled.button`
 
 const CreateWorkoutBtn = styled.button`
     position: absolute;
-    bottom: 1vh;
+    bottom: 10px;
     width: 260px;
     padding: 5px 0px;
     border-style: none;
@@ -987,7 +994,7 @@ const CreateWorkoutBtn = styled.button`
 
 const CreateWorkoutInput = styled.input`
     position: absolute;
-    bottom: 1vh;
+    bottom: 10px;
     width: 215px;
     padding: 6px 20px;
     border-radius: 20px;

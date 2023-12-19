@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 // firebase 관련 import
@@ -22,8 +22,14 @@ const MainPage = (): JSX.Element => {
     const nicknameRecoil = useRecoilValue<string | undefined>(nicknameSelector);
     const [userInfo, setUserInfo] = useState<InfoType | null>(null);
     const [nickname, setNickname] = useState<string | undefined>();
-    // 부드러운 애니메이션 효과를 위한 State
+    // 부드러운 Lottie 애니메이션 효과를 위한 State와 객체
     const [opacity, setOpacity] = useState(0);
+    const elementStyle = {
+        width: '275px',
+        height: '275px',
+        opacity: opacity,
+        transition: 'opacity 2s',
+    };
 
     // 로그인 페이지로 이동하는 함수
     const moveToSignIn = () => {
@@ -89,13 +95,6 @@ const MainPage = (): JSX.Element => {
         setOpacity(1);
     }, []);
 
-    const elementStyle = {
-        width: '250px',
-        height: '250px',
-        opacity: opacity,
-        transition: 'opacity 2s',
-    };
-
     return (
         <MainPageContainer>
             <Lottie animationData={Animation} loop play style={elementStyle} />
@@ -108,12 +107,8 @@ const MainPage = (): JSX.Element => {
                 </LoginStateBtnContainer>
             ) : (
                 <LogoutStateBtnContainer>
-                    {/* <Link className="signin-link" href={'/login'} as={'/login'}> */}
                     <SignInPageBtn onClick={moveToSignIn}>Sign In →</SignInPageBtn>
-                    {/* </Link> */}
-                    {/* <Link className="signup-link" href={'/signup'} as={'/signup'}> */}
                     <SignUpPageBtn onClick={moveToSignOut}>Sign Up →</SignUpPageBtn>
-                    {/* </Link> */}
                 </LogoutStateBtnContainer>
             )}
         </MainPageContainer>
@@ -125,6 +120,7 @@ const MainPageContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-top: 20px;
 `;
 
 const LoginStateBtnContainer = styled.div`
@@ -137,7 +133,7 @@ const LoginStateBtnContainer = styled.div`
 
 const RoutinePageBtn = styled.button`
     width: 230px;
-    height: 25px;
+    height: 35px;
     color: white;
     font-size: 14px;
     font-weight: bold;
@@ -150,7 +146,7 @@ const RoutinePageBtn = styled.button`
 
 const SignOutBtn = styled.button`
     width: 230px;
-    height: 25px;
+    height: 35px;
     color: white;
     font-size: 14px;
     font-weight: bold;
@@ -171,7 +167,7 @@ const LogoutStateBtnContainer = styled.div`
 
 const SignInPageBtn = styled.button`
     width: 230px;
-    height: 25px;
+    height: 30px;
     color: white;
     font-size: 14px;
     font-weight: bold;
@@ -183,7 +179,7 @@ const SignInPageBtn = styled.button`
 `;
 const SignUpPageBtn = styled.button`
     width: 230px;
-    height: 25px;
+    height: 30px;
     color: white;
     font-size: 14px;
     font-weight: bold;

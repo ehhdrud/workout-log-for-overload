@@ -57,7 +57,6 @@ const UserIconBox = styled.div`
     border-radius: 50%;
     overflow: hidden;
     background-color: #002;
-    z-index: 22;
     cursor: pointer;
 `;
 

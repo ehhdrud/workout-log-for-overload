@@ -107,6 +107,7 @@ const SignupContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-top: 40px;
 `;
 
 const InputContainer = styled.div`
@@ -127,7 +128,7 @@ const SignupBtn = styled.button`
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 230px;
+    width: 232px;
     height: 35px;
     color: white;
     font-size: 14px;
@@ -135,7 +136,7 @@ const SignupBtn = styled.button`
     background-color: #08b;
     border: none;
     border-radius: 3px;
-    margin-top: 10px;
+    margin-top: 20px;
     text-decoration: none;
     color: white;
     outline: none;

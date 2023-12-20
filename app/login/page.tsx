@@ -148,7 +148,7 @@ const GoogleLoginContainer = styled.div`
     align-items: center;
     background-color: #55f;
     padding: 5px 15px;
-    border-radius: 8px;
+    border-radius: 20px;
     width: 200px;
     height: 35px;
     cursor: pointer;
@@ -172,7 +172,7 @@ const EmailLoginContainer = styled.div`
     justify-content: space-between;
     align-items: center;
     position: relative;
-    width: 230px;
+    width: 232px;
     gap: 5px;
 `;
 
@@ -189,7 +189,7 @@ const InputContainerItem = styled.input`
 `;
 
 const LoginBtn = styled.button`
-    width: 230px;
+    width: 232px;
     height: 30px;
     color: white;
     font-size: 14px;
@@ -202,7 +202,7 @@ const LoginBtn = styled.button`
 `;
 
 const SignupBtn = styled.button`
-    width: 230px;
+    width: 232px;
     height: 30px;
     color: white;
     font-size: 14px;

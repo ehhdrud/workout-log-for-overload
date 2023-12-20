@@ -101,14 +101,20 @@ const MainPage = (): JSX.Element => {
             {userInfo ? (
                 <LoginStateBtnContainer>
                     <Link href={'/routine'} as={'/routine'}>
-                        <RoutinePageBtn>{nickname}&apos;s routine →</RoutinePageBtn>
+                        <RoutinePageBtn type="button">{nickname}&apos;s routine →</RoutinePageBtn>
                     </Link>
-                    <SignOutBtn onClick={handleSignOut}>Sign Out</SignOutBtn>
+                    <SignOutBtn type="button" onClick={handleSignOut}>
+                        Sign Out
+                    </SignOutBtn>
                 </LoginStateBtnContainer>
             ) : (
                 <LogoutStateBtnContainer>
-                    <SignInPageBtn onClick={moveToSignIn}>Sign In →</SignInPageBtn>
-                    <SignUpPageBtn onClick={moveToSignOut}>Sign Up →</SignUpPageBtn>
+                    <SignInPageBtn type="button" onClick={moveToSignIn}>
+                        Sign In →
+                    </SignInPageBtn>
+                    <SignUpPageBtn type="button" onClick={moveToSignOut}>
+                        Sign Up →
+                    </SignUpPageBtn>
                 </LogoutStateBtnContainer>
             )}
         </MainPageContainer>
@@ -132,7 +138,7 @@ const LoginStateBtnContainer = styled.div`
 `;
 
 const RoutinePageBtn = styled.button`
-    width: 230px;
+    width: 232px;
     height: 35px;
     color: white;
     font-size: 14px;
@@ -145,7 +151,7 @@ const RoutinePageBtn = styled.button`
 `;
 
 const SignOutBtn = styled.button`
-    width: 230px;
+    width: 232px;
     height: 35px;
     color: white;
     font-size: 14px;
@@ -166,7 +172,7 @@ const LogoutStateBtnContainer = styled.div`
 `;
 
 const SignInPageBtn = styled.button`
-    width: 230px;
+    width: 232px;
     height: 30px;
     color: white;
     font-size: 14px;
@@ -178,7 +184,7 @@ const SignInPageBtn = styled.button`
     cursor: pointer;
 `;
 const SignUpPageBtn = styled.button`
-    width: 230px;
+    width: 232px;
     height: 30px;
     color: white;
     font-size: 14px;

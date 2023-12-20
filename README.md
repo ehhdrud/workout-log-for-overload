@@ -112,7 +112,7 @@
 
 ---
 
-### 🔸 lighthouse 렌더링 성능
+### 🔸 PageSpeed Insight 브라우저 성능
 
 ![100,100,100,100](https://github.com/ehhdrud/workout-log-for-overload/assets/106059716/796467b9-2fc1-40fc-9031-86b68f907072)
 

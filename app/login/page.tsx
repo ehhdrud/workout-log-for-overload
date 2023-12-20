@@ -136,6 +136,7 @@ const LoginPage = styled.div`
     justify-content: center;
     align-items: center;
     margin-top: 40px;
+    user-select: none;
 `;
 
 const GoogleLogo = styled(Image)`

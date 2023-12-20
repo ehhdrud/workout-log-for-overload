@@ -108,6 +108,7 @@ const SignupContainer = styled.div`
     justify-content: center;
     align-items: center;
     margin-top: 40px;
+    user-select: none;
 `;
 
 const InputContainer = styled.div`
@@ -188,6 +189,7 @@ const SuccessMessageBtn = styled.button`
     border-bottom: 4px solid #005;
     color: white;
     background-color: #44c;
+    user-select: none;
 `;
 
 export default SignUp;

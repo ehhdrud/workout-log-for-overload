@@ -148,7 +148,7 @@ const TimerAlertOverlay = styled.div`
 
 const TimerAlertMessage = styled.p`
     position: fixed;
-    top: 50%;
+    top: 45%;
     left: 50%;
     transform: translate(-50%, -50%);
     color: white;

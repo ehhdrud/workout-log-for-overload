@@ -679,6 +679,7 @@ const LogPage = styled.div`
     position: relative;
     width: 100vw;
     height: 100vh;
+    user-select: none;
 `;
 
 const TableRowInputOverlay = styled.div`

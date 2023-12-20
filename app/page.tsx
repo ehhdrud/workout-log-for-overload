@@ -127,6 +127,7 @@ const MainPageContainer = styled.div`
     justify-content: center;
     align-items: center;
     margin-top: 20px;
+    user-select: none;
 `;
 
 const LoginStateBtnContainer = styled.div`
@@ -173,7 +174,7 @@ const LogoutStateBtnContainer = styled.div`
 
 const SignInPageBtn = styled.button`
     width: 232px;
-    height: 30px;
+    height: 35px;
     color: white;
     font-size: 14px;
     font-weight: bold;
@@ -185,7 +186,7 @@ const SignInPageBtn = styled.button`
 `;
 const SignUpPageBtn = styled.button`
     width: 232px;
-    height: 30px;
+    height: 35px;
     color: white;
     font-size: 14px;
     font-weight: bold;

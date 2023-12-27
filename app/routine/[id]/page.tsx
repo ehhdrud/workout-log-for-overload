@@ -1006,4 +1006,4 @@ const CreateWorkoutInput = styled.input`
 `;
 
 // export default React.memo(Log);
-export default React.memo(Log);
+export default Log;

@@ -34,38 +34,38 @@ const MainPage = (): JSX.Element => {
     // 로그인 페이지로 이동하는 함수
     const moveToSignIn = () => {
         console.log("세션 스토리지에 'sessionStorage' Key가 없으므로 관찰자를 생성합니다.");
-        // // 사용자 관찰자 생성
-        // onAuthStateChanged(auth, (user) => {
-        //     if (user) {
-        //         setUserInfoRecoil({
-        //             uid: user.uid,
-        //             email: user.email,
-        //         });
-        //         console.log('현재 사용자의 UID:', user.uid, '현재 사용자의 Email:', user.email);
-        //     } else {
-        //         setUserInfoRecoil(null);
-        //         console.log('사용자가 로그인되어 있지 않습니다.');
-        //     }
-        // });
+        // 사용자 관찰자 생성
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUserInfoRecoil({
+                    uid: user.uid,
+                    email: user.email,
+                });
+                console.log('현재 사용자의 UID:', user.uid, '현재 사용자의 Email:', user.email);
+            } else {
+                setUserInfoRecoil(null);
+                console.log('사용자가 로그인되어 있지 않습니다.');
+            }
+        });
         router.push('/login');
     };
 
     // 회원가입 페이지로 이동하는 함수
     const moveToSignOut = () => {
         console.log("세션 스토리지에 'sessionStorage' Key가 없으므로 관찰자를 생성합니다.");
-        // // 사용자 관찰자 생성
-        // onAuthStateChanged(auth, (user) => {
-        //     if (user) {
-        //         setUserInfoRecoil({
-        //             uid: user.uid,
-        //             email: user.email,
-        //         });
-        //         console.log('현재 사용자의 UID:', user.uid, '현재 사용자의 Email:', user.email);
-        //     } else {
-        //         setUserInfoRecoil(null);
-        //         console.log('사용자가 로그인되어 있지 않습니다.');
-        //     }
-        // });
+        // 사용자 관찰자 생성
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUserInfoRecoil({
+                    uid: user.uid,
+                    email: user.email,
+                });
+                console.log('현재 사용자의 UID:', user.uid, '현재 사용자의 Email:', user.email);
+            } else {
+                setUserInfoRecoil(null);
+                console.log('사용자가 로그인되어 있지 않습니다.');
+            }
+        });
         router.push('/signup');
     };
 
@@ -93,19 +93,6 @@ const MainPage = (): JSX.Element => {
     // 애니메이션의 부드러운 렌더링을 위한 useEffect
     useEffect(() => {
         setOpacity(1);
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                setUserInfoRecoil({
-                    uid: user.uid,
-                    email: user.email,
-                });
-                console.log('현재 사용자의 UID:', user.uid, '현재 사용자의 Email:', user.email);
-            } else {
-                setUserInfoRecoil(null);
-                console.log('사용자가 로그인되어 있지 않습니다.');
-            }
-        });
     }, []);
 
     return (

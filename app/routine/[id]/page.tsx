@@ -1005,4 +1005,5 @@ const CreateWorkoutInput = styled.input`
     z-index: 6;
 `;
 
+// export default React.memo(Log);
 export default React.memo(Log);

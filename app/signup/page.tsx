@@ -39,6 +39,7 @@ const SignUp = (): JSX.Element => {
             }
         } catch (error) {
             console.log(error);
+            setPasswordError('Please use another email');
         }
     };
 

@@ -5,7 +5,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 // firebase 관련 import
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { db, logout } from '@/api/firebase';
+import { db } from '@/api/firebase';
 // recoil 관련 import
 import { useRecoilValue } from 'recoil';
 import { userAtom, InfoType } from '@/recoil/atoms';

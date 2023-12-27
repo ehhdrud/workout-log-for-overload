@@ -33,7 +33,6 @@ const MainPage = (): JSX.Element => {
 
     // 로그인 페이지로 이동하는 함수
     const moveToSignIn = () => {
-        console.log("세션 스토리지에 'sessionStorage' Key가 없으므로 관찰자를 생성합니다.");
         // 사용자 관찰자 생성
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -52,7 +51,6 @@ const MainPage = (): JSX.Element => {
 
     // 회원가입 페이지로 이동하는 함수
     const moveToSignOut = () => {
-        console.log("세션 스토리지에 'sessionStorage' Key가 없으므로 관찰자를 생성합니다.");
         // 사용자 관찰자 생성
         onAuthStateChanged(auth, (user) => {
             if (user) {

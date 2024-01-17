@@ -10,7 +10,7 @@
 
 ## 🚩 Link
 
-- 배포 사이트: [workout-log-for-overload.vercel.app](https://workout-log-for-overload.vercel.app/)
+- 배포 사이트: [workout-log-for-overload.vercel.app](https://workout-log-for-overload.vercel.app/) (아이디 `test@test.com` 비밀번호 `574384`)
 - 시연 영상: [youtu.be/iU5sZAEP5Jk](https://youtu.be/iU5sZAEP5Jk)
 
 <br />

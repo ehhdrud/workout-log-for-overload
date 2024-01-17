@@ -1,6 +1,6 @@
 # Workout Log for Overload
 
-> 🔎 [개발 배경 및 기획](https://buttery-python-af0.notion.site/9926a3876b8b42f9a709b57f57d719ae?pvs=4)
+> 🔎 [개발 배경 및 기획]([https://buttery-python-af0.notion.site/9926a3876b8b42f9a709b57f57d719ae?pvs=4](https://buttery-python-af0.notion.site/f2784ea988a942baac8eba458b48ba18?pvs=4))
 
 웨이트 트레이닝 루틴의 점진적 과부하를 위한 운동 일지
 

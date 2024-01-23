@@ -18,6 +18,7 @@ const UserIcon: React.FC<Props> = (props: { nickname: string | undefined }): JSX
         logout();
         router.push('/');
     };
+
     return (
         <div>
             <UserIconBox
